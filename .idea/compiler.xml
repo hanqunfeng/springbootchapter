@@ -6,19 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="chapter04" />
-        <module name="chapter03" />
-        <module name="chapter02" />
-        <module name="chapter01" />
-        <module name="chapter13" />
-        <module name="chapter12" />
-        <module name="chapter11" />
-        <module name="chapter10" />
         <module name="chapter09" />
         <module name="chapter08" />
         <module name="chapter07" />
         <module name="chapter06" />
         <module name="chapter05" />
+        <module name="chapter04" />
+        <module name="chapter03" />
+        <module name="chapter02" />
+        <module name="chapter01" />
+        <module name="chapter14" />
+        <module name="chapter13" />
+        <module name="chapter12" />
+        <module name="chapter11" />
+        <module name="chapter10" />
       </profile>
     </annotationProcessing>
   </component>
@@ -29,6 +30,7 @@
       <module name="chapter11" options="-parameters" />
       <module name="chapter12" options="-parameters" />
       <module name="chapter13" options="-parameters" />
+      <module name="chapter14" options="-parameters" />
     </option>
   </component>
 </project>
