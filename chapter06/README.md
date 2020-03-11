@@ -1,4 +1,3 @@
-jdbc
-druid
+# jdbc + druid
 
 StatementCallback和ConnectionCallback，一次连接执行多个sql
