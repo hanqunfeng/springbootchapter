@@ -1,0 +1,6 @@
+org/example/config/AppConfig.class
+org/example/dao/JpaUserRepository.class
+org/example/config/DruidConfigProperties.class
+org/example/App.class
+org/example/config/DataSourceConfig.class
+org/example/model/User.class

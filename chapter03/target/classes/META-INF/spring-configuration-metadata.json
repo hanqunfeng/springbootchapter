@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "database",
+      "type": "org.example.model.ConfigProperties",
+      "sourceType": "org.example.model.ConfigProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "database.url",
+      "type": "java.lang.String",
+      "sourceType": "org.example.model.ConfigProperties"
+    },
+    {
+      "name": "database.username",
+      "type": "java.lang.String",
+      "sourceType": "org.example.model.ConfigProperties"
+    }
+  ],
+  "hints": []
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>springbootchapter</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>chapter03</artifactId>
+
+    <dependencies>
+        <!-- springboot 配置文件处理器，这里其实可以不用配置，但是使用@ConfigurationProperties时代码页面会有警告 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+
+        <!-- 快速开始spring注解项目，该依赖会加载spring-context的依赖包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+<!--            独立打包jar插件，只会将项目文件打包，而不包含依赖的外部jar ,如果使用fat jar，则该插件不需要-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>org.example.App</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <version>${project.version}</version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+
+<!--           fat jar 插件： 将依赖的外部jar也打包的项目jar中，此时会将依赖jar全部解压放入项目包中，实际上就是个fat jar-->
+<!--            <plugin>-->
+<!--                <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <appendAssemblyId>false</appendAssemblyId>-->
+<!--                    <descriptorRefs>-->
+<!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--                    </descriptorRefs>-->
+<!--                    <archive>-->
+<!--                        <manifest>-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                            <useUniqueVersions>false</useUniqueVersions>-->
+<!--                            <mainClass>org.example.App</mainClass>-->
+<!--                        </manifest>-->
+<!--                        <manifestEntries>-->
+<!--                            <version>${project.version}</version>-->
+<!--                        </manifestEntries>-->
+<!--                    </archive>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>make-assembly</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>assembly</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
+
+</project>
