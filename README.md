@@ -14,6 +14,5 @@
 ### chapter12----springboot mybatis xml+注解 + PageHelper分页 + 多数据源事务管理--Atomikos
 ### chapter13----springboot mybatis 通用mapper
 ### chapter14----springboot mybatis 通用mapper + 多数据源事务管理--Atomikos
-### chapter15----springboot mybatis-plus(待续)
+### chapter15----springboot mybatis-plus
 ### chapter16----springboot mybatis-plus 多数据源事务管理--Atomikos(待续)
-

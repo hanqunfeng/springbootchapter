@@ -15,6 +15,7 @@
         <module name="chapter03" />
         <module name="chapter02" />
         <module name="chapter01" />
+        <module name="chapter15" />
         <module name="chapter14" />
         <module name="chapter13" />
         <module name="chapter12" />
@@ -31,6 +32,7 @@
       <module name="chapter12" options="-parameters" />
       <module name="chapter13" options="-parameters" />
       <module name="chapter14" options="-parameters" />
+      <module name="chapter15" options="-parameters" />
     </option>
   </component>
 </project>
