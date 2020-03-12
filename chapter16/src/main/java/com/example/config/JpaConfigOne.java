@@ -54,6 +54,12 @@ public class JpaConfigOne {
         //添加分页插件
         bean.setPlugins(new Interceptor[]{paginationInterceptor});
 
+        //mybatis原生配置 配置日志输出
+        //MybatisConfiguration configuration = new MybatisConfiguration();
+        //configuration.setLogImpl(Log4jImpl.class);
+        //bean.setConfiguration(configuration);
+
+
         try {
             return bean;
         } catch (Exception e) {

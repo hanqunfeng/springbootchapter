@@ -1,6 +1,8 @@
 package com.example;
 
+import com.example.dao.AddressDao;
 import com.example.dao.UserDao;
+import com.example.model.Address;
 import com.example.model.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -15,6 +17,30 @@ class Chapter13ApplicationTests {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private AddressDao addressDao;
+
+    @Test
+    void getAddressAndUserByUserId(){
+        Address address = addressDao.getAddressAndUserByUserId(65L);
+        System.out.println(address);
+    }
+
+    @Test
+    void selectByPrimaryKeyaddress(){
+        Address address = addressDao.selectByPrimaryKey(1L);
+        System.out.println(address);
+    }
+
+    @Test
+    void getUserAddressAndBooksById(){
+        User user = userDao.getUserAddressAndBooksById(65L);
+        System.out.println(user.getUserAddress());
+        System.out.println(user.getBooks());
+        System.out.println(user);
+    }
+
 
     @Test
     void selectAll() {
@@ -43,7 +69,7 @@ class Chapter13ApplicationTests {
     @Test
     void insert(){
         User user = new User();
-        user.setName("mapper01");
+        user.setName("mapper0100000");
         user.setAge(100);
         userDao.insert(user);
     }
