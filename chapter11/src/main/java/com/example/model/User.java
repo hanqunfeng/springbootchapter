@@ -1,6 +1,8 @@
 package com.example.model;
 
+import java.awt.print.Book;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -12,12 +14,33 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "userAddress=" + userAddress +
+                ", books=" + books +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
                 ", del='" + del + '\'' +
                 '}';
+    }
+
+    private Address userAddress;
+    private List<Book> books;
+
+    public Address getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(Address userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     /**

@@ -12,6 +12,43 @@
     id, `name`, age, email, del
   </sql>
 
+  <resultMap id="UserResultMap" type="com.example.model.User" extends="BaseResultMap">
+    <association column="id" property="userAddress" select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId" fetchType="eager" ></association>
+  </resultMap>
+
+  <resultMap id="BooksResultMap" type="com.example.model.User" extends="BaseResultMap">
+    <collection column="id" property="books" select="com.example.dao.AnnotationsBookMapper.getBooksByUserId" fetchType="eager" ></collection>
+  </resultMap>
+
+  <!--  只支持单继承 ，符合java特性 -->
+  <resultMap id="UserBooksResultMap" type="com.example.model.User" extends="BaseResultMap">
+    <association column="id" property="userAddress" select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId" fetchType="eager" ></association>
+    <collection column="id" property="books" select="com.example.dao.AnnotationsBookMapper.getBooksByUserId" fetchType="eager" ></collection>
+  </resultMap>
+
+  <select id="getUserAddressAndBooksById" parameterType="java.lang.Long" resultMap="UserBooksResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getUserAndBooksById" parameterType="java.lang.Long" resultMap="BooksResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="getUserById" parameterType="java.lang.Long" resultMap="UserResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
   <select id="selectUsers" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

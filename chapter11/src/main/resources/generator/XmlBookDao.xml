@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.XmlBookMapper">
+  <resultMap id="BaseResultMap" type="com.example.model.Book">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bookName" jdbcType="VARCHAR" property="bookName" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="totalPage" jdbcType="INTEGER" property="totalPage" />
+    <result column="userId" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bookName, price, totalPage, userId
+  </sql>
+
+  <resultMap id="BookAndUserResultMap" type="com.example.model.Book" extends="BaseResultMap">
+    <association column="userId" property="user" select="com.example.dao.XmlUserDao.selectByPrimaryKey" fetchType="eager" ></association>
+  </resultMap>
+
+
+  <select id="getBooksByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from books
+    where userId = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getBooksAndUserByUserId" parameterType="java.lang.Long" resultMap="BookAndUserResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from books
+    where userId = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>

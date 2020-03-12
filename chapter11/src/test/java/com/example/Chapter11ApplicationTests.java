@@ -1,7 +1,8 @@
 package com.example;
 
-import com.example.dao.AnnotationsUserDao;
-import com.example.dao.XmlUserDao;
+import com.example.dao.*;
+import com.example.model.Address;
+import com.example.model.Book;
 import com.example.model.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,7 +19,77 @@ class Chapter11ApplicationTests {
     private XmlUserDao xmlUserDao;
 
     @Autowired
+    private XmlBookMapper xmlBookMapper;
+
+    @Autowired
+    private XmlAddressMapper xmlAddressMapper;
+
+    @Autowired
     private AnnotationsUserDao annotationsUserDao;
+
+    @Autowired
+    private AnnotationsAddressMapper annotationsAddressMapper;
+
+    @Test
+    void getUserAddressAndBooksByIdxml(){
+        User user = xmlUserDao.getUserAddressAndBooksById(65L);
+        System.out.println(user);
+    }
+    @Test
+    void getUserAndBooksByIdxml(){
+        User user = xmlUserDao.getUserAndBooksById(65L);
+        System.out.println(user);
+    }
+    @Test
+    void getUserByIdxml(){
+        User user = xmlUserDao.getUserById(65L);
+        System.out.println(user);
+    }
+
+
+    @Test
+    void getAddressByUserId(){
+        Address address = annotationsAddressMapper.getAddressByUserId(65L);
+        System.out.println(address);
+    }
+
+    @Test
+    void getAddressAndUserByUserId(){
+        Address address = xmlAddressMapper.getAddressAndUserByUserId(65L);
+        System.out.println(address);
+    }
+
+    @Test
+    void getBooksByUserId(){
+        List<Book> books = xmlBookMapper.getBooksByUserId(65L);
+        books.stream().forEach(System.out::println);
+    }
+
+    @Test
+    void getBooksAndUserByUserId(){
+        List<Book> books = xmlBookMapper.getBooksAndUserByUserId(65L);
+        books.stream().forEach(System.out::println);
+    }
+
+
+
+    @Test
+    void getUserAndBooksById(){
+        User user = annotationsUserDao.getUserAndBooksById(65L);
+        System.out.println(user);
+    }
+
+    @Test
+    void getUserById(){
+        User user = annotationsUserDao.getUserById(65L);
+        System.out.println(user);
+    }
+
+    @Test
+    void getUserAddressAndBooksById(){
+        User user = annotationsUserDao.getUserAddressAndBooksById(65L);
+        System.out.println(user);
+    }
 
     @Test
     void selectAll(){

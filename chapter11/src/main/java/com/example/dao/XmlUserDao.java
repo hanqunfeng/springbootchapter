@@ -20,4 +20,12 @@ public interface XmlUserDao {
     int updateByPrimaryKey(User record);
 
     List<User> selectUsers();
+
+    public User getUserById(Long userId);
+
+    public User getUserAndBooksById(Long userId);
+    //
+    public User getUserAddressAndBooksById(Long userId);
+
+
 }
