@@ -33,7 +33,11 @@ class Chapter11ApplicationTests {
     @Test
     void getUserAddressAndBooksByIdxml(){
         User user = xmlUserDao.getUserAddressAndBooksById(65L);
-        System.out.println(user);
+        System.out.println("======");
+        //预先抓取
+        System.out.println(user.getUserAddress());
+        //延迟加载books，只有用到时才从数据库中获取
+        System.out.println(user.getBooks());
     }
     @Test
     void getUserAndBooksByIdxml(){

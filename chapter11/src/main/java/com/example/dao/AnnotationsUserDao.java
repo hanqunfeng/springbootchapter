@@ -128,7 +128,7 @@ public interface AnnotationsUserDao {
             @Result(column="email",property="email"),
             @Result(column="del",property="del"),
             //这里column="id" 是user表的主键
-            @Result(column="id",property="books",many=@Many(select="com.example.dao.AnnotationsBookMapper.getBooksByUserId",fetchType= FetchType.EAGER))
+            @Result(column="id",property="books",many=@Many(select="com.example.dao.AnnotationsBookMapper.getBooksByUserId",fetchType= FetchType.LAZY))
     })
     public User getUserAndBooksById(Long userId);
 
@@ -144,7 +144,7 @@ public interface AnnotationsUserDao {
             //这里column="id" 是user表的主键,可以理解为当前表发送给getAddressByUserId方法的参数
             @Result(column="id",property="userAddress",one=@One(select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId",fetchType= FetchType.EAGER)),
             //这里column="id" 是user表的主键,可以理解为当前表发送给getBooksByUserId方法的参数
-            @Result(column="id",property="books",many=@Many(select="com.example.dao.AnnotationsBookMapper.getBooksByUserId",fetchType= FetchType.EAGER))
+            @Result(column="id",property="books",many=@Many(select="com.example.dao.AnnotationsBookMapper.getBooksByUserId",fetchType= FetchType.LAZY))
     })
     public User getUserAddressAndBooksById(Long userId);
 
