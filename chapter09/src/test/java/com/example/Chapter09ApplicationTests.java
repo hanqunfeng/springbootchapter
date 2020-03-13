@@ -3,17 +3,18 @@ package com.example;
 import com.example.dao.AddressRepository;
 import com.example.dao.BookRepository;
 import com.example.dao.JpaUserRepository;
-import com.example.model.Address;
-import com.example.model.Book;
-import com.example.model.DelEnum;
-import com.example.model.User;
+import com.example.dao.RoleRepository;
+import com.example.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.function.Consumer;
 
 @SpringBootTest
+@Transactional
 class Chapter09ApplicationTests {
 
     @Autowired
@@ -24,6 +25,22 @@ class Chapter09ApplicationTests {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Test
+    void getRoleAll(){
+        List<Role> roleList = roleRepository.findAll();
+        roleList.stream().forEach(new Consumer<Role>() {
+            @Override
+            public void accept(Role role) {
+                System.out.println(role);
+                System.out.println(role.getUsers());
+            }
+        });
+
+    }
 
     @Test
     void getBookAll(){
@@ -44,6 +61,13 @@ class Chapter09ApplicationTests {
     void testFindAll() {
         List<User> list = jpaUserRepository.findAll();
         list.stream().forEach(System.out::println);
+    }
+
+    @Test
+    void testFindbyId(){
+        User user = jpaUserRepository.findById(65L).get();
+        System.out.println(user);
+        user.getRoles().stream().forEach(System.out::println);
     }
 
     @Test

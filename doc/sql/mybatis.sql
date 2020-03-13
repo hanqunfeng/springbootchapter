@@ -24,3 +24,14 @@ CREATE TABLE `user` (
   `del` varchar(1) COLLATE utf8mb4_bin DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `role` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+CREATE TABLE `userrole` (
+    `roleId` bigint(20) DEFAULT NULL,
+    `userId` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

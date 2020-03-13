@@ -5,6 +5,7 @@ package com.example.model;/**
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author hanqf
@@ -39,6 +40,21 @@ public class User {
     @OneToMany(cascade={CascadeType.DETACH},mappedBy = "user",fetch = FetchType.LAZY)
     private List<Book> books;
 
+
+    //多对多
+    //FetchType.LAZY，一定要开启事务，否则会报no session错误，@Transactional
+    @ManyToMany(cascade={CascadeType.DETACH},fetch=FetchType.LAZY)
+    @JoinTable(name="USERROLE",joinColumns={@JoinColumn(name="userId")},inverseJoinColumns={@JoinColumn(name="roleId")})
+    @OrderBy("id ASC")
+    private Set<Role> roles;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public Address getUserAddress() {
         return userAddress;

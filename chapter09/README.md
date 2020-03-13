@@ -1,13 +1,15 @@
-# jpa,springboot，一对一、一对多、多对一关联映射
+# jpa,springboot，一对一、一对多、多对一、多对多关联映射
 
-Spring Boot Jpa之CascadeType
+注意：一定要开启@Transactional，否则延迟加载会报no session错误
+
+## Spring Boot Jpa之CascadeType
 
 JPA允许您传播从父实体到子级的状态转换。为此，JPA javax.persistence.CascadeType定义了各种级联类型：
 
-## ALL 
+### ALL 
 级联所有实体状态转换
 
-## PERSIST 
+### PERSIST 
 级联实体持久化操作。
 ```java
 User user = new User();
@@ -25,7 +27,7 @@ User user = new User();
         //保存前会再查询一次，如果没有变化，则不会发送修改sql
         jpaUserRepository.save(user);
 ```
-## MERGE 
+### MERGE 
 级联实体合并操作。
 ```java
 User user = jpaUserRepository.findById(65L).get();
@@ -38,11 +40,11 @@ User user = jpaUserRepository.findById(65L).get();
         //保存前会再查询一次，如果没有变化，则不会发送修改sql
         jpaUserRepository.save(user);
 ```
-## REMOVE 
+### REMOVE 
 级联实体删除操作。
 
-## REFRESH 
+### REFRESH 
 级联实体刷新操作。
 
-## DETACH 
+### DETACH 
 级联实体分离操作。就是没有级联操作，推荐这种吧，手工处理更安全
