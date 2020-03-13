@@ -1,4 +1,4 @@
-# jpa,springboot，一对一、一对多、多对多关联映射
+# jpa,springboot，一对一、一对多、多对一关联映射
 
 Spring Boot Jpa之CascadeType
 

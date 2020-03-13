@@ -8,9 +8,9 @@
 ### chapter06----jdbc + druid
 ### chapter07----多数据源事务--atomikos
 ### chapter08----jpa,非springboot
-### chapter09----jpa,springboot，一对一、一对多、多对多关联映射
+### chapter09----jpa,springboot，一对一、一对多、多对一关联映射
 ### chapter10----jta,springboot 多数据源事务--Atomikos
-### chapter11----springboot mybatis xml+注解 + PageHelper分页，一对一、一对多、多对多关联映射
+### chapter11----springboot mybatis xml+注解 + PageHelper分页，一对一、一对多、多对一关联映射
 ### chapter12----springboot mybatis xml+注解 + PageHelper分页 + 多数据源事务管理--Atomikos
 ### chapter13----springboot mybatis 通用mapper
 ### chapter14----springboot mybatis 通用mapper + 多数据源事务管理--Atomikos
