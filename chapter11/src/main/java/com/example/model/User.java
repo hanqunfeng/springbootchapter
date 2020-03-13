@@ -16,6 +16,7 @@ public class User implements Serializable {
         return "User{" +
                 "userAddress=" + userAddress +
                 ", books=" + books +
+                ", roles=" + roles +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
@@ -24,8 +25,20 @@ public class User implements Serializable {
                 '}';
     }
 
+
     private Address userAddress;
     private List<Book> books;
+    private List<Role> roles;
+
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
     public Address getUserAddress() {
         return userAddress;

@@ -21,11 +21,15 @@ public interface XmlUserDao {
 
     List<User> selectUsers();
 
-    public User getUserById(Long userId);
+    public User getUserById(Long id);
 
-    public User getUserAndBooksById(Long userId);
+    public User getUserAndBooksById(Long id);
     //
-    public User getUserAddressAndBooksById(Long userId);
+    public User getUserAddressAndBooksById(Long id);
+
+    public User getUserRolesById(Long id);
+
+    public List<User> getUserListByRoleId(Long roleId);
 
 
 }

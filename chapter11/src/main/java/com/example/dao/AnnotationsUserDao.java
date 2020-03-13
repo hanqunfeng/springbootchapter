@@ -148,4 +148,36 @@ public interface AnnotationsUserDao {
     })
     public User getUserAddressAndBooksById(Long userId);
 
+    //one to many
+    @Select("select * from user where id = #{userId}")
+    @Results({
+            @Result(id=true,column="id",property="id"),
+            @Result(column="name",property="name"),
+            @Result(column="age",property="age"),
+            @Result(column="email",property="email"),
+            @Result(column="del",property="del"),
+            //这里column="id" 是user表的主键,可以理解为当前表发送给getAddressByUserId方法的参数
+            @Result(column="id",property="userAddress",one=@One(select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId",fetchType= FetchType.EAGER)),
+            //这里column="id" 是user表的主键,可以理解为当前表发送给getBooksByUserId方法的参数
+            @Result(column="id",property="books",many=@Many(select="com.example.dao.AnnotationsBookMapper.getBooksByUserId",fetchType= FetchType.LAZY)),
+            @Result(column="id",property="roles",many=@Many(select="com.example.dao.AnnotationsRoleMapper.getRoleListByUserId",fetchType= FetchType.LAZY))
+    })
+    public User getUserRolesById(Long userId);
+
+
+    @Select({
+            "select",
+            "id, name, age, email, del",
+            "from user u,userrole ur",
+            "where u.id = ur.userId and ur.roleId = #{roleId,jdbcType=BIGINT}"
+    })
+    @Results({
+            @Result(column="id", property="id", jdbcType= JdbcType.BIGINT, id=true),
+            @Result(column="name", property="name", jdbcType=JdbcType.VARCHAR),
+            @Result(column="age", property="age", jdbcType=JdbcType.INTEGER),
+            @Result(column="email", property="email", jdbcType=JdbcType.VARCHAR),
+            @Result(column="del", property="del", jdbcType=JdbcType.VARCHAR)
+    })
+    public List<User> getUserListByRoleId(Long roleId);
+
 }

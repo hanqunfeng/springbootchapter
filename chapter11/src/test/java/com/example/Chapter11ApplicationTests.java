@@ -3,6 +3,7 @@ package com.example;
 import com.example.dao.*;
 import com.example.model.Address;
 import com.example.model.Book;
+import com.example.model.Role;
 import com.example.model.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -29,6 +30,15 @@ class Chapter11ApplicationTests {
 
     @Autowired
     private AnnotationsAddressMapper annotationsAddressMapper;
+
+    @Autowired
+    private AnnotationsRoleMapper annotationsRoleMapper;
+
+    @Test
+    void getRole(){
+        Role role = annotationsRoleMapper.getRoleAllWithUsersByRoleId(1L);
+        System.out.println(role);
+    }
 
     @Test
     void getUserAddressAndBooksByIdxml(){
@@ -76,6 +86,11 @@ class Chapter11ApplicationTests {
     }
 
 
+    @Test
+    void getUserRoles(){
+        User user = annotationsUserDao.getUserRolesById(65L);
+        System.out.println(user);
+    }
 
     @Test
     void getUserAndBooksById(){

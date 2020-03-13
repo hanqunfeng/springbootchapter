@@ -20,13 +20,13 @@
     select 
     <include refid="Base_Column_List" />
     from address
-    where userId = #{id,jdbcType=BIGINT}
+    where userId = #{userId,jdbcType=BIGINT}
   </select>
 
   <select id="getAddressAndUserByUserId" parameterType="java.lang.Long" resultMap="AddressAndUserResultMap">
     select
     <include refid="Base_Column_List" />
     from address
-    where userId = #{id,jdbcType=BIGINT}
+    where userId = #{userId,jdbcType=BIGINT}
   </select>
 </mapper>

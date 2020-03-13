@@ -1,6 +1,6 @@
 # springboot mybatis xml+注解 + PageHelper分页
 
-xml和注解方式实现多对一，一对多的配置
+xml和注解方式实现一对一，多对一，一对多,多对多的配置
 
 ## xml
 ```xml

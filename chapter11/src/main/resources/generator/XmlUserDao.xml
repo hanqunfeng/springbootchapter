@@ -26,6 +26,25 @@
     <collection column="id" property="books" select="com.example.dao.AnnotationsBookMapper.getBooksByUserId" fetchType="lazy" ></collection>
   </resultMap>
 
+  <!--  只支持单继承 ，符合java特性 -->
+  <resultMap id="UserRolesResultMap" type="com.example.model.User" extends="UserBooksResultMap">
+    <collection column="id" property="roles" select="com.example.dao.XmlRoleMapper.getRoleListByUserId" fetchType="lazy" ></collection>
+  </resultMap>
+
+  <select id="getUserRolesById" parameterType="java.lang.Long" resultMap="UserRolesResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getUserListByRoleId" parameterType="java.lang.Long" resultMap="BooksResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user u,userrole ur
+    where u.id = ur.userId and ur.roleId = #{roleId,jdbcType=BIGINT}
+  </select>
+
   <select id="getUserAddressAndBooksById" parameterType="java.lang.Long" resultMap="UserBooksResultMap">
     select
     <include refid="Base_Column_List" />
