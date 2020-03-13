@@ -4,6 +4,7 @@ package com.example.model;/**
 
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author hanqf
@@ -30,6 +31,36 @@ public class User {
     @Convert(converter = DelConverter.class)
     private DelEnum del;
 
+    //映射Address类中的user属性的关联关系，onetoxxx关系中one的一方不要设置为预先抓取，否则可能造成无限循环
+    @OneToOne(cascade={CascadeType.DETACH},mappedBy = "user",fetch = FetchType.LAZY)
+    private Address userAddress;
+
+    //映射Book类中的user属性的关联关系
+    @OneToMany(cascade={CascadeType.DETACH},mappedBy = "user",fetch = FetchType.LAZY)
+    private List<Book> books;
+
+
+    public Address getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(Address userAddress) {
+        this.userAddress = userAddress;
+    }
+
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+
+
+
+    //toString方法中最好加入映射字段，否则会因为无限循环打印导致内存泄露
     @Override
     public String toString() {
         return "User{" +
@@ -37,7 +68,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
-                ", del='" + del + '\'' +
+                ", del=" + del +
                 '}';
     }
 

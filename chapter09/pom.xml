@@ -19,6 +19,22 @@
     </properties>
 
     <dependencies>
+
+<!--        &lt;!&ndash;fastjson&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>fastjson</artifactId>-->
+<!--            <version>1.2.49</version>-->
+<!--        </dependency>-->
+
+
+        <!--  该功能依赖 p6spy 组件，完美的输出打印 SQL 及执行时长 -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.8.7</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>

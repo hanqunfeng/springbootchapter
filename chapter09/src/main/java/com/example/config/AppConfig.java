@@ -21,4 +21,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //定义实体Bean扫描包路径，可以不声明，springboot会自动查找
 @EntityScan(basePackages = "com.example.model")
 public class AppConfig {
+
+
 }
