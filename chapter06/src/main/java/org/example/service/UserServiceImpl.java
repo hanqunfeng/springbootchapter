@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.StatementCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.PreparedStatement;
@@ -20,10 +22,12 @@ import java.util.List;
  * @date 2020/3/5 16:49
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = { Exception.class })
 public class UserServiceImpl implements UserService {
     @Resource(name = "jdbcTemplate")
     private JdbcTemplate jdbcTemplate;
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> getUserListByName(String name) {
 

@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private JdbcTemplate twoJdbcTemplate;
 
     @Override
+
     public List<User> getUserListByName(String name) {
 
         //要求bean的属性与sql属性一致，不一致时sql字段用as
