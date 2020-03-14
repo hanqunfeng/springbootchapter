@@ -3,6 +3,7 @@ package com.example.config;/**
  */
 
 
+import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,8 @@ public class MybatisConfigTwo {
         mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactoryTwo");
         //扫描ds2目录来注册Mapper接口
         mapperScannerConfigurer.setBasePackage("com.example.mapper.two");
+        //只有标注了该注解才会被扫描到
+        mapperScannerConfigurer.setAnnotationClass(Mapper.class);
         return mapperScannerConfigurer;
     }
 
