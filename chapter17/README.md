@@ -49,6 +49,12 @@ mongo --host 127.0.0.1:27017 -uspringboot01 -p123456 springboot01
 > db.user.createIndex({"age":-1})
 
 
+> db.address.createIndex({"userId":1})
+
+> db.books.createIndex({"userId":1})
+
+
+
 > db.user.find()
 
 > db.address.find()
