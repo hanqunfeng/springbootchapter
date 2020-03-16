@@ -56,4 +56,4 @@ mongo --host 127.0.0.1:27017 -uspringboot01 -p123456 springboot01
 > db.books.find()
 ```
 
-### 尽量不要使用@DBRef，依赖代码维护集合关联关系
+### 尽量不要使用@DBRef，还是依赖代码来维护集合关联关系吧
