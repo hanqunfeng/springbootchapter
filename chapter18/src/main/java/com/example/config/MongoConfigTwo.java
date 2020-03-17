@@ -9,9 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author hanqf
@@ -30,11 +32,20 @@ public class MongoConfigTwo {
 
     @Bean(name = "twoMongoTemplate")
     public MongoTemplate twoMongoTemplate() {
-        return new MongoTemplate(twoFactory());
+        return new MongoTemplate(twoMongoDbFactory());
     }
 
-    @Bean
-    public MongoDbFactory twoFactory() {
+    @Bean(name = "twoMongoDbFactory")
+    public MongoDbFactory twoMongoDbFactory() {
         return new SimpleMongoClientDbFactory(new ConnectionString(twoMongoProperties().getUri()));
     }
+    @Bean(name = "twoMongoTransactionManager")
+    MongoTransactionManager twoTransactionManager(){
+        return new MongoTransactionManager(twoMongoDbFactory());
+    }
+    @Bean(name = "twoTransactionTemplate")
+    TransactionTemplate twoTransactionTemplate(){
+        return new TransactionTemplate(twoTransactionManager());
+    }
+
 }

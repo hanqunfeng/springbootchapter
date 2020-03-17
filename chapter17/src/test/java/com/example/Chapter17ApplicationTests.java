@@ -6,6 +6,7 @@ import com.example.dao.UserRepository;
 import com.example.model.Address;
 import com.example.model.Book;
 import com.example.model.User;
+import com.example.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,20 @@ class Chapter17ApplicationTests {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    void testUserService(){
+
+        User user = new User();
+        user.setUserName("UserService");
+        userService.Save(user);
+        List<User> userList = userService.getAllUser();
+        userList.stream().forEach(System.out::println);
+    }
 
 
     @Test

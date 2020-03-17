@@ -10,9 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author hanqf
@@ -33,12 +35,21 @@ public class MongoConfigOne {
     @Primary
     @Bean(name = "oneMongoTemplate")
     public MongoTemplate oneMongoTemplate() {
-        return new MongoTemplate(oneFactory());
+        return new MongoTemplate(oneMongoDbFactory());
     }
 
-    @Bean
+    @Bean(name = "oneMongoDbFactory")
     @Primary
-    public MongoDbFactory oneFactory() {
+    public MongoDbFactory oneMongoDbFactory() {
         return new SimpleMongoClientDbFactory(new ConnectionString(oneMongoProperties().getUri()));
+    }
+
+    @Bean(name = "oneMongoTransactionManager")
+    MongoTransactionManager oneTransactionManager(){
+        return new MongoTransactionManager(oneMongoDbFactory());
+    }
+    @Bean(name = "oneTransactionTemplate")
+    TransactionTemplate twoTransactionTemplate(){
+        return new TransactionTemplate(oneTransactionManager());
     }
 }
