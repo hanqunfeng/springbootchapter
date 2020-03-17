@@ -112,3 +112,33 @@ mongo --host 127.0.0.1:27017 -uspringboot02 -p123456 springboot02
 ```
 
 ### 尽量不要使用@DBRef，还是依赖代码来维护集合关联关系吧
+
+
+```java
+
+@Configuration
+@EnableMongoRepositories(basePackages = "com.example.dao.one",
+        mongoTemplateRef = "oneMongoTemplate")
+public class MongoConfigOne {
+
+    @Bean
+    @Primary
+    @ConfigurationProperties(prefix = "spring.data.mongodb.one")
+    public MongoProperties oneMongoProperties() {
+        return new MongoProperties();
+    }
+
+    @Primary
+    @Bean(name = "oneMongoTemplate")
+    public MongoTemplate oneMongoTemplate() {
+        return new MongoTemplate(oneFactory());
+    }
+
+    @Bean
+    @Primary
+    public MongoDbFactory oneFactory() {
+        return new SimpleMongoClientDbFactory(new ConnectionString(oneMongoProperties().getUri()));
+    }
+}
+
+```
