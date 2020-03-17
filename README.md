@@ -17,5 +17,5 @@
 ### chapter15----springboot mybatis-plus
 ### chapter16----springboot mybatis-plus 多数据源事务管理--Atomikos
 ### chapter17----springboot mongoDB
-### chapter18----springboot mongoDB 多数据源(待续)
+### chapter18----springboot mongoDB 多数据源
 ### chapter19----springboot 缓存(待续)
