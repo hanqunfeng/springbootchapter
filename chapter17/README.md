@@ -4,6 +4,7 @@
 * 1：MongoDB的版本必须是4.0
 * 2.MongoDB事务功能必须是在多副本集的情况下才能使用，否则报错"Sessions are not supported by the MongoDB cluster to which this client is connected"，4.2版本会支持分片事务。
 * 3.事务控制只能用在已存在的集合中，也就是集合需要手工添加不会由jpa创建会报错"Cannot create namespace glcloud.test_user in multi-document transaction."
+* 参考资料：https://blog.csdn.net/airhhh/article/details/104398577
 
 ## 1.创建新库及初始化数据
 ```bash
