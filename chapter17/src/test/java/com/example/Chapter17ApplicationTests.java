@@ -140,8 +140,8 @@ class Chapter17ApplicationTests {
     @Test
     void findUserAllByPage(){
 
-        //查询第一页，按一页三行分页
-        Pageable pageable = PageRequest.of(0,3, Sort.by(Sort.Direction.DESC,"name"));
+        //查询第三页（第一页是0），按一页三行分页:db.user.find().skip(6).limit(3)
+        Pageable pageable = PageRequest.of(2,3, Sort.by(Sort.Direction.DESC,"name"));
         Page<User> userList = userRepository.findAll(pageable);
         userList.get().forEach(System.out::println);
     }
