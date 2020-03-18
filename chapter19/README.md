@@ -1,7 +1,8 @@
 # springboot mongoDB 复制集 事务
 
 * 读写分离配置：spring.data.mongodb.uri=mongodb://127.0.0.1:27011,127.0.0.1:27012,127.0.0.1:27013/springboot?readPreference=secondaryPreferred&connectTimeoutMS=300000
-* 如果开启了事务，则读写操作都只能在主库里，所以不能设置为读写分离，否则会报异常：Read preference in a transaction must be primary
+* 事务中只能读主库，从库不能读，开启读从库会报错（Read preference in a transaction must be primary）
+* 如果集合不存在，插入数据会报错，需事先好创建集合，报错信息："Cannot create namespace test.user in multi-document transaction.; nested exception is com.mongodb.MongoWriteException: Cannot create namespace test.user in multi-document transaction.",
 
 ```bash
 配置三个mongod.conf 注意替换不同的路径和端口，提前创建好相关目录
