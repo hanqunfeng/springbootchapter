@@ -18,5 +18,5 @@
 ### chapter16----springboot mybatis-plus 多数据源事务管理--Atomikos
 ### chapter17----springboot mongoDB
 ### chapter18----springboot mongoDB 多数据源
-### chapter19----springboot mongoDB 复制集 事务(4.0+版本支持事务，但至少为复制集)
+### chapter19----springboot mongoDB 复制集 事务(4.0+版本支持事务，但至少为复制集，事务不支持读写分理，所以读写都必须为主库)
 ### chapter20----springboot 缓存(待续)
