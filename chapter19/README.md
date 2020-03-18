@@ -1,0 +1,99 @@
+# springboot mongoDB 复制集 事务
+
+* 读写分离配置：spring.data.mongodb.uri=mongodb://127.0.0.1:27011,127.0.0.1:27012,127.0.0.1:27013/springboot?readPreference=secondaryPreferred&connectTimeoutMS=300000
+* 如果开启了事务，则读写操作都只能在主库里，所以不能设置为读写分离，否则会报异常：Read preference in a transaction must be primary
+
+```bash
+配置三个mongod.conf 注意替换不同的路径和端口，提前创建好相关目录
+
+systemLog:
+  destination: file
+  path: /Users/hanqf/myservice_dir/mongodb-replSet/node1/logs/mongo.log
+  logAppend: true
+storage:
+  dbPath: /Users/hanqf/myservice_dir/mongodb-replSet/node1/db
+net:
+  port: 27011
+  bindIp: 127.0.0.1
+processManagement:
+  fork: true
+setParameter:
+  enableLocalhostAuthBypass: false
+replication:
+  replSetName: configRS
+  oplogSizeMB: 50
+
+
+启动：
+mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node1/mongod.conf
+mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node2/mongod.conf
+mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node3/mongod.conf
+
+任意登录一个：
+mongo --host 127.0.0.1:27011
+
+配置复制集成员：
+>rs.initiate({
+_id: "configRS",
+version: 1,
+members: [{_id: 0, host: "127.0.0.1:27011"}]
+});
+
+其实可以都配置到上面的json中一起添加
+>rs.add("127.0.0.1:27012");
+>rs.add("127.0.0.1:27013");
+
+
+>rs.isMaster()
+>rs.status()
+
+创建数据库
+>use springboot
+
+
+#集合创建后会自动创建id索引,查看索引：db.user.getIndexes()
+#删除集合 db.user.drop()
+> db.createCollection("user")
+> db.createCollection("books")
+> db.createCollection("address")
+
+> show collections
+
+#如果插入数据时集合没有创建，则会自动创建
+> db.user.insert({
+    name: 'zhangsan', 
+    age: 25,
+    email: 'zhangsan@email.com',
+    blog: 'http://zhangsan.blob.com',
+    tags: ['mongodb', 'database', 'NoSQL']
+});
+
+#创建索引：1为升序，-1为降序
+#查看索引：db.user.getIndexes()
+#删除索引：
+# 删除所有索引：db.user.dropIndexes() 
+# 删除指定名称索引: db.col.dropIndex("索引名称")
+> db.user.createIndex({"name":1})
+> db.user.createIndex({"age":-1})
+
+
+> db.address.createIndex({"userId":1})
+
+> db.books.createIndex({"userId":1})
+
+
+
+> db.user.find()
+
+> db.address.find()
+
+> db.books.find()
+
+设置从节点可以读数据，默认从库不可以读
+mongo --host 127.0.0.1:27012
+注意这里一定要切换到对应的数据库在设置从库可读
+use springboot
+>rs.slaveOk()
+>show tables
+```
+

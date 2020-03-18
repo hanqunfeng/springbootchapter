@@ -29,7 +29,7 @@ mongo --host 127.0.0.1:27017 -uspringboot01 -p123456 springboot01
 > db.createCollection("books")
 > db.createCollection("address")
 
-> show collections
+> show collections  # 或者 show tables，其实这个更好记忆
 
 #如果插入数据时集合没有创建，则会自动创建
 > db.user.insert({
