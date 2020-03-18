@@ -21,9 +21,8 @@ net:
 replication:
   replSetName: configRS
   oplogSizeMB: 50
-security:
-  authorization: "enabled"
-  keyFile: /Users/hanqf/myservice_dir/mongodb-replSet/keyFile.key
+processManagement:
+   fork: true
 
 
 启动：
