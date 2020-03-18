@@ -6,7 +6,39 @@
 * 3.事务控制只能用在已存在的集合中，也就是集合需要手工添加不会由jpa创建会报错"Cannot create namespace glcloud.test_user in multi-document transaction."
 * 参考资料：https://blog.csdn.net/airhhh/article/details/104398577
 
+
+
+
 ## 1.创建新库及初始化数据
+mongo --host 127.0.0.1:27017
+```bash
+> use admin
+
+> db.createUser(
+   {
+     user: "adminUser",
+     pwd: "adminPass",
+     roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+   }
+ )
+
+ Roles（内置角色）：
+    1. 数据库用户角色：read、readWrite;
+    2. 数据库管理角色：dbAdmin、dbOwner、userAdmin；
+    3. 集群管理角色：clusterAdmin、clusterManager、clusterMonitor、hostManager；
+    4. 备份恢复角色：backup、restore；
+    5. 所有数据库角色：readAnyDatabase、readWriteAnyDatabase、userAdminAnyDatabase、dbAdminAnyDatabase
+    6. 超级用户角色：userAdminAnyDatabase  
+    // 这里还有几个角色间接或直接提供了系统超级用户的访问（dbOwner 、userAdmin）
+    7. 内部角色：__system。
+
+
+```
+* 带访问控制启动
+```
+mongod --config /usr/local/etc/mongod.conf --auth
+```
+
 ```bash
 mongo --host 127.0.0.1:27017 -uadminUser -padminPass
 # 查询所有的数据库：show dbs 一定是管理员登录才可以查看，刚创建的新库，如果没有创建集合则不会显示

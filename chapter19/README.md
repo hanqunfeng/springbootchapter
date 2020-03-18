@@ -4,6 +4,8 @@
 * 事务中只能读主库，从库不能读，开启读从库会报错（Read preference in a transaction must be primary）
 * 如果集合不存在，插入数据会报错，需事先好创建集合，报错信息："Cannot create namespace test.user in multi-document transaction.; nested exception is com.mongodb.MongoWriteException: Cannot create namespace test.user in multi-document transaction.",
 
+
+
 ```bash
 配置三个mongod.conf 注意替换不同的路径和端口，提前创建好相关目录
 
@@ -16,19 +18,20 @@ storage:
 net:
   port: 27011
   bindIp: 127.0.0.1
-processManagement:
-  fork: true
-setParameter:
-  enableLocalhostAuthBypass: false
 replication:
   replSetName: configRS
   oplogSizeMB: 50
+security:
+  authorization: "enabled"
+  keyFile: /Users/hanqf/myservice_dir/mongodb-replSet/keyFile.key
 
 
 启动：
 mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node1/mongod.conf
 mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node2/mongod.conf
 mongod --config /Users/hanqf/myservice_dir/mongodb-replSet/node3/mongod.conf
+
+注意，每次重启，主从库都可能发生变更，具体哪个是主库，要登录后查看。
 
 任意登录一个：
 mongo --host 127.0.0.1:27011
@@ -98,3 +101,54 @@ use springboot
 >show tables
 ```
 
+
+
+## 开启认证：
+
+登录主库：mongo --host 127.0.0.1:27011
+```bash
+> use admin
+
+> db.createUser(
+   {
+     user: "adminUser",
+     pwd: "adminPass",
+     roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+   }
+ )
+
+```
+
+openssl rand -base64 753 > keyFile.key 
+
+chmod 600 keyFile.key 
+
+三个mongod.conf中都添加如下内容
+
+```bash
+security:
+  authorization: "enabled"
+  keyFile: /Users/hanqf/myservice_dir/mongodb-replSet/keyFile.key
+```
+
+重启服务器之后就需要认证才能操作了，然后在springboot库中添加用户
+
+```bash
+mongo --host 127.0.0.1:27011 -uadminUser -padminPass
+
+> use springboot01
+
+# 在哪个库下创建的用户，就要切换到哪个库下删除用户 use dbname, db.dropUser("username")
+# 查看当前库下的用户：show users
+> db.createUser(
+   {
+     user: "springboot",
+     pwd: "123456",
+     roles: [ { role: "dbOwner", db: "springboot" } ]
+   }
+  );      
+
+> exit
+
+mongo --host 127.0.0.1:27011 -uspringboot -p123456 springboot
+```
