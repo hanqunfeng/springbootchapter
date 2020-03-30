@@ -18,6 +18,34 @@ class Chapter20ApplicationTests {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+
+    //流水线执行
+    @Test
+    void testPipeLine(){
+
+        for(int i=0;i<100000;i++) {
+            //此时命令只是进入队列，不会真正执行，待到最后一次性一起执行，这里要注意数据量，一次执行量过大会导致内存益处
+            redisTemplate.delete("pipeline_" + i);
+        }
+
+        //十万次写入大约400~500ms
+        Long start = System.currentTimeMillis();
+        List list = (List)redisTemplate.executePipelined(new SessionCallback() {
+            @Override
+            public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                for(int i=0;i<100000;i++) {
+                    //此时命令只是进入队列，不会真正执行，待到最后一次性一起执行，这里要注意数据量，一次执行量过大会导致内存益处
+                    redisOperations.opsForValue().set("pipeline_" + i, "value_" + i);
+                }
+                return null;
+
+            }
+        });
+        Long end = System.currentTimeMillis();
+        System.out.println("耗时：" + (end - start) + "ms");
+        //list.stream().forEach(x -> System.out.println(x));
+    }
+
     //事务测试
     @Test
     void testTransactional() {

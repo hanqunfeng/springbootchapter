@@ -5,6 +5,7 @@ package com.example.config;/**
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -16,6 +17,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 import java.time.Duration;
 
@@ -28,13 +31,18 @@ import java.time.Duration;
 public class RedisConfig extends CachingConfigurerSupport {
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     //如果注解式缓存要使用redis，则开启这个bean即可
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         logger.info("RedisCacheManager");
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1));//失效时间一小时
+                .entryTtl(Duration.ofHours(1)) //设置过期时间1小时
+                //.disableKeyPrefix()  //设置key前面不带前缀，最好不要去掉前缀，否则执行删除缓存时会清空全部缓存
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getStringSerializer()))//key字符串
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getStringSerializer()));//value字符串
         return RedisCacheManager
                 .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(redisCacheConfiguration).build();

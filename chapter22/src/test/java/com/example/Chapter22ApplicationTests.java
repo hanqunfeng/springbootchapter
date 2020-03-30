@@ -14,17 +14,17 @@ class Chapter22ApplicationTests {
     @Test
     void cacheKey() {
         redisService.deleteAllkey();
+        System.out.println(redisService.getValueByKey("aaa"));
         System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
+        System.out.println(redisService.getValueByKey2("ccc"));
         redisService.deleteAllkey();
+        System.out.println(redisService.getValueByKey("aaa"));
         System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
+        System.out.println(redisService.getValueByKey2("ccc"));
         redisService.deleteByKey("qqq");
+        System.out.println(redisService.getValueByKey("aaa"));
         System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey("qqq"));
+        System.out.println(redisService.getValueByKey2("ccc"));
 
     }
 

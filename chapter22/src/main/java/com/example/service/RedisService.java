@@ -21,6 +21,12 @@ public class RedisService {
         System.out.println("RedisService getValueByKey_"+key);
         return key + "aa";
     }
+
+    @Cacheable(key = "'RedisService.getValueByKey2_'+#key")
+    public String  getValueByKey2(String key){
+        System.out.println("RedisService getValueByKey2_"+key);
+        return key + "aa";
+    }
     //清除掉指定key的缓存
     @CacheEvict(key="'RedisService.getValueByKey_'+#key")
     public void deleteByKey(String key) {
