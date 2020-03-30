@@ -1,4 +1,4 @@
-# springboot redis集群
+# springboot redis集群 不支持事务
 
 ```
 #设置密码

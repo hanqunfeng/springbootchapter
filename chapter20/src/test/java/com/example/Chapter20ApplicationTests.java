@@ -18,6 +18,43 @@ class Chapter20ApplicationTests {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    //事务测试
+    @Test
+    void testTransactional() {
+        redisTemplate.delete("key");
+        redisTemplate.delete("t1");
+        redisTemplate.delete("t2");
+        redisTemplate.delete("t3");
+        redisTemplate.delete("key2");
+
+        //这里设置一个监控key
+        redisTemplate.opsForValue().set("key", "yes");
+        List list = (List)redisTemplate.execute(new SessionCallback() {
+            @Override
+            public Object execute(RedisOperations redisOperations) throws DataAccessException {
+                //1.监控key是否发生变化
+                redisOperations.watch("key");
+                //2.开启事务，在exec命令执行前，全部都只是进入队列
+                redisOperations.multi();
+                redisOperations.opsForValue().set("t1", "value01");
+                //对字符串做自增会报错，但是不会影响事务执行
+                redisOperations.opsForValue().increment("key2",1);
+                redisOperations.opsForValue().set("t2", "value02");
+                redisOperations.opsForValue().set("t3", "value03");
+                //3.执行exec命令，先判断key是否在监控后发生变化，如果是则不执行事务操作，否则就执行
+                //每成功执行一条命令就会返回true(void方法)或者实际方法返回值，如increment返回Long
+                return redisOperations.exec();
+            }
+        });
+        //true
+        //1
+        //true
+        //true
+        list.stream().forEach(x -> System.out.println(x));
+
+
+    }
+
     @Test
     void testString() throws InterruptedException {
         redisTemplate.delete("name");
@@ -84,7 +121,7 @@ class Chapter20ApplicationTests {
         stringRedisTemplate.opsForList().leftPushAll("listkey", "value1", "value2", "value3");
         //从右侧插入列表
         stringRedisTemplate.opsForList().rightPushAll("listkey", "value4", "value5", "value6");
-        List<String> stringList = stringRedisTemplate.opsForList().range("listkey", 0, stringRedisTemplate.opsForList().size("listkey")-1);
+        List<String> stringList = stringRedisTemplate.opsForList().range("listkey", 0, stringRedisTemplate.opsForList().size("listkey") - 1);
         stringList.stream().forEach(System.out::println);
 
         System.out.println("======================================");
@@ -96,7 +133,7 @@ class Chapter20ApplicationTests {
         //右侧弹出一个成员
         listOperations.rightPop();
 
-        stringList = listOperations.range(0,listOperations.size()-1);
+        stringList = listOperations.range(0, listOperations.size() - 1);
         stringList.stream().forEach(System.out::println);
 
         //左侧插入
@@ -104,20 +141,19 @@ class Chapter20ApplicationTests {
         //右侧插入
         listOperations.rightPush("value8");
 
-        stringList = listOperations.range(0,listOperations.size()-1);
+        stringList = listOperations.range(0, listOperations.size() - 1);
         stringList.stream().forEach(System.out::println);
-
 
 
     }
 
     @Test
-    //无序集合
+        //无序集合
     void testSet() {
         stringRedisTemplate.delete("setkey1");
         stringRedisTemplate.delete("setkey2");
         //集合成员不允许重复，所以这里value1只会插入一个
-        stringRedisTemplate.opsForSet().add("setkey1", "value1", "value2", "value3","value1","value4","value5");
+        stringRedisTemplate.opsForSet().add("setkey1", "value1", "value2", "value3", "value1", "value4", "value5");
         Set<String> members = stringRedisTemplate.opsForSet().members("setkey1");
         members.stream().forEach(System.out::println);
 
@@ -126,9 +162,9 @@ class Chapter20ApplicationTests {
         //绑定key
         BoundSetOperations<String, String> setOperations = stringRedisTemplate.boundSetOps("setkey2");
         //增加多个元素
-        setOperations.add("value1","value2","value3","value4","value5","value6","value7");
+        setOperations.add("value1", "value2", "value3", "value4", "value5", "value6", "value7");
         //删除两个元素
-        setOperations.remove("value2","value3");
+        setOperations.remove("value2", "value3");
         //成员数量
         Long size = setOperations.size();
         //求交集
@@ -152,26 +188,26 @@ class Chapter20ApplicationTests {
     }
 
     @Test
-    //有序集合
+        //有序集合
     void testZSet() {
         redisTemplate.delete("zset1");
 
         Set<ZSetOperations.TypedTuple<String>> typedTupleSet = new HashSet<>();
-        for(int i=1;i<=9;i++){
-            double score = i*0.1; //排序分值，默认从小到大排序
-            ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>("value"+i,score);
+        for (int i = 1; i <= 9; i++) {
+            double score = i * 0.1; //排序分值，默认从小到大排序
+            ZSetOperations.TypedTuple<String> typedTuple = new DefaultTypedTuple<>("value" + i, score);
             typedTupleSet.add(typedTuple);
         }
-        redisTemplate.opsForZSet().add("zset1",typedTupleSet);
+        redisTemplate.opsForZSet().add("zset1", typedTupleSet);
 
         BoundZSetOperations zSetOperations = redisTemplate.boundZSetOps("zset1");
         Long size = zSetOperations.size();
-        System.out.println("size=="+size);
+        System.out.println("size==" + size);
         Set range = zSetOperations.range(0, size - 1);
         range.stream().forEach(System.out::println);
         System.out.println("======================");
 
-        zSetOperations.add("value10",0.26);
+        zSetOperations.add("value10", 0.26);
         //取出分数范围内的数据，0.2<= range <= 0.6
         Set rangeByScore = zSetOperations.rangeByScore(0.2, 0.6);
         rangeByScore.stream().forEach(System.out::println);
@@ -183,7 +219,7 @@ class Chapter20ApplicationTests {
 
         System.out.println("======================");
         //删除数据
-        zSetOperations.remove("value4","value5");
+        zSetOperations.remove("value4", "value5");
         System.out.println("======================");
 
         //从大到小排序
@@ -193,13 +229,13 @@ class Chapter20ApplicationTests {
 
         //返回有序集合，这里在下标区间按分数排序
         Set<ZSetOperations.TypedTuple<String>> rangeWithScores = zSetOperations.rangeWithScores(0, zSetOperations.size() - 1);
-        for(ZSetOperations.TypedTuple<String> typedTuple : rangeWithScores){
+        for (ZSetOperations.TypedTuple<String> typedTuple : rangeWithScores) {
             System.out.println(typedTuple.getValue() + "||" + typedTuple.getScore());
         }
         System.out.println("======================");
         //返回有序集合，这里在分数区间按分数排序
         Set<ZSetOperations.TypedTuple<String>> rangeByScoreWithScores = zSetOperations.rangeByScoreWithScores(0.1, 0.9);
-        for(ZSetOperations.TypedTuple<String> typedTuple : rangeByScoreWithScores){
+        for (ZSetOperations.TypedTuple<String> typedTuple : rangeByScoreWithScores) {
             System.out.println(typedTuple.getValue() + "||" + typedTuple.getScore());
         }
         System.out.println("======================");
