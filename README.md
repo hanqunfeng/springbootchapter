@@ -21,4 +21,4 @@
 ### chapter19----springboot mongoDB 复制集 事务(4.0+版本支持事务，但至少为复制集，事务不支持读写分理，所以读写都必须为主库,另外需要提前创建好集合，事务下不会自动创建集合)
 ### chapter20----springboot redis 事务
 ### chapter21----springboot redis集群 不支持事务
-### chapter22----springboot 注解式缓存
+### chapter22----springboot redis注解式缓存
