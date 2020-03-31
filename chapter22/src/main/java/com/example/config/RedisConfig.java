@@ -40,6 +40,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         logger.info("RedisCacheManager");
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(1)) //设置过期时间1小时
+                //.disableCachingNullValues() //不允许存储null值，默认可以存储null
                 //.disableKeyPrefix()  //设置key前面不带前缀，最好不要去掉前缀，否则执行删除缓存时会清空全部缓存
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getStringSerializer()))//key字符串
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getStringSerializer()));//value字符串

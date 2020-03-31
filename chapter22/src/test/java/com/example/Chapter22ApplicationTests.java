@@ -17,14 +17,13 @@ class Chapter22ApplicationTests {
         System.out.println(redisService.getValueByKey("aaa"));
         System.out.println(redisService.getValueByKey("qqq"));
         System.out.println(redisService.getValueByKey2("ccc"));
-        redisService.deleteAllkey();
-        System.out.println(redisService.getValueByKey("aaa"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey2("ccc"));
+        System.out.println(redisService.getValueByKey3("ddd"));
+
         redisService.deleteByKey("qqq");
         System.out.println(redisService.getValueByKey("aaa"));
         System.out.println(redisService.getValueByKey("qqq"));
         System.out.println(redisService.getValueByKey2("ccc"));
+        System.out.println(redisService.getValueByKey3("ddd"));
 
     }
 

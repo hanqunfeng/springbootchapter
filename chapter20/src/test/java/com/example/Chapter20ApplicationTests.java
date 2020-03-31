@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,51 @@ class Chapter20ApplicationTests {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+
+    //Lua脚本
+    @Test
+    void testLua1(){
+        DefaultRedisScript<String> defaultRedisScript = new DefaultRedisScript<>();
+        //设置脚本
+        defaultRedisScript.setScriptText("return 'hello redis'");
+        //设置返回类型
+        defaultRedisScript.setResultType(String.class);
+        //执行脚本
+        String result = (String) redisTemplate.execute(defaultRedisScript, redisTemplate.getStringSerializer(), redisTemplate.getStringSerializer(), null);
+
+        System.out.println("result=="+result);
+    }
+
+    //Lua是原子操作，这里比较两个key的value，如果相等则返回1，不相等返回0
+    @Test
+    void testLua2(){
+        String script = "redis.call('set', KEYS[1] , ARGV[1]) \n" +
+                "redis.call('set', KEYS[2], ARGV[2] ) \n" +
+                "local str1 = redis.call('get' , KEYS[1]) \n" +
+                "local str2 = redis.call('get', KEYS[2]) \n" +
+                "if str1 == str2 then \n" +
+                "return 1 \n" +
+                "end \n" +
+                "return 0";
+
+        System.out.println(script);
+
+        DefaultRedisScript<Long> defaultRedisScript = new DefaultRedisScript<>();
+        //设置脚本
+        defaultRedisScript.setScriptText(script);
+        //设置返回类型
+        defaultRedisScript.setResultType(Long.class);
+
+        List<String> keyList = new ArrayList<>();
+        keyList.add("keylua1");
+        keyList.add("keylua2");
+        String value1 = "lua";
+        String value2 = "lua";
+        //第一个序列化器是key的，第二个是参数的即value
+        Long result = (Long) redisTemplate.execute(defaultRedisScript, redisTemplate.getStringSerializer(), redisTemplate.getStringSerializer(), keyList, value1, value2);
+        System.out.println("result=="+result);
+    }
 
 
     //流水线执行

@@ -1,4 +1,4 @@
-# springboot redis 事务
+# springboot redis 事务 批量执行 Lua脚本
 
 ```java
 @Configuration
