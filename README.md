@@ -22,3 +22,4 @@
 ### chapter20----springboot redis 事务 批量执行 Lua执行
 ### chapter21----springboot redis集群 不支持事务
 ### chapter22----springboot redis注解式缓存
+### chapter23----springboot redis发布订阅
