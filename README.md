@@ -23,3 +23,4 @@
 ### chapter21----springboot redis集群 不支持事务
 ### chapter22----springboot redis注解式缓存
 ### chapter23----springboot redis发布订阅
+### chapter24----springboot MVC thymeleaf i18n 跨域
