@@ -8,8 +8,8 @@
 ### chapter06----jdbc + druid + 事务
 ### chapter07----多数据源事务--atomikos
 ### chapter08----jpa,非springboot
-### chapter09----jpa,springboot，一对一、一对多、多对一，多对多关联映射
-### chapter10----jta,springboot 多数据源事务--Atomikos
+### chapter09----springboot JPA，一对一、一对多、多对一，多对多关联映射
+### chapter10----springboot JTA 多数据源事务--Atomikos
 ### chapter11----springboot mybatis xml+注解 + PageHelper分页，一对一、一对多、多对一、多对多关联映射
 ### chapter12----springboot mybatis xml+注解 + PageHelper分页 + 多数据源事务管理--Atomikos
 ### chapter13----springboot mybatis 通用mapper
@@ -24,3 +24,4 @@
 ### chapter22----springboot redis注解式缓存
 ### chapter23----springboot redis发布订阅
 ### chapter24----springboot MVC thymeleaf i18n 跨域
+### chapter25----springboot JPA 自定义JpaRepositories接口
