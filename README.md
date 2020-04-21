@@ -25,3 +25,5 @@
 ### chapter23----springboot redis发布订阅
 ### chapter24----springboot MVC thymeleaf i18n 跨域
 ### chapter25----springboot JPA 自定义JpaRepositories接口
+### chapter26----springboot HttpClient 和 OkHttpClient
+### chapter27----springboot 动态刷新外部属性文件 @PropertySource(value = "file:demo.properties")

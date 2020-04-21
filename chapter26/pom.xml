@@ -2,24 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>springbootchapter</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>springbootchapter</artifactId>
+    <artifactId>chapter26</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>chapter01</module>
-        <module>chapter02</module>
-        <module>chapter03</module>
-        <module>chapter04</module>
-        <module>chapter05</module>
-        <module>chapter06</module>
-        <module>chapter07</module>
-        <module>chapter08</module>
-        <module>chapter26</module>
-        <module>chapter26</module>
-        <module>chapter26</module>
+        <module>HttpClient</module>
+        <module>OkHttpClient</module>
+        <module>HttpClientOld</module>
     </modules>
 
     <properties>
@@ -29,32 +24,18 @@
     </properties>
 
     <dependencies>
-
-        <!-- springframework 必须引入 -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.2.4.RELEASE</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <optional>true</optional>
         </dependency>
 
-
-
-
-        <!-- logback -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
-
-
-
-        <!-- 如果需要spring test则引入 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>5.2.4.RELEASE</version>
-            <scope>test</scope>
+            <scope>compile</scope>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.68</version>
         </dependency>
 
         <dependency>
@@ -64,6 +45,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Begin LogBack Log-->
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+        <!--End LogBack Log-->
     </dependencies>
 
     <build>
@@ -111,4 +106,6 @@
             </plugins>
         </pluginManagement>
     </build>
+
+
 </project>
