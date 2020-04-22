@@ -1,8 +1,10 @@
 package org.example;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -11,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -18,6 +21,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -43,13 +48,6 @@ import java.util.zip.GZIPOutputStream;
 @Slf4j
 public class HttpClientUtil {
     /**
-     * 获得Http客户端
-     */
-    private static CloseableHttpClient httpClient = HttpClientBuilder.create()
-            .setRetryHandler(new DefaultHttpRequestRetryHandler()) //失败重试，默认3次
-            .build();
-
-    /**
      * 配置信息
      */
     private static RequestConfig requestConfig = RequestConfig.custom()
@@ -64,6 +62,63 @@ public class HttpClientUtil {
             //是否启用内容压缩，默认true
             .setContentCompressionEnabled(true)
             .build();
+    /**
+     * 获得Http客户端
+     */
+    private static CloseableHttpClient httpClient = HttpClientBuilder.create()
+            .setRetryHandler(new DefaultHttpRequestRetryHandler()) //失败重试，默认3次
+            .build();
+
+    /**
+     * 异步Http客户端
+    */
+    private static CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
+            .setDefaultRequestConfig(requestConfig)
+            .build();
+
+
+
+    /**
+     * <p>异步请求</p>
+     * @author hanqf
+     * 2020/4/22 21:16
+     * @param httpRequestBase
+     */
+    private static void executeAsync(HttpRequestBase httpRequestBase) {
+        httpAsyncClient.start();
+        httpAsyncClient.execute(httpRequestBase, new FutureCallback<HttpResponse>() {
+            @SneakyThrows
+            @Override
+            public void completed(HttpResponse httpResponse) {
+                log.info(" callback thread id is : " + Thread.currentThread().getId());
+                log.info(httpRequestBase.getRequestLine() + "->" + httpResponse.getStatusLine());
+                String responseResult = null;
+                HttpEntity responseEntity = httpResponse.getEntity();
+                log.debug("响应状态为:" + httpResponse.getStatusLine());
+                if (responseEntity != null) {
+                    responseResult = EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+                    log.info("响应内容为:" + responseResult);
+
+                }
+
+                for (Header header : httpResponse.getAllHeaders()) {
+                    log.info(String.format("响应头信息: [%s]", header.toString()));
+                }
+            }
+
+            @Override
+            public void failed(Exception e) {
+                log.info(" callback thread id is : " + Thread.currentThread().getId());
+                log.info("Get responseResult：", e);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void cancelled() {
+                log.info(httpRequestBase.getRequestLine() + " cancelled");
+            }
+        });
+    }
 
     /**
      * <p>请求的执行方法，需要提前封装好httpRequestBase对象，如请求url和请求参数</p>
@@ -159,7 +214,7 @@ public class HttpClientUtil {
             log.info("Get responseResult：", e);
             e.printStackTrace();
         }
-
+        //executeAsync(httpGet);
         return execute(httpGet);
     }
 

@@ -39,6 +39,35 @@ public class OkHttpUtil {
             .addInterceptor(new RetryIntercepter()) //重试拦截器，默认3次
             .addInterceptor(new HeadersLoggingInterceper()) //header拦截器
             .build();
+    
+    
+    /**
+     * <p>异步调用</p>
+     * @author hanqf
+     * 2020/4/22 20:37
+     * @param request
+     */
+    private static void executeAsync(Request request){
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                log.info("Get responseResult：", e);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                String responseResult = null;
+                if (response.isSuccessful()) {
+                    responseResult = response.body().string();
+                }
+                Headers headers = response.headers();
+                log.info(String.format("响应头信息: [%s]", headers.toString()));
+                log.info(String.format("响应结果：%s",responseResult));
+            }
+        });
+    }
 
     /**
      * <p>请求的执行方法，需要提前封装好Request对象，如请求url和请求参数</p>
@@ -117,6 +146,8 @@ public class OkHttpUtil {
             jArray.add(params);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
         }
+
+        //executeAsync(request);
         return execute(request);
 
     }
