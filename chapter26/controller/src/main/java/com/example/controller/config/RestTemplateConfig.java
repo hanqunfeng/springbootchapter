@@ -19,6 +19,9 @@ public class RestTemplateConfig {
         return new RestTemplate(factory);
     }
 
+    //异步请求过时了，推荐使用spring-boot-starter-webflux中的WebClient
+    //public AsyncRestTemplate
+
     @Bean
     public ClientHttpRequestFactory simpleClientHttpRequestFactory() {
         //默认的是JDK提供http连接，需要的话可以替换为例如Apache HttpComponents、Netty或OkHttp等其它HTTP library。
