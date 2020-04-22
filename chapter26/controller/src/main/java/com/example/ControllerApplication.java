@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
-@ServletComponentScan
+@ServletComponentScan //支持扫描@WebFilter,@WebServlet
 public class ControllerApplication {
 
     public static void main(String[] args) {
