@@ -15,6 +15,7 @@
         <module>HttpClient</module>
         <module>OkHttpClient</module>
         <module>HttpClientOld</module>
+        <module>RestTemplate</module>
     </modules>
 
     <properties>
