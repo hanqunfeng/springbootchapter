@@ -50,13 +50,14 @@ public class AppTest
     public void postTest(){
         System.out.println("post=" + WebClientUtil.post(URL_POST));
         System.out.println("postParam=" + WebClientUtil.post(URL_POST,map));
-        //System.out.println("postForm=" + WebClientUtil.postForm(URL_POST_FORM,map));
-        //System.out.println("postJson=" + WebClientUtil.postJson(URL_POST_JSON,JSON));
-        //System.out.println("postJsonZip=" + WebClientUtil.postJson(URL_POST_JSON,JSON,true));
-        //System.out.println("postBytes=" + WebClientUtil.postInputBytes(URL_POST_STREAM,BYTES));
-        //System.out.println("postBytesZip=" + WebClientUtil.postInputBytes(URL_POST_STREAM,BYTES,true));
-        //System.out.println("postStream=" + WebClientUtil.postInputStream(URL_POST_STREAM,INPUTSTREAM));
-        //System.out.println("postStreamZip=" + WebClientUtil.postInputStream(URL_POST_STREAM,INPUTSTREAM2,true));
-        //System.out.println("postFiles=" + WebClientUtil.postFile(URL_POST_FILES,map,files));
+        System.out.println("postForm=" + WebClientUtil.postForm(URL_POST_FORM,map));
+        System.out.println("postJson=" + WebClientUtil.postJson(URL_POST_JSON,JSON));
+        System.out.println("postJsonZip=" + WebClientUtil.postJson(URL_POST_STREAM,JSON,true));
+        System.out.println("postBytes=" + WebClientUtil.postBytes(URL_POST_STREAM,BYTES));
+        System.out.println("postBytesZip=" + WebClientUtil.postBytes(URL_POST_STREAM,BYTES,true));
+        System.out.println("postStream=" + WebClientUtil.postStream(URL_POST_STREAM,INPUTSTREAM));
+        System.out.println("postStreamZip=" + WebClientUtil.postStream(URL_POST_STREAM,INPUTSTREAM2,true));
+        System.out.println("postFiles=" + WebClientUtil.postFiles(URL_POST_FILES,files));
+        System.out.println("postFiles=" + WebClientUtil.postFiles(URL_POST_FILES,map,files));
     }
 }

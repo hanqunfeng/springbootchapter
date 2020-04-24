@@ -1,9 +1,11 @@
 package org.example;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,9 +13,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -22,19 +27,24 @@ import java.util.zip.GZIPOutputStream;
  * Created by hanqf on 2020/4/22 16:54.
  */
 
-
+@Slf4j
 public class RestTemplateUtil {
 
     private static SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-    private static RestTemplate restTemplate = null;
+    private static RestTemplate restTemplate;
 
     static {
         factory.setReadTimeout(5000);//单位为ms
         factory.setConnectTimeout(5000);//单位为ms
 
-        restTemplate = new RestTemplate(factory);
-    }
+        //拦截器
+        List<ClientHttpRequestInterceptor> list = new ArrayList<>();
+        list.add(new RetryIntercepter()); //重试拦截器
+        list.add(new HeadersLoggingInterceper()); //header拦截器
 
+        restTemplate = new RestTemplate(factory);
+        restTemplate.setInterceptors(list);
+    }
 
     public static String get(String url) {
         return get(url, new HashMap<>());
@@ -65,7 +75,6 @@ public class RestTemplateUtil {
         }
         return restTemplate.getForObject(url, String.class);
     }
-
 
     public static String post(String url) {
         return post(url, new HashMap<>());
@@ -173,7 +182,6 @@ public class RestTemplateUtil {
 
     }
 
-
     public static String postStream(String url, InputStream is) {
         return postStream(url, is, false);
     }
@@ -233,6 +241,49 @@ public class RestTemplateUtil {
         }
         return restTemplate.postForObject(url, map, String.class);
 
+    }
+
+    /**
+     * <p>重试拦截器</p>
+     */
+    private static class RetryIntercepter implements ClientHttpRequestInterceptor {
+
+        private int maxRetry = 3;//最大重试次数，默认3次
+        private int retryNum = 0;
+
+        public RetryIntercepter() {
+
+        }
+
+        public RetryIntercepter(int maxRetry) {
+            this.maxRetry = maxRetry;
+        }
+
+        @Override
+        public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes, ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
+            ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, bytes);
+            if (!response.getStatusCode().equals(HttpStatus.OK) && retryNum < maxRetry) {
+                retryNum++;
+                response = clientHttpRequestExecution.execute(httpRequest, bytes);
+
+            }
+            return response;
+        }
+    }
+
+    /**
+     * <p>Headers拦截器</p>
+     */
+    private static class HeadersLoggingInterceper implements ClientHttpRequestInterceptor {
+
+        @Override
+        public ClientHttpResponse intercept(HttpRequest httpRequest, byte[] bytes, ClientHttpRequestExecution clientHttpRequestExecution) throws IOException {
+            log.info(String.format("请求地址: %s", httpRequest.getURI()));
+            log.info(String.format("请求头信息: %s", httpRequest.getHeaders()));
+            ClientHttpResponse response = clientHttpRequestExecution.execute(httpRequest, bytes);
+            log.info(String.format("响应头信息: %s", response.getHeaders()));
+            return response;
+        }
     }
 
 
