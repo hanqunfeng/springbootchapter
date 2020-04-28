@@ -71,18 +71,18 @@ public class HttpClientUtil {
 
     /**
      * 异步Http客户端
-    */
+     */
     private static CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
             .setDefaultRequestConfig(requestConfig)
             .build();
 
 
-
     /**
      * <p>异步请求</p>
+     *
+     * @param httpRequestBase
      * @author hanqf
      * 2020/4/22 21:16
-     * @param httpRequestBase
      */
     private static void executeAsync(HttpRequestBase httpRequestBase) {
         httpAsyncClient.start();
@@ -120,6 +120,7 @@ public class HttpClientUtil {
         });
     }
 
+
     /**
      * <p>请求的执行方法，需要提前封装好httpRequestBase对象，如请求url和请求参数</p>
      *
@@ -150,7 +151,9 @@ public class HttpClientUtil {
             log.debug("响应状态为:" + response.getStatusLine());
             long t2 = System.nanoTime();//收到响应的时间
             if (responseEntity != null) {
+
                 responseResult = EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+
                 log.debug("响应内容为:" + responseResult);
 
             }
@@ -174,6 +177,54 @@ public class HttpClientUtil {
 
         }
         return responseResult;
+
+    }
+
+    private static byte[] executeBytes(HttpRequestBase httpRequestBase) {
+        log.info(String.format("请求地址: [%s]", httpRequestBase.getURI().toString()));
+        log.info(String.format("请求类型: [%s]", httpRequestBase.getMethod()));
+        for (Header header : httpRequestBase.getAllHeaders()) {
+            log.info(String.format("请求头信息: [%s]", header.toString()));
+        }
+
+        log.info(String.format("请求参数: [%s]", httpRequestBase.getURI().getQuery()));
+
+        byte[] bytes = null;
+        // 响应模型
+        CloseableHttpResponse response = null;
+        try {
+            // 将上面的配置信息 运用到这个Get请求里
+            httpRequestBase.setConfig(requestConfig);
+            long t1 = System.nanoTime();//请求发起的时间
+            response = httpClient.execute(httpRequestBase);
+            // 从响应模型中获取响应实体
+            HttpEntity responseEntity = response.getEntity();
+            log.debug("响应状态为:" + response.getStatusLine());
+            long t2 = System.nanoTime();//收到响应的时间
+            if (responseEntity != null) {
+                bytes = EntityUtils.toByteArray(responseEntity);
+                log.debug("响应byte长度:" + bytes.length);
+            }
+
+            for (Header header : response.getAllHeaders()) {
+                log.info(String.format("响应头信息: [%s]", header.toString()));
+            }
+            log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
+
+        } catch (Exception e) {
+            log.info("Get responseResult：", e);
+            e.printStackTrace();
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return bytes;
 
     }
 
@@ -214,8 +265,27 @@ public class HttpClientUtil {
             log.info("Get responseResult：", e);
             e.printStackTrace();
         }
-        //executeAsync(httpGet);
         return execute(httpGet);
+    }
+
+    public static byte[] getBytes(String url, Map<String, Object> params) {
+        HttpGet httpGet = null;
+        List<NameValuePair> list = new ArrayList<>();
+        for (String key : params.keySet()) {
+            list.add(new BasicNameValuePair(key, params.get(key).toString()));
+        }
+
+        // 由客户端执行(发送)Get请求
+        try {
+            URI uri = new URIBuilder(url).addParameters(list).build();
+            // 创建Get请求
+            httpGet = new HttpGet(uri);
+
+        } catch (Exception e) {
+            log.info("Get responseResult：", e);
+            e.printStackTrace();
+        }
+        return executeBytes(httpGet);
     }
 
     /**
@@ -255,6 +325,24 @@ public class HttpClientUtil {
         }
 
         return execute(httpPost);
+    }
+
+    public static byte[] postBytes(String url, Map<String, Object> params) {
+        HttpPost httpPost = null;
+        List<NameValuePair> list = new ArrayList<>();
+        for (String key : params.keySet()) {
+            list.add(new BasicNameValuePair(key, params.get(key).toString()));
+        }
+
+        try {
+            URI uri = new URIBuilder(url).addParameters(list).build();
+            httpPost = new HttpPost(uri);
+        } catch (Exception e) {
+            log.info("Get responseResult：", e);
+            e.printStackTrace();
+        }
+
+        return executeBytes(httpPost);
     }
 
     /**
@@ -408,7 +496,7 @@ public class HttpClientUtil {
      * 2020/4/21 22:24
      */
     public static String postInputStream(String url, InputStream is) {
-        return postInputStream(url,is,false);
+        return postInputStream(url, is, false);
     }
 
     /**
@@ -496,5 +584,6 @@ public class HttpClientUtil {
 
         return execute(httpPost);
     }
+
 
 }

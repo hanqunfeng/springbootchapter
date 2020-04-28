@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class AppTest
     static String URL_POST_JSON = URL + "json";
     static String URL_POST_STREAM = URL + "stream";
     static String URL_POST_FILES = URL + "files";
+    static String URL_GET_BYTES = URL + "getBytes";
     static Map<String,Object> map = new HashMap<>();
     static {
         map.put("name","张三");
@@ -40,16 +42,17 @@ public class AppTest
     };
 
     @Test
-    public void getTest()
-    {
+    public void getTest() throws UnsupportedEncodingException {
         System.out.println("get=" + HttpClientUtil.get(URL_GET));
         System.out.println("getParam=" + HttpClientUtil.get(URL_GET,map));
+        System.out.println("getBytes=" + new String(HttpClientUtil.getBytes(URL_GET_BYTES,map),"utf-8"));
     }
 
     @Test
-    public void postTest(){
+    public void postTest() throws UnsupportedEncodingException {
         System.out.println("post=" + HttpClientUtil.post(URL_POST));
         System.out.println("postParam=" + HttpClientUtil.post(URL_POST,map));
+        System.out.println("postParamGetBytes=" + new String(HttpClientUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postForm=" + HttpClientUtil.postForm(URL_POST_FORM,map));
         System.out.println("postJson=" + HttpClientUtil.postJson(URL_POST_JSON,JSON));
         System.out.println("postJsonZip=" + HttpClientUtil.postJson(URL_POST_JSON,JSON,true));

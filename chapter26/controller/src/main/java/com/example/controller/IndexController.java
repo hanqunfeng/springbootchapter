@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +95,13 @@ public class IndexController {
         jsonObject.put("files",jsonArray);
         return jsonObject.toJSONString();
     }
+
+    @RequestMapping("/getBytes")
+    public byte[] getBytes(@RequestParam Map<String, Object> map){
+        JSONObject jsonObject = new JSONObject(map);
+        return jsonObject.toJSONString().getBytes(Charset.forName("utf-8"));
+    }
+
 
 
 }

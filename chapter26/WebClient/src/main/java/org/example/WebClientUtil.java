@@ -104,6 +104,27 @@ public class WebClientUtil {
         return responseResult;
     }
 
+    public static byte[] getBytes(String url, Map<String, Object> map) {
+        if (map.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(url);
+            if (url.contains("?")) {
+                stringBuffer.append("&");
+            } else {
+                stringBuffer.append("?");
+            }
+            for (String key : map.keySet()) {
+                stringBuffer.append(key).append("=").append(map.get(key).toString()).append("&");
+            }
+            url = stringBuffer.toString();
+        }
+        byte[] bytes = null;
+        Mono<byte[]> mono = webClient.get().uri(url).retrieve().bodyToMono(byte[].class);
+        bytes = mono.block();
+
+        return bytes;
+    }
+
     public static String post(String url) {
         return post(url, new HashMap<>());
     }
@@ -127,6 +148,18 @@ public class WebClientUtil {
         responseResult = mono.block();
 
         return responseResult;
+    }
+
+    public static byte[] postBytes(String url, Map<String, Object> params) {
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        if (params != null && params.size() > 0) {
+            map.setAll(params);
+        }
+        byte[] bytes = null;
+        Mono<byte[]> mono = webClient.post().uri(url).bodyValue(map).retrieve().bodyToMono(byte[].class);
+        bytes = mono.block();
+
+        return bytes;
     }
 
     /**

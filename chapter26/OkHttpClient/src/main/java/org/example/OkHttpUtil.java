@@ -84,6 +84,8 @@ public class OkHttpUtil {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 responseResult = response.body().string();
+                //byte[] bytes = response.body().bytes();
+                //responseResult = new String(bytes,"utf-8");
             }
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
@@ -96,6 +98,28 @@ public class OkHttpUtil {
             e.printStackTrace();
         }
         return responseResult;
+
+    }
+
+    private static byte[] executeBytes(Request request) {
+        byte[] bytes = null;
+        try {
+            long t1 = System.nanoTime();//请求发起的时间
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                bytes = response.body().bytes();
+            }
+            long t2 = System.nanoTime();//收到响应的时间
+            Headers headers = response.headers();
+
+            log.info(String.format("响应头信息: [%s]", headers.toString()));
+
+            log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
+        } catch (IOException e) {
+            log.info("Get responseResult：", e);
+            e.printStackTrace();
+        }
+        return bytes;
 
     }
 
@@ -152,6 +176,36 @@ public class OkHttpUtil {
 
     }
 
+    public static byte[] getBytes(String url, Map<String, Object> params) {
+        if (params.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(url);
+            if (url.contains("?")) {
+                stringBuffer.append("&");
+            } else {
+                stringBuffer.append("?");
+            }
+            for (String key : params.keySet()) {
+                stringBuffer.append(key).append("=").append(params.get(key).toString()).append("&");
+            }
+            url = stringBuffer.toString();
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        log.info(String.format("请求地址: [%s]", request.url()));
+        if (params != null && params.size() > 0) {
+            JSONArray jArray = new JSONArray();
+            jArray.add(params);
+            log.info(String.format("请求参数: %s", jArray.toJSONString()));
+        }
+
+        return executeBytes(request);
+
+    }
+
     /**
      * <p>post请求</p>
      *
@@ -195,6 +249,30 @@ public class OkHttpUtil {
         log.info(String.format("请求类型: %s", request.body().contentType().toString()));
 
         return execute(request);
+
+    }
+
+    public static byte[] postBytes(String url, Map<String, Object> params) {
+        //请求头会加入：application/x-www-form-urlencoded
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : params.keySet()) {
+            builder.add(key, params.get(key).toString());
+        }
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        log.info(String.format("请求地址: [%s]", request.url()));
+        if (params != null && params.size() > 0) {
+            JSONArray jArray = new JSONArray();
+            jArray.add(params);
+            log.info(String.format("请求参数: %s", jArray.toJSONString()));
+        }
+        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+
+        return executeBytes(request);
 
     }
 

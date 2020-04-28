@@ -76,6 +76,23 @@ public class RestTemplateUtil {
         return restTemplate.getForObject(url, String.class);
     }
 
+    public static byte[] getBytes(String url, Map<String, Object> map) {
+        if (map.size() > 0) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(url);
+            if (url.contains("?")) {
+                stringBuffer.append("&");
+            } else {
+                stringBuffer.append("?");
+            }
+            for (String key : map.keySet()) {
+                stringBuffer.append(key).append("=").append(map.get(key).toString()).append("&");
+            }
+            url = stringBuffer.toString();
+        }
+        return restTemplate.getForObject(url, byte[].class);
+    }
+
     public static String post(String url) {
         return post(url, new HashMap<>());
     }
@@ -100,6 +117,19 @@ public class RestTemplateUtil {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
         return restTemplate.postForObject(url, httpEntity, String.class);
+    }
+
+    public static byte[] postBytes(String url, Map<String, Object> params) {
+
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+        if (params != null && params.size() > 0) {
+            map.setAll(params);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
+        return restTemplate.postForObject(url, httpEntity, byte[].class);
     }
 
     public static String postJson(String url, String json) {
