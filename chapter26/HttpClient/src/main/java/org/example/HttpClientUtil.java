@@ -92,6 +92,14 @@ public class HttpClientUtil {
             public void completed(HttpResponse httpResponse) {
                 log.info(" callback thread id is : " + Thread.currentThread().getId());
                 log.info(httpRequestBase.getRequestLine() + "->" + httpResponse.getStatusLine());
+
+                StringBuffer stringBuffer = new StringBuffer();
+                for (Header header : httpRequestBase.getAllHeaders()) {
+                    stringBuffer.append(header.toString()).append(",");
+                }
+                log.info(String.format("请求头信息: [%s]", stringBuffer.toString()));
+
+
                 String responseResult = null;
                 HttpEntity responseEntity = httpResponse.getEntity();
                 log.debug("响应状态为:" + httpResponse.getStatusLine());
@@ -101,9 +109,13 @@ public class HttpClientUtil {
 
                 }
 
+                stringBuffer = new StringBuffer();
                 for (Header header : httpResponse.getAllHeaders()) {
-                    log.info(String.format("响应头信息: [%s]", header.toString()));
+                    stringBuffer.append(header.toString()).append(",");
                 }
+                log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
+
+
             }
 
             @Override
@@ -132,9 +144,13 @@ public class HttpClientUtil {
     private static String execute(HttpRequestBase httpRequestBase) {
         log.info(String.format("请求地址: [%s]", httpRequestBase.getURI().toString()));
         log.info(String.format("请求类型: [%s]", httpRequestBase.getMethod()));
+
+        StringBuffer stringBuffer = new StringBuffer();
         for (Header header : httpRequestBase.getAllHeaders()) {
-            log.info(String.format("请求头信息: [%s]", header.toString()));
+            stringBuffer.append(header.toString()).append(",");
         }
+        log.info(String.format("请求头信息: [%s]", stringBuffer.toString()));
+
 
         log.info(String.format("请求参数: [%s]", httpRequestBase.getURI().getQuery()));
 
@@ -158,9 +174,12 @@ public class HttpClientUtil {
 
             }
 
+            stringBuffer = new StringBuffer();
             for (Header header : response.getAllHeaders()) {
-                log.info(String.format("响应头信息: [%s]", header.toString()));
+                stringBuffer.append(header.toString()).append(",");
             }
+            log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
+
             log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
 
         } catch (Exception e) {
@@ -183,9 +202,12 @@ public class HttpClientUtil {
     private static byte[] executeBytes(HttpRequestBase httpRequestBase) {
         log.info(String.format("请求地址: [%s]", httpRequestBase.getURI().toString()));
         log.info(String.format("请求类型: [%s]", httpRequestBase.getMethod()));
+        StringBuffer stringBuffer = new StringBuffer();
         for (Header header : httpRequestBase.getAllHeaders()) {
-            log.info(String.format("请求头信息: [%s]", header.toString()));
+            stringBuffer.append(header.toString()).append(",");
         }
+        log.info(String.format("请求头信息: [%s]", stringBuffer.toString()));
+
 
         log.info(String.format("请求参数: [%s]", httpRequestBase.getURI().getQuery()));
 
