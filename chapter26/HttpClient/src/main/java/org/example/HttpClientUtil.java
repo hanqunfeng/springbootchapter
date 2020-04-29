@@ -199,6 +199,14 @@ public class HttpClientUtil {
 
     }
 
+    /**
+     * <p>请求的执行方法，需要提前封装好httpRequestBase对象，如请求url和请求参数</p>
+     *
+     * @param httpRequestBase
+     * @return byte[]
+     * @author hanqf
+     * 2020/4/29 13:33
+     */
     private static byte[] executeBytes(HttpRequestBase httpRequestBase) {
         log.info(String.format("请求地址: [%s]", httpRequestBase.getURI().toString()));
         log.info(String.format("请求类型: [%s]", httpRequestBase.getMethod()));
@@ -293,6 +301,15 @@ public class HttpClientUtil {
         return execute(httpGet);
     }
 
+    /**
+     * <p>get请求，返回字节数组</p>
+     *
+     * @param url
+     * @param params
+     * @return byte[]
+     * @author hanqf
+     * 2020/4/29 13:35
+     */
     public static byte[] getBytes(String url, Map<String, Object> params) {
         HttpGet httpGet = null;
         List<NameValuePair> list = new ArrayList<>();
@@ -352,6 +369,15 @@ public class HttpClientUtil {
         return execute(httpPost);
     }
 
+    /**
+     * <p>post请求，返回字节数组</p>
+     *
+     * @param url
+     * @param params
+     * @return byte[]
+     * @author hanqf
+     * 2020/4/29 13:35
+     */
     public static byte[] postBytes(String url, Map<String, Object> params) {
         HttpPost httpPost = null;
         List<NameValuePair> list = new ArrayList<>();
