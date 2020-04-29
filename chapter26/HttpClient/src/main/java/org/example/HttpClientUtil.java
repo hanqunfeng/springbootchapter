@@ -228,9 +228,12 @@ public class HttpClientUtil {
                 log.debug("响应byte长度:" + bytes.length);
             }
 
+            stringBuffer = new StringBuffer();
             for (Header header : response.getAllHeaders()) {
-                log.info(String.format("响应头信息: [%s]", header.toString()));
+                stringBuffer.append(header.toString()).append(",");
             }
+            log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
+
             log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
 
         } catch (Exception e) {
