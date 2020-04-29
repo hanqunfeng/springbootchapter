@@ -63,7 +63,11 @@ public class OkHttpUtil {
                     responseResult = response.body().string();
                 }
                 Headers headers = response.headers();
-                log.info(String.format("响应头信息: [%s]", headers.toString()));
+                StringBuffer stringBuffer = new StringBuffer();
+                for(int i=0;i<headers.size();i++){
+                    stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
+                }
+                log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
                 log.info(String.format("响应结果：%s",responseResult));
             }
         });
@@ -90,7 +94,11 @@ public class OkHttpUtil {
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
 
-            log.info(String.format("响应头信息: [%s]", headers.toString()));
+            StringBuffer stringBuffer = new StringBuffer();
+            for(int i=0;i<headers.size();i++){
+                stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
+            }
+            log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
 
             log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
         } catch (IOException e) {
@@ -111,8 +119,11 @@ public class OkHttpUtil {
             }
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
-
-            log.info(String.format("响应头信息: [%s]", headers.toString()));
+            StringBuffer stringBuffer = new StringBuffer();
+            for(int i=0;i<headers.size();i++){
+                stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
+            }
+            log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
 
             log.info(String.format("执行时间: [%.1fms]", (t2 - t1) / 1e6d));
         } catch (IOException e) {
@@ -498,7 +509,12 @@ public class OkHttpUtil {
         @Override
         public Response intercept(@NotNull Chain chain) throws IOException {
             Request request = chain.request();
-            log.info(String.format("请求头信息: %s", request.headers().toString()));
+            Headers headers = request.headers();
+            StringBuffer stringBuffer = new StringBuffer();
+            for(int i=0;i<headers.size();i++){
+                stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
+            }
+            log.info(String.format("请求头信息: [%s]", stringBuffer.toString()));
             return chain.proceed(request);
         }
     }
