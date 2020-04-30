@@ -54,7 +54,6 @@ public class AppTest
     public void postTest() throws UnsupportedEncodingException {
         System.out.println("post=" + WebClientUtil.post(URL_POST));
         System.out.println("postParam=" + WebClientUtil.post(URL_POST,map));
-        System.out.println("postParamGetBytes=" + new String(WebClientUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postForm=" + WebClientUtil.postForm(URL_POST_FORM,map));
         System.out.println("postJson=" + WebClientUtil.postJson(URL_POST_JSON,JSON));
         System.out.println("postJsonZip=" + WebClientUtil.postJson(URL_POST_STREAM,JSON,true));
@@ -65,6 +64,7 @@ public class AppTest
         System.out.println("postFiles=" + WebClientUtil.postFiles(URL_POST_FILES,files));
         System.out.println("postFiles=" + WebClientUtil.postFiles(URL_POST_FILES,map,files));
 
+        System.out.println("postParamGetBytes=" + new String(WebClientUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postParamGetBytesZip=" + new String(WebClientUtil.postBytes(URL_GET_BYTES_ZIP,map),"utf-8"));
     }
 }

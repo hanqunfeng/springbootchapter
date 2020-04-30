@@ -52,23 +52,16 @@ public class AppTest {
     public void post() throws UnsupportedEncodingException {
         System.out.println("post=" + RestTemplateUtil.post(URL_POST));
         System.out.println("postParam=" + RestTemplateUtil.post(URL_POST_FORM, map));
-        System.out.println("postParamGetBytes=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
-
         System.out.println("postJson=" + RestTemplateUtil.postJson(URL_POST_JSON, JSON));
-        //注意这里一定要发给流处理连接，压缩之后都是流
         System.out.println("postJsonZip=" + RestTemplateUtil.postJson(URL_POST_STREAM, JSON, true));
-
         System.out.println("postBytes=" + RestTemplateUtil.postBytes(URL_POST_STREAM, BYTES));
         System.out.println("postBytesZip=" + RestTemplateUtil.postBytes(URL_POST_STREAM, BYTES, true));
-
         System.out.println("postStream=" + RestTemplateUtil.postStream(URL_POST_STREAM, INPUTSTREAM));
         System.out.println("postStreamZip=" + RestTemplateUtil.postStream(URL_POST_STREAM, INPUTSTREAM2, true));
-
-
         System.out.println("postFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, files));
         System.out.println("postParamFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, map, files));
 
-
+        System.out.println("postParamGetBytes=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postParamGetBytesZip=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES_ZIP, map), "utf-8"));
 
     }

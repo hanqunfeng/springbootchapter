@@ -189,7 +189,6 @@ public class WebClientUtil {
             map.setAll(params);
         }
         byte[] bytes = null;
-
         Mono<ClientResponse> exchange = webClient.post().uri(url).bodyValue(map).exchange();
         ClientResponse response = exchange.block();
         if (response.statusCode() == HttpStatus.OK) {

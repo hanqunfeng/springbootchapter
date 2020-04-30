@@ -53,13 +53,14 @@ public class AppTest
     public void postTest() throws UnsupportedEncodingException {
         System.out.println("post=" + OkHttpUtil.post(URL_POST));
         System.out.println("postParam=" + OkHttpUtil.post(URL_POST,map));
-        System.out.println("postParamGetBytes=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postForm=" + OkHttpUtil.post(URL_POST_FORM,map));
         System.out.println("postJson=" + OkHttpUtil.post(URL_POST_JSON,JSON));
         System.out.println("postBytes=" + OkHttpUtil.post(URL_POST_STREAM,BYTES));
         System.out.println("postStream=" + OkHttpUtil.post(URL_POST_STREAM,INPUTSTREAM));
+        System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES,files));
         System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES,map,files));
 
+        System.out.println("postParamGetBytes=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
         System.out.println("postParamGetBytesZip=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES_ZIP, map), "utf-8"));
 
     }
