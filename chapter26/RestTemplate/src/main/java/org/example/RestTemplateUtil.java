@@ -11,15 +11,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -90,7 +88,41 @@ public class RestTemplateUtil {
             }
             url = stringBuffer.toString();
         }
-        return restTemplate.getForObject(url, byte[].class);
+        //return restTemplate.getForObject(url, byte[].class);
+        ResponseEntity<byte[]> exchange = restTemplate.exchange(url, HttpMethod.GET,null, byte[].class);
+        byte[] bytes = exchange.getBody();
+
+
+        //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+        List<String> strings = exchange.getHeaders().get("Content-Encoding");
+        if ( strings !=null && strings.contains("gzip")) {
+            GZIPInputStream gzipInputStream = null;
+            ByteArrayOutputStream out = null;
+            try {
+                gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                out = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int offset = -1;
+                while ((offset = gzipInputStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, offset);
+                }
+                bytes = out.toByteArray();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    gzipInputStream.close();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+
+        return bytes;
+
     }
 
     public static String post(String url) {
@@ -129,7 +161,41 @@ public class RestTemplateUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-        return restTemplate.postForObject(url, httpEntity, byte[].class);
+        //byte[] bytes = restTemplate.postForObject(url, httpEntity, byte[].class);
+
+        ResponseEntity<byte[]> exchange = restTemplate.exchange(url, HttpMethod.POST, httpEntity, byte[].class);
+        byte[] bytes = exchange.getBody();
+
+
+        //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+        List<String> strings = exchange.getHeaders().get("Content-Encoding");
+        if ( strings !=null && strings.contains("gzip")) {
+            GZIPInputStream gzipInputStream = null;
+            ByteArrayOutputStream out = null;
+            try {
+                gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                out = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int offset = -1;
+                while ((offset = gzipInputStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, offset);
+                }
+                bytes = out.toByteArray();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    gzipInputStream.close();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+
+        return bytes;
     }
 
     public static String postJson(String url, String json) {

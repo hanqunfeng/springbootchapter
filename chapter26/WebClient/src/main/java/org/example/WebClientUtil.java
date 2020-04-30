@@ -5,6 +5,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -18,13 +19,13 @@ import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.resources.LoopResources;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -119,8 +120,40 @@ public class WebClientUtil {
             url = stringBuffer.toString();
         }
         byte[] bytes = null;
-        Mono<byte[]> mono = webClient.get().uri(url).retrieve().bodyToMono(byte[].class);
-        bytes = mono.block();
+        Mono<ClientResponse> exchange = webClient.get().uri(url).exchange();
+        ClientResponse response = exchange.block();
+        if (response.statusCode() == HttpStatus.OK) {
+            Mono<byte[]> mono =  response.bodyToMono(byte[].class);
+            bytes = mono.block();
+
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+            List<String> header = response.headers().header("Content-Encoding");
+            if ( header !=null && header.contains("gzip")) {
+                GZIPInputStream gzipInputStream = null;
+                ByteArrayOutputStream out = null;
+                try {
+                    gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                    out = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int offset = -1;
+                    while ((offset = gzipInputStream.read(buffer)) != -1) {
+                        out.write(buffer, 0, offset);
+                    }
+                    bytes = out.toByteArray();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        gzipInputStream.close();
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+        }
 
         return bytes;
     }
@@ -156,8 +189,42 @@ public class WebClientUtil {
             map.setAll(params);
         }
         byte[] bytes = null;
-        Mono<byte[]> mono = webClient.post().uri(url).bodyValue(map).retrieve().bodyToMono(byte[].class);
-        bytes = mono.block();
+
+        Mono<ClientResponse> exchange = webClient.post().uri(url).bodyValue(map).exchange();
+        ClientResponse response = exchange.block();
+        if (response.statusCode() == HttpStatus.OK) {
+            Mono<byte[]> mono =  response.bodyToMono(byte[].class);
+            bytes = mono.block();
+
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+            List<String> header = response.headers().header("Content-Encoding");
+            if ( header !=null && header.contains("gzip")) {
+                GZIPInputStream gzipInputStream = null;
+                ByteArrayOutputStream out = null;
+                try {
+                    gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                    out = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int offset = -1;
+                    while ((offset = gzipInputStream.read(buffer)) != -1) {
+                        out.write(buffer, 0, offset);
+                    }
+                    bytes = out.toByteArray();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        gzipInputStream.close();
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+        }
+
 
         return bytes;
     }

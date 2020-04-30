@@ -9,14 +9,12 @@ import okio.GzipSink;
 import okio.Okio;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 /**
  * <p>OkHttp工具类</p>
@@ -116,6 +114,35 @@ public class OkHttpUtil {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 bytes = response.body().bytes();
+
+                //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+                String responseHeader = response.header("Content-Encoding");
+                if (responseHeader != null && responseHeader.indexOf("gzip") != -1) {
+                    GZIPInputStream gzipInputStream = null;
+                    ByteArrayOutputStream out = null;
+                    try {
+                        gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                        out = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int offset = -1;
+                        while ((offset = gzipInputStream.read(buffer)) != -1) {
+                            out.write(buffer, 0, offset);
+                        }
+                        bytes = out.toByteArray();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            gzipInputStream.close();
+                            out.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+
             }
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();

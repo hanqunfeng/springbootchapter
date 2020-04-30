@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 
@@ -124,6 +125,35 @@ public class HttpUtil {
             log.debug("响应状态为:" + httpMethodBase.getStatusLine());
             long t2 = System.nanoTime();//收到响应的时间
             bytes = httpMethodBase.getResponseBody();
+
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+            Header responseHeader = httpMethodBase.getResponseHeader("Content-Encoding");
+            if (responseHeader != null && responseHeader.getValue().indexOf("gzip") != -1) {
+                GZIPInputStream gzipInputStream = null;
+                ByteArrayOutputStream out = null;
+                try {
+                    gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                    out = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int offset = -1;
+                    while ((offset = gzipInputStream.read(buffer)) != -1) {
+                        out.write(buffer, 0, offset);
+                    }
+                    bytes = out.toByteArray();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        gzipInputStream.close();
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+
             log.debug("响应内容字节数组长度:" + bytes.length);
 
             stringBuffer = new StringBuffer();

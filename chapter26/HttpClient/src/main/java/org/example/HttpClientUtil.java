@@ -26,10 +26,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -38,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -233,6 +231,35 @@ public class HttpClientUtil {
             long t2 = System.nanoTime();//收到响应的时间
             if (responseEntity != null) {
                 bytes = EntityUtils.toByteArray(responseEntity);
+
+                //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
+                Header responseHeader = response.getFirstHeader("Content-Encoding");
+                if (responseHeader != null && responseHeader.getValue().indexOf("gzip") != -1) {
+                    GZIPInputStream gzipInputStream = null;
+                    ByteArrayOutputStream out = null;
+                    try {
+                        gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                        out = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int offset = -1;
+                        while ((offset = gzipInputStream.read(buffer)) != -1) {
+                            out.write(buffer, 0, offset);
+                        }
+                        bytes = out.toByteArray();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            gzipInputStream.close();
+                            out.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                //判断是否需要解压，即服务器返回是否经过了gzip压缩--end
+
                 log.debug("响应byte长度:" + bytes.length);
             }
 

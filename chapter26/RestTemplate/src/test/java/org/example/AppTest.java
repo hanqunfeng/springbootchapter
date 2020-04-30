@@ -22,6 +22,7 @@ public class AppTest {
     static String URL_POST_STREAM = URL + "stream";
     static String URL_POST_FILES = URL + "files";
     static String URL_GET_BYTES = URL + "getBytes";
+    static String URL_GET_BYTES_ZIP = URL + "getBytesZip";
     static Map<String, Object> map = new HashMap<>();
     static String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
     static byte[] BYTES = JSON.getBytes(Charset.forName("UTF-8"));
@@ -44,6 +45,7 @@ public class AppTest {
         System.out.println("get=" + RestTemplateUtil.get(URL_GET));
         System.out.println("getParam=" + RestTemplateUtil.get(URL_GET, map));
         System.out.println("getBytes=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES,map),"utf-8"));
+        System.out.println("getBytesZip=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES_ZIP,map),"utf-8"));
     }
 
     @Test
@@ -65,6 +67,10 @@ public class AppTest {
 
         System.out.println("postFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, files));
         System.out.println("postParamFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, map, files));
+
+
+        System.out.println("postParamGetBytesZip=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES_ZIP, map), "utf-8"));
+
     }
 
 

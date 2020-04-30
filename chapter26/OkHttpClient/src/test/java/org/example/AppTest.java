@@ -23,6 +23,7 @@ public class AppTest
     static String URL_POST_STREAM = URL + "stream";
     static String URL_POST_FILES = URL + "files";
     static String URL_GET_BYTES = URL + "getBytes";
+    static String URL_GET_BYTES_ZIP = URL + "getBytesZip";
     static Map<String,Object> map = new HashMap<>();
     static {
         map.put("name","张三");
@@ -45,6 +46,7 @@ public class AppTest
         System.out.println("get=" + OkHttpUtil.get(URL_GET));
         System.out.println("getParam=" + OkHttpUtil.get(URL_GET,map));
         System.out.println("getBytes=" + new String(OkHttpUtil.getBytes(URL_GET_BYTES,map),"utf-8"));
+        System.out.println("getBytesZip=" + new String(OkHttpUtil.getBytes(URL_GET_BYTES_ZIP,map),"utf-8"));
     }
 
     @Test
@@ -57,5 +59,8 @@ public class AppTest
         System.out.println("postBytes=" + OkHttpUtil.post(URL_POST_STREAM,BYTES));
         System.out.println("postStream=" + OkHttpUtil.post(URL_POST_STREAM,INPUTSTREAM));
         System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES,map,files));
+
+        System.out.println("postParamGetBytesZip=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES_ZIP, map), "utf-8"));
+
     }
 }

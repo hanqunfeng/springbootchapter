@@ -5,14 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * <p>服务端模拟</p>
@@ -100,6 +100,22 @@ public class IndexController {
     public byte[] getBytes(@RequestParam Map<String, Object> map){
         JSONObject jsonObject = new JSONObject(map);
         return jsonObject.toJSONString().getBytes(Charset.forName("utf-8"));
+    }
+
+    @RequestMapping("/getBytesZip")
+    public byte[] getBytesZip(@RequestParam Map<String, Object> map, HttpServletResponse response) throws IOException {
+        JSONObject jsonObject = new JSONObject(map);
+        byte[] bytes = jsonObject.toJSONString().getBytes(Charset.forName("utf-8"));
+        //压缩
+        response.addHeader("Content-Encoding", "gzip");
+        ByteArrayOutputStream originalContent = new ByteArrayOutputStream();
+        originalContent.write(bytes);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        GZIPOutputStream gzipOut = new GZIPOutputStream(baos);
+        originalContent.writeTo(gzipOut);
+        gzipOut.finish();
+        //返回压缩后的字节数组
+        return baos.toByteArray();
     }
 
 
