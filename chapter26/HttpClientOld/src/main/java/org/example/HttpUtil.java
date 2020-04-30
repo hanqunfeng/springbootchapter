@@ -117,6 +117,8 @@ public class HttpUtil {
         try {
             //允许客户端或服务器中任何一方关闭底层的连接双方都会要求在处理请求后关闭它们的TCP连接
             httpMethodBase.setRequestHeader("Connection", "close");
+            //重试机制，默认3次
+            httpMethodBase.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
             long t1 = System.nanoTime();//请求发起的时间
             client.executeMethod(httpMethodBase);
             log.debug("响应状态为:" + httpMethodBase.getStatusLine());
