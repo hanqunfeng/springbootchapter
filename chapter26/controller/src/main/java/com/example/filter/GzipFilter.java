@@ -20,7 +20,7 @@ public class GzipFilter implements Filter {
     public static final Logger LOGGER = LoggerFactory.getLogger(GzipFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
@@ -39,7 +39,7 @@ public class GzipFilter implements Filter {
      * <p>解压缩封装类</p>
      * Created by hanqf on 2020/4/21 21:18.
      */
-    private class GzipRequestWrapper extends HttpServletRequestWrapper {
+    private static class GzipRequestWrapper extends HttpServletRequestWrapper {
 
         private HttpServletRequest request;
 
@@ -53,11 +53,11 @@ public class GzipFilter implements Filter {
             ServletInputStream stream = request.getInputStream();
             String contentEncoding = request.getHeader("Content-Encoding");
             // 如果对内容进行了压缩，则解压
-            if (null != contentEncoding && contentEncoding.indexOf("gzip") != -1) {
+            if (null != contentEncoding && contentEncoding.contains("gzip")) {
                 try {
                     final GZIPInputStream gzipInputStream = new GZIPInputStream(stream);
 
-                    ServletInputStream newStream = new ServletInputStream() {
+                    return new ServletInputStream() {
 
                         @Override
                         public boolean isFinished() {
@@ -79,7 +79,6 @@ public class GzipFilter implements Filter {
                             return gzipInputStream.read();
                         }
                     };
-                    return newStream;
                 } catch (Exception e) {
                     LOGGER.debug("ungzip content fail.", e);
                 }

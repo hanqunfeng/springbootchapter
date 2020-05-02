@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -58,7 +58,7 @@ public class IndexController {
 
     @PostMapping("/stream")
     public String inputStream(InputStream is) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         String line;
         try {
@@ -78,11 +78,11 @@ public class IndexController {
         jsonObject.put("map",jsonObjectMap);
 
         JSONArray jsonArray = new JSONArray();
-        JSONObject js = null;
+        JSONObject js;
         try {
             for (MultipartFile file : multipartFileList) {
                 js = new JSONObject();
-                js.put("fileName", URLDecoder.decode(file.getOriginalFilename(), "utf-8"));
+                js.put("fileName", URLDecoder.decode(Objects.requireNonNull(file.getOriginalFilename()), "utf-8"));
                 js.put("fileSize", file.getSize());
                 js.put("fileContentType", file.getContentType());
                 jsonArray.add(js);
@@ -99,13 +99,13 @@ public class IndexController {
     @RequestMapping("/getBytes")
     public byte[] getBytes(@RequestParam Map<String, Object> map){
         JSONObject jsonObject = new JSONObject(map);
-        return jsonObject.toJSONString().getBytes(Charset.forName("utf-8"));
+        return jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8);
     }
 
     @RequestMapping("/getBytesZip")
     public byte[] getBytesZip(@RequestParam Map<String, Object> map, HttpServletResponse response) throws IOException {
         JSONObject jsonObject = new JSONObject(map);
-        byte[] bytes = jsonObject.toJSONString().getBytes(Charset.forName("utf-8"));
+        byte[] bytes = jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8);
         //压缩
         response.addHeader("Content-Encoding", "gzip");
         ByteArrayOutputStream originalContent = new ByteArrayOutputStream();

@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -43,8 +43,8 @@ public class RestTemplateUtil {
      * 2020/4/22 16:57
      */
     public String get(String url, Map<String, Object> map) {
-        if (map.size() > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+        if (map != null && map.size() > 0) {
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(url);
             if (url.contains("?")) {
                 stringBuffer.append("&");
@@ -107,7 +107,7 @@ public class RestTemplateUtil {
 
             headers.add("Content-Encoding", "gzip");
             ByteArrayOutputStream originalContent = new ByteArrayOutputStream();
-            originalContent.write(json.getBytes("utf-8"));
+            originalContent.write(json.getBytes(StandardCharsets.UTF_8));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             GZIPOutputStream gzipOut = new GZIPOutputStream(baos);
             originalContent.writeTo(gzipOut);
@@ -116,7 +116,7 @@ public class RestTemplateUtil {
             HttpEntity<byte[]> httpEntity = new HttpEntity<>(baos.toByteArray(), headers);
             return restTemplate.postForObject(url, httpEntity, String.class);
         } else {
-            headers.setContentType(new MediaType("application", "json", Charset.forName("utf-8")));
+            headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
             //headers.add("Content-Type", "application/json;charset=utf8");
             HttpEntity<String> httpEntity = new HttpEntity<>(json, headers);
             return restTemplate.postForObject(url, httpEntity, String.class);
@@ -124,7 +124,7 @@ public class RestTemplateUtil {
     }
 
     public String postBytes(String url, byte[] bytes) throws IOException {
-        return postBytes(url,bytes,false);
+        return postBytes(url, bytes, false);
     }
 
     /**
