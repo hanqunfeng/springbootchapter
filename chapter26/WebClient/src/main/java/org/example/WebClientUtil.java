@@ -36,14 +36,14 @@ import java.util.zip.GZIPOutputStream;
 @Slf4j
 public class WebClientUtil {
 
-    private static final ReactorResourceFactory factory = new ReactorResourceFactory();
+    private static final ReactorResourceFactory REACTOR_RESOURCE_FACTORY = new ReactorResourceFactory();
 
-    private static final WebClient webClient;
+    private static final WebClient WEB_CLIENT;
 
     static {
-        factory.setUseGlobalResources(false);
-        factory.setConnectionProvider(ConnectionProvider.create("httpClient", 50));
-        factory.setLoopResources(LoopResources.create("httpClient", 50, true));
+        REACTOR_RESOURCE_FACTORY.setUseGlobalResources(false);
+        REACTOR_RESOURCE_FACTORY.setConnectionProvider(ConnectionProvider.create("httpClient", 50));
+        REACTOR_RESOURCE_FACTORY.setLoopResources(LoopResources.create("httpClient", 50, true));
 
         Function<HttpClient, HttpClient> mapper = client ->
                 client.tcpConfiguration(c ->
@@ -55,9 +55,9 @@ public class WebClientUtil {
                                 }));
 
         ClientHttpConnector connector =
-                new ReactorClientHttpConnector(factory, mapper);
+                new ReactorClientHttpConnector(REACTOR_RESOURCE_FACTORY, mapper);
 
-        webClient = WebClient.builder()
+        WEB_CLIENT = WebClient.builder()
                 .filter((request, next) -> {  //过滤器，3次重试，header打印
                     log.info(String.format("请求地址: %s", request.url()));
                     log.info(String.format("请求头信息: %s", request.headers()));
@@ -99,7 +99,7 @@ public class WebClientUtil {
             url = stringBuffer.toString();
         }
         String responseResult = null;
-        Mono<String> mono = webClient.get().uri(url).retrieve().bodyToMono(String.class);
+        Mono<String> mono = WEB_CLIENT.get().uri(url).retrieve().bodyToMono(String.class);
         responseResult = mono.block();
 
         return responseResult;
@@ -120,7 +120,7 @@ public class WebClientUtil {
             url = stringBuffer.toString();
         }
         byte[] bytes = null;
-        Mono<ClientResponse> exchange = webClient.get().uri(url).exchange();
+        Mono<ClientResponse> exchange = WEB_CLIENT.get().uri(url).exchange();
         ClientResponse response = exchange.block();
         if (response.statusCode() == HttpStatus.OK) {
             Mono<byte[]> mono =  response.bodyToMono(byte[].class);
@@ -177,7 +177,7 @@ public class WebClientUtil {
             map.setAll(params);
         }
         String responseResult = null;
-        Mono<String> mono = webClient.post().uri(url).bodyValue(map).retrieve().bodyToMono(String.class);
+        Mono<String> mono = WEB_CLIENT.post().uri(url).bodyValue(map).retrieve().bodyToMono(String.class);
         responseResult = mono.block();
 
         return responseResult;
@@ -189,7 +189,7 @@ public class WebClientUtil {
             map.setAll(params);
         }
         byte[] bytes = null;
-        Mono<ClientResponse> exchange = webClient.post().uri(url).bodyValue(map).exchange();
+        Mono<ClientResponse> exchange = WEB_CLIENT.post().uri(url).bodyValue(map).exchange();
         ClientResponse response = exchange.block();
         if (response.statusCode() == HttpStatus.OK) {
             Mono<byte[]> mono =  response.bodyToMono(byte[].class);
@@ -245,7 +245,7 @@ public class WebClientUtil {
             }
         }
         String responseResult;
-        Mono<String> mono = webClient.post().uri(url).contentType(MediaType.APPLICATION_FORM_URLENCODED).bodyValue(map).retrieve().bodyToMono(String.class);
+        Mono<String> mono = WEB_CLIENT.post().uri(url).contentType(MediaType.APPLICATION_FORM_URLENCODED).bodyValue(map).retrieve().bodyToMono(String.class);
         responseResult = mono.block();
 
         return responseResult;
@@ -272,7 +272,7 @@ public class WebClientUtil {
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             return postBytes(url, bytes, true);
         } else {
-            Mono<String> mono = webClient.post().uri(url).contentType(MediaType.APPLICATION_JSON).bodyValue(json).retrieve().bodyToMono(String.class);
+            Mono<String> mono = WEB_CLIENT.post().uri(url).contentType(MediaType.APPLICATION_JSON).bodyValue(json).retrieve().bodyToMono(String.class);
             responseResult = mono.block();
         }
 
@@ -296,7 +296,7 @@ public class WebClientUtil {
     public static String postBytes(String url, byte[] bytes, boolean gzip) {
         String responseResult;
         Mono<String> mono = null;
-        WebClient.RequestBodySpec requestBodySpec = webClient.post().uri(url).contentType(MediaType.APPLICATION_OCTET_STREAM);
+        WebClient.RequestBodySpec requestBodySpec = WEB_CLIENT.post().uri(url).contentType(MediaType.APPLICATION_OCTET_STREAM);
         if (gzip) {
             try {
                 //headers.add("Content-Encoding", "gzip");
@@ -379,7 +379,7 @@ public class WebClientUtil {
         for (File file : files) {
             map.add("files", new FileSystemResource(file));
         }
-        Mono<String> mono = webClient.post().uri(url).contentType(MediaType.MULTIPART_FORM_DATA).bodyValue(map).retrieve().bodyToMono(String.class);
+        Mono<String> mono = WEB_CLIENT.post().uri(url).contentType(MediaType.MULTIPART_FORM_DATA).bodyValue(map).retrieve().bodyToMono(String.class);
         responseResult = mono.block();
 
         return responseResult;
