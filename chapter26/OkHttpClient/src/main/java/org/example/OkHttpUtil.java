@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
@@ -27,7 +28,7 @@ public class OkHttpUtil {
     /**
      * 获得OkHttpClient客户端
      */
-    private static OkHttpClient client = new OkHttpClient.Builder()
+    private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(5L, TimeUnit.SECONDS) //连接超时时间，5秒
             .readTimeout(5L, TimeUnit.SECONDS) //读超时时间，5秒
             .writeTimeout(5L, TimeUnit.SECONDS) //写超时时间，5秒
@@ -58,10 +59,10 @@ public class OkHttpUtil {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseResult = null;
                 if (response.isSuccessful()) {
-                    responseResult = response.body().string();
+                    responseResult = Objects.requireNonNull(response.body()).string();
                 }
                 Headers headers = response.headers();
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuffer = new StringBuilder();
                 for(int i=0;i<headers.size();i++){
                     stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
                 }
@@ -85,14 +86,14 @@ public class OkHttpUtil {
             long t1 = System.nanoTime();//请求发起的时间
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                responseResult = response.body().string();
+                responseResult = Objects.requireNonNull(response.body()).string();
                 //byte[] bytes = response.body().bytes();
                 //responseResult = new String(bytes,"utf-8");
             }
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
 
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             for(int i=0;i<headers.size();i++){
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }
@@ -113,11 +114,11 @@ public class OkHttpUtil {
             long t1 = System.nanoTime();//请求发起的时间
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                bytes = response.body().bytes();
+                bytes = Objects.requireNonNull(response.body()).bytes();
 
                 //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
                 String responseHeader = response.header("Content-Encoding");
-                if (responseHeader != null && responseHeader.indexOf("gzip") != -1) {
+                if (responseHeader != null && responseHeader.contains("gzip")) {
                     GZIPInputStream gzipInputStream = null;
                     ByteArrayOutputStream out = null;
                     try {
@@ -146,7 +147,7 @@ public class OkHttpUtil {
             }
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             for(int i=0;i<headers.size();i++){
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }
@@ -185,7 +186,7 @@ public class OkHttpUtil {
      */
     public static String get(String url, Map<String, Object> params) {
         if (params.size() > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(url);
             if (url.contains("?")) {
                 stringBuffer.append("&");
@@ -203,7 +204,7 @@ public class OkHttpUtil {
                 .get()
                 .build();
         log.info(String.format("请求地址: [%s]", request.url()));
-        if (params != null && params.size() > 0) {
+        if (params.size() > 0) {
             JSONArray jArray = new JSONArray();
             jArray.add(params);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
@@ -216,7 +217,7 @@ public class OkHttpUtil {
 
     public static byte[] getBytes(String url, Map<String, Object> params) {
         if (params.size() > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(url);
             if (url.contains("?")) {
                 stringBuffer.append("&");
@@ -234,7 +235,7 @@ public class OkHttpUtil {
                 .get()
                 .build();
         log.info(String.format("请求地址: [%s]", request.url()));
-        if (params != null && params.size() > 0) {
+        if (params.size() > 0) {
             JSONArray jArray = new JSONArray();
             jArray.add(params);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
@@ -279,12 +280,12 @@ public class OkHttpUtil {
                 .build();
 
         log.info(String.format("请求地址: [%s]", request.url()));
-        if (params != null && params.size() > 0) {
+        if (params.size() > 0) {
             JSONArray jArray = new JSONArray();
             jArray.add(params);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
         }
-        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
 
         return execute(request);
 
@@ -303,12 +304,12 @@ public class OkHttpUtil {
                 .build();
 
         log.info(String.format("请求地址: [%s]", request.url()));
-        if (params != null && params.size() > 0) {
+        if (params.size() > 0) {
             JSONArray jArray = new JSONArray();
             jArray.add(params);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
         }
-        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
 
         return executeBytes(request);
 
@@ -334,7 +335,7 @@ public class OkHttpUtil {
                 .build();
         log.info(String.format("请求地址: [%s]", request.url()));
         log.info(String.format("请求参数: %s", json));
-        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
         return execute(request);
     }
 
@@ -358,7 +359,7 @@ public class OkHttpUtil {
                 .post(requestBody)
                 .build();
         log.info(String.format("请求地址: [%s]", request.url()));
-        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
         return execute(request);
     }
 
@@ -450,7 +451,7 @@ public class OkHttpUtil {
             jArray.add(files);
             log.info(String.format("请求参数: %s", jArray.toJSONString()));
         }
-        log.info(String.format("请求类型: %s", request.body().contentType().toString()));
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
         return execute(request);
     }
 
@@ -459,6 +460,7 @@ public class OkHttpUtil {
      * This interceptor compresses the HTTP request body. Many webservers can't handle this!
      */
     private static class GzipRequestInterceptor implements Interceptor {
+        @NotNull
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request originalRequest = chain.request();
@@ -466,7 +468,7 @@ public class OkHttpUtil {
                 return chain.proceed(originalRequest);
             }
 
-            MediaType mediaType = originalRequest.body().contentType();
+            MediaType mediaType = Objects.requireNonNull(originalRequest.body()).contentType();
             //对流和json开启压缩
             if (mediaType != null && ("application/octet-stream".equals(mediaType.toString()) || "application/json; charset=utf8".equals(mediaType.toString()))) {
                 Request compressedRequest = originalRequest.newBuilder()
@@ -492,7 +494,7 @@ public class OkHttpUtil {
                 }
 
                 @Override
-                public void writeTo(BufferedSink sink) throws IOException {
+                public void writeTo(@NotNull BufferedSink sink) throws IOException {
                     BufferedSink gzipSink = Okio.buffer(new GzipSink(sink));
                     body.writeTo(gzipSink);
                     gzipSink.close();
@@ -517,6 +519,7 @@ public class OkHttpUtil {
             this.maxRetry = maxRetry;
         }
 
+        @NotNull
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
@@ -538,7 +541,7 @@ public class OkHttpUtil {
         public Response intercept(@NotNull Chain chain) throws IOException {
             Request request = chain.request();
             Headers headers = request.headers();
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             for(int i=0;i<headers.size();i++){
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }

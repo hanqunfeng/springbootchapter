@@ -29,7 +29,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class HttpClientUtil {
     /**
      * 配置信息
      */
-    private static RequestConfig requestConfig = RequestConfig.custom()
+    private static final RequestConfig requestConfig = RequestConfig.custom()
             // 设置连接超时时间(单位毫秒)
             .setConnectTimeout(5000)
             // 设置请求超时时间(单位毫秒)
@@ -63,14 +62,14 @@ public class HttpClientUtil {
     /**
      * 获得Http客户端
      */
-    private static CloseableHttpClient httpClient = HttpClientBuilder.create()
+    private static final CloseableHttpClient HTTP_CLIENT = HttpClientBuilder.create()
             .setRetryHandler(new DefaultHttpRequestRetryHandler()) //失败重试，默认3次
             .build();
 
     /**
      * 异步Http客户端
      */
-    private static CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
+    private static final CloseableHttpAsyncClient HTTP_ASYNC_CLIENT = HttpAsyncClients.custom()
             .setDefaultRequestConfig(requestConfig)
             .build();
 
@@ -83,8 +82,8 @@ public class HttpClientUtil {
      * 2020/4/22 21:16
      */
     private static void executeAsync(HttpRequestBase httpRequestBase) {
-        httpAsyncClient.start();
-        httpAsyncClient.execute(httpRequestBase, new FutureCallback<HttpResponse>() {
+        HTTP_ASYNC_CLIENT.start();
+        HTTP_ASYNC_CLIENT.execute(httpRequestBase, new FutureCallback<HttpResponse>() {
             @SneakyThrows
             @Override
             public void completed(HttpResponse httpResponse) {
@@ -159,7 +158,7 @@ public class HttpClientUtil {
             // 将上面的配置信息 运用到这个Get请求里
             httpRequestBase.setConfig(requestConfig);
             long t1 = System.nanoTime();//请求发起的时间
-            response = httpClient.execute(httpRequestBase);
+            response = HTTP_CLIENT.execute(httpRequestBase);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
             log.debug("响应状态为:" + response.getStatusLine());
@@ -224,7 +223,7 @@ public class HttpClientUtil {
             // 将上面的配置信息 运用到这个Get请求里
             httpRequestBase.setConfig(requestConfig);
             long t1 = System.nanoTime();//请求发起的时间
-            response = httpClient.execute(httpRequestBase);
+            response = HTTP_CLIENT.execute(httpRequestBase);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
             log.debug("响应状态为:" + response.getStatusLine());
@@ -234,7 +233,7 @@ public class HttpClientUtil {
 
                 //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
                 Header responseHeader = response.getFirstHeader("Content-Encoding");
-                if (responseHeader != null && responseHeader.getValue().indexOf("gzip") != -1) {
+                if (responseHeader != null && responseHeader.getValue().contains("gzip")) {
                     GZIPInputStream gzipInputStream = null;
                     ByteArrayOutputStream out = null;
                     try {
@@ -459,7 +458,7 @@ public class HttpClientUtil {
             if (gzip) {
                 httpPost.setHeader("Content-Encoding", "gzip");
                 ByteArrayOutputStream originalContent = new ByteArrayOutputStream();
-                originalContent.write(json.getBytes(Charset.forName("UTF-8")));
+                originalContent.write(json.getBytes(StandardCharsets.UTF_8));
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 GZIPOutputStream gzipOut = new GZIPOutputStream(baos);
                 originalContent.writeTo(gzipOut);
@@ -646,7 +645,7 @@ public class HttpClientUtil {
             }
 
             // 其它参数(注:自定义contentType，设置UTF-8是为了防止服务端拿到的参数出现乱码)
-            ContentType contentType = ContentType.create("text/plain", Charset.forName("UTF-8"));
+            ContentType contentType = ContentType.create("text/plain", StandardCharsets.UTF_8);
             for (String key : params.keySet()) {
                 multipartEntityBuilder.addTextBody(key, params.get(key).toString(), contentType);
             }

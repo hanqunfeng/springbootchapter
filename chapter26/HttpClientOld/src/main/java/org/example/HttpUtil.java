@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -27,7 +28,7 @@ public class HttpUtil {
     /**
      * 创建HttpClient客户端
      */
-    private static HttpClient client = new HttpClient();
+    private static final HttpClient client = new HttpClient();
 
     /**
      * 初始化客户端
@@ -60,7 +61,7 @@ public class HttpUtil {
             log.info(String.format("请求参数: [%s]", httpMethodBase.getURI().getQuery()));
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         String responseResult = null;
         try {
@@ -128,7 +129,7 @@ public class HttpUtil {
 
             //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
             Header responseHeader = httpMethodBase.getResponseHeader("Content-Encoding");
-            if (responseHeader != null && responseHeader.getValue().indexOf("gzip") != -1) {
+            if (responseHeader != null && responseHeader.getValue().contains("gzip")) {
                 GZIPInputStream gzipInputStream = null;
                 ByteArrayOutputStream out = null;
                 try {
@@ -274,7 +275,7 @@ public class HttpUtil {
             if (gzip) {
                 method.addRequestHeader("Content-Encoding", "gzip");
                 ByteArrayOutputStream originalContent = new ByteArrayOutputStream();
-                originalContent.write(json.getBytes("utf-8"));
+                originalContent.write(json.getBytes(StandardCharsets.UTF_8));
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 GZIPOutputStream gzipOut = new GZIPOutputStream(baos);
                 originalContent.writeTo(gzipOut);

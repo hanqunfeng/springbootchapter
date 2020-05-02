@@ -5,8 +5,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class AppTest {
     static String URL_GET_BYTES_ZIP = URL + "getBytesZip";
     static Map<String, Object> map = new HashMap<>();
     static String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
-    static byte[] BYTES = JSON.getBytes(Charset.forName("UTF-8"));
+    static byte[] BYTES = JSON.getBytes(StandardCharsets.UTF_8);
     static InputStream INPUTSTREAM = new ByteArrayInputStream(BYTES);
     static InputStream INPUTSTREAM2 = new ByteArrayInputStream(BYTES);
     static File[] files = new File[]{
@@ -41,15 +40,15 @@ public class AppTest {
 
 
     @Test
-    public void get() throws UnsupportedEncodingException {
+    public void get() {
         System.out.println("get=" + RestTemplateUtil.get(URL_GET));
         System.out.println("getParam=" + RestTemplateUtil.get(URL_GET, map));
-        System.out.println("getBytes=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES,map),"utf-8"));
-        System.out.println("getBytesZip=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES_ZIP,map),"utf-8"));
+        System.out.println("getBytes=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES, map), StandardCharsets.UTF_8));
+        System.out.println("getBytesZip=" + new String(RestTemplateUtil.getBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
     }
 
     @Test
-    public void post() throws UnsupportedEncodingException {
+    public void post() {
         System.out.println("post=" + RestTemplateUtil.post(URL_POST));
         System.out.println("postParam=" + RestTemplateUtil.post(URL_POST_FORM, map));
         System.out.println("postJson=" + RestTemplateUtil.postJson(URL_POST_JSON, JSON));
@@ -61,8 +60,8 @@ public class AppTest {
         System.out.println("postFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, files));
         System.out.println("postParamFiles=" + RestTemplateUtil.postFiles(URL_POST_FILES, map, files));
 
-        System.out.println("postParamGetBytes=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES,map),"utf-8"));
-        System.out.println("postParamGetBytesZip=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES_ZIP, map), "utf-8"));
+        System.out.println("postParamGetBytes=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES, map), StandardCharsets.UTF_8));
+        System.out.println("postParamGetBytesZip=" + new String(RestTemplateUtil.postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
 
     }
 

@@ -20,7 +20,7 @@ import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.resources.LoopResources;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +36,9 @@ import java.util.zip.GZIPOutputStream;
 @Slf4j
 public class WebClientUtil {
 
-    private static ReactorResourceFactory factory = new ReactorResourceFactory();
+    private static final ReactorResourceFactory factory = new ReactorResourceFactory();
 
-    private static WebClient webClient = null;
+    private static final WebClient webClient;
 
     static {
         factory.setUseGlobalResources(false);
@@ -86,7 +86,7 @@ public class WebClientUtil {
      */
     public static String get(String url, Map<String, Object> map) {
         if (map.size() > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(url);
             if (url.contains("?")) {
                 stringBuffer.append("&");
@@ -107,7 +107,7 @@ public class WebClientUtil {
 
     public static byte[] getBytes(String url, Map<String, Object> map) {
         if (map.size() > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append(url);
             if (url.contains("?")) {
                 stringBuffer.append("&");
@@ -128,7 +128,7 @@ public class WebClientUtil {
 
             //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
             List<String> header = response.headers().header("Content-Encoding");
-            if ( header !=null && header.contains("gzip")) {
+            if (header.contains("gzip")) {
                 GZIPInputStream gzipInputStream = null;
                 ByteArrayOutputStream out = null;
                 try {
@@ -197,14 +197,14 @@ public class WebClientUtil {
 
             //判断是否需要解压，即服务器返回是否经过了gzip压缩--start
             List<String> header = response.headers().header("Content-Encoding");
-            if ( header !=null && header.contains("gzip")) {
+            if (header.contains("gzip")) {
                 GZIPInputStream gzipInputStream = null;
                 ByteArrayOutputStream out = null;
                 try {
                     gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(bytes));
                     out = new ByteArrayOutputStream();
                     byte[] buffer = new byte[1024];
-                    int offset = -1;
+                    int offset;
                     while ((offset = gzipInputStream.read(buffer)) != -1) {
                         out.write(buffer, 0, offset);
                     }
@@ -244,7 +244,7 @@ public class WebClientUtil {
                 map.add(key, params.get(key).toString());
             }
         }
-        String responseResult = null;
+        String responseResult;
         Mono<String> mono = webClient.post().uri(url).contentType(MediaType.APPLICATION_FORM_URLENCODED).bodyValue(map).retrieve().bodyToMono(String.class);
         responseResult = mono.block();
 
@@ -267,9 +267,9 @@ public class WebClientUtil {
      * 2020/4/24 15:45
      */
     public static String postJson(String url, String json, boolean gzip) {
-        String responseResult = null;
+        String responseResult;
         if (gzip) {
-            byte[] bytes = json.getBytes(Charset.forName("UTF-8"));
+            byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             return postBytes(url, bytes, true);
         } else {
             Mono<String> mono = webClient.post().uri(url).contentType(MediaType.APPLICATION_JSON).bodyValue(json).retrieve().bodyToMono(String.class);
@@ -294,7 +294,7 @@ public class WebClientUtil {
      * 2020/4/24 15:45
      */
     public static String postBytes(String url, byte[] bytes, boolean gzip) {
-        String responseResult = null;
+        String responseResult;
         Mono<String> mono = null;
         WebClient.RequestBodySpec requestBodySpec = webClient.post().uri(url).contentType(MediaType.APPLICATION_OCTET_STREAM);
         if (gzip) {
@@ -370,7 +370,7 @@ public class WebClientUtil {
      * 2020/4/24 15:46
      */
     public static String postFiles(String url, Map<String, Object> params, File[] files) {
-        String responseResult = null;
+        String responseResult;
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         if (params != null && params.size() > 0) {
             map.setAll(params);
