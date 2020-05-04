@@ -27,3 +27,4 @@
 ### chapter25----springboot JPA 自定义JpaRepositories接口
 ### chapter26----springboot HttpClient 和 OkHttpClient
 ### chapter27----springboot 动态刷新外部属性文件 @PropertySource(value = "file:demo.properties")
+### chapter28----springWebFlux 一个Demo
