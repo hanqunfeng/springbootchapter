@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,26 @@ class WebFluxDemoApplicationTests {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("Demo 100");
+    }
+
+    @Test
+    public void testUser() {
+        webTestClient.get()
+                .uri("/user/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(User.class).consumeWith(System.out::println);
+    }
+
+    @Test
+    public void testUserAll() {
+        webTestClient.get()
+                .uri("/users")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(User.class).consumeWith(System.out::println);
     }
 
 }
