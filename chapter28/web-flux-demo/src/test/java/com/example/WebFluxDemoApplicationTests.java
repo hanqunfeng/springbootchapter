@@ -37,4 +37,14 @@ class WebFluxDemoApplicationTests {
                 .expectBody(String.class).isEqualTo("Index, Spring!");
     }
 
+    @Test
+    public void testDemo() {
+        webTestClient.get()
+                .uri("/demo/100")
+                .accept(MediaType.TEXT_PLAIN)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Demo 100");
+    }
+
 }

@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
  */
 
 @Component
-public class GreetingHandler {
+public class DemoHandler {
 
     public Mono<ServerResponse> hello(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN)

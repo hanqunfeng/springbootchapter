@@ -33,8 +33,18 @@ public class TestMain {
         return ">> result = " + index.flatMap(res -> res.bodyToMono(String.class)).block();
     }
 
+    private static Mono<ClientResponse> demo = client.get()
+            .uri("/demo/100")
+            .accept(MediaType.TEXT_PLAIN)
+            .exchange();
+
+    private static String getDemo() {
+        return ">> result = " + demo.flatMap(res -> res.bodyToMono(String.class)).block();
+    }
+
     public static void main(String[] args) {
         System.out.println(TestMain.getHello());
         System.out.println(TestMain.getIndex());
+        System.out.println(TestMain.getDemo());
     }
 }

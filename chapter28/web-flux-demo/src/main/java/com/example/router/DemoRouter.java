@@ -1,6 +1,6 @@
 package com.example.router;
 
-import com.example.handler.GreetingHandler;
+import com.example.handler.DemoHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -17,9 +17,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class DemoRouter {
     @Bean
-    public RouterFunction<ServerResponse> route(GreetingHandler greetingHandler) {
-        return RouterFunctions.route(RequestPredicates.GET("/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), greetingHandler::hello)
-                .andRoute(RequestPredicates.GET("/index").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), greetingHandler::index);
+    public RouterFunction<ServerResponse> route(DemoHandler demoHandler) {
+        return RouterFunctions.route(RequestPredicates.GET("/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), demoHandler::hello)
+                .andRoute(RequestPredicates.GET("/index").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), demoHandler::index);
     }
 
 }
