@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.nio.charset.StandardCharsets;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WebFluxDemoApplicationTests {
@@ -52,7 +54,7 @@ class WebFluxDemoApplicationTests {
     public void testUser() {
         webTestClient.get()
                 .uri("/user/1")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(User.class).consumeWith(System.out::println);
@@ -62,10 +64,30 @@ class WebFluxDemoApplicationTests {
     public void testUserAll() {
         webTestClient.get()
                 .uri("/users")
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(User.class).consumeWith(System.out::println);
     }
 
+
+    @Test
+    public void testUserName() {
+        webTestClient.get()
+                .uri("/username/张三")
+                .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(User.class).consumeWith(System.out::println);
+    }
+
+    @Test
+    public void testUa() {
+        webTestClient.get()
+                .uri("/ua")
+                .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(User.class).consumeWith(System.out::println);
+    }
 }

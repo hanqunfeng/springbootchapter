@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class TestMain {
 
     private static Mono<ClientResponse> user = client.get()
             .uri("/user/1")
-            .accept(MediaType.APPLICATION_JSON)
+            .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
             .exchange();
 
     private static String getUser() {
@@ -57,18 +58,38 @@ public class TestMain {
 
     private static Mono<ClientResponse> userAll = client.get()
             .uri("/users")
-            .accept(MediaType.APPLICATION_JSON).exchange();
+            .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
 
     private static String getUserAll() {
         List<User> block = userAll.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
         return ">> result = " + block;
     }
 
+    private static Mono<ClientResponse> username = client.get()
+            .uri("/username/张三")
+            .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
+            .exchange();
+
+    private static String getUserName() {
+        User block = username.flatMap(res -> res.bodyToMono(User.class)).block();
+        return ">> result = " + block;
+    }
+
+    private static Mono<ClientResponse> ua = client.get()
+            .uri("/ua")
+            .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
+
+    private static String getUa() {
+        List<User> block = ua.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
+        return ">> result = " + block;
+    }
     public static void main(String[] args) {
         System.out.println(TestMain.getHello());
         System.out.println(TestMain.getIndex());
         System.out.println(TestMain.getDemo());
         System.out.println(TestMain.getUser());
         System.out.println(TestMain.getUserAll());
+        System.out.println(TestMain.getUserName());
+        System.out.println(TestMain.getUa());
     }
 }
