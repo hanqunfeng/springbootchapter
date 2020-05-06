@@ -17,70 +17,70 @@ import java.util.List;
 
 public class TestMain {
 
-    private static WebClient client = WebClient.create("http://localhost:8080");
+    private static final WebClient CLIENT = WebClient.create("http://localhost:8080");
 
-    private static Mono<ClientResponse> hello = client.get()
+    private static final Mono<ClientResponse> HELLO = CLIENT.get()
             .uri("/hello")
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
 
     private static String getHello() {
-        return ">> result = " + hello.flatMap(res -> res.bodyToMono(String.class)).block();
+        return ">> result = " + HELLO.flatMap(res -> res.bodyToMono(String.class)).block();
     }
 
-    private static Mono<ClientResponse> index = client.get()
+    private static final Mono<ClientResponse> INDEX = CLIENT.get()
             .uri("/index")
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
 
     private static String getIndex() {
-        return ">> result = " + index.flatMap(res -> res.bodyToMono(String.class)).block();
+        return ">> result = " + INDEX.flatMap(res -> res.bodyToMono(String.class)).block();
     }
 
-    private static Mono<ClientResponse> demo = client.get()
+    private static final Mono<ClientResponse> DEMO = CLIENT.get()
             .uri("/demo/100")
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
 
     private static String getDemo() {
-        return ">> result = " + demo.flatMap(res -> res.bodyToMono(String.class)).block();
+        return ">> result = " + DEMO.flatMap(res -> res.bodyToMono(String.class)).block();
     }
 
-    private static Mono<ClientResponse> user = client.get()
+    private static final Mono<ClientResponse> USER = CLIENT.get()
             .uri("/user/1")
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
             .exchange();
 
     private static String getUser() {
-        User block = user.flatMap(res -> res.bodyToMono(User.class)).block();
+        User block = USER.flatMap(res -> res.bodyToMono(User.class)).block();
         return ">> result = " + block;
     }
 
-    private static Mono<ClientResponse> userAll = client.get()
+    private static final Mono<ClientResponse> USER_ALL = CLIENT.get()
             .uri("/users")
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
 
     private static String getUserAll() {
-        List<User> block = userAll.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
+        List<User> block = USER_ALL.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
         return ">> result = " + block;
     }
 
-    private static Mono<ClientResponse> username = client.get()
+    private static final Mono<ClientResponse> USERNAME = CLIENT.get()
             .uri("/username/张三")
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
             .exchange();
 
     private static String getUserName() {
-        User block = username.flatMap(res -> res.bodyToMono(User.class)).block();
+        User block = USERNAME.flatMap(res -> res.bodyToMono(User.class)).block();
         return ">> result = " + block;
     }
 
-    private static Mono<ClientResponse> ua = client.get()
+    private static final Mono<ClientResponse> UA = CLIENT.get()
             .uri("/ua")
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
 
     private static String getUa() {
-        List<User> block = ua.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
+        List<User> block = UA.flatMap(res -> res.bodyToFlux(User.class).collectList()).block();
         return ">> result = " + block;
     }
     public static void main(String[] args) {
