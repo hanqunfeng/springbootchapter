@@ -12,7 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.nio.charset.StandardCharsets;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) //使用随机端口启动server
 class WebFluxDemoApplicationTests {
 
 
