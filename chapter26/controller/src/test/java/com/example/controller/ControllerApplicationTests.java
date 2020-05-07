@@ -10,7 +10,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -22,31 +21,30 @@ import java.util.zip.GZIPOutputStream;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerApplicationTests {
 
-    static Map<String, Object> map = new HashMap<>();
-    static String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
-    static byte[] BYTES = JSON.getBytes(Charset.forName("UTF-8"));
-    static InputStream INPUTSTREAM = new ByteArrayInputStream(BYTES);
-    static InputStream INPUTSTREAM2 = new ByteArrayInputStream(BYTES);
-    static File[] files = new File[]{
+    private static final Map<String, Object> map = new HashMap<>();
+    private static final String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
+    private static final byte[] BYTES = JSON.getBytes(StandardCharsets.UTF_8);
+    private static final InputStream INPUTSTREAM = new ByteArrayInputStream(BYTES);
+    private static final InputStream INPUTSTREAM2 = new ByteArrayInputStream(BYTES);
+    private static final File[] files = new File[]{
             new File("../file.txt"),
             new File("../文件.txt")
     };
+    private static final String URL = "/demo/";
+    private static final String URL_GET = URL + "get";
+    private static final String URL_POST = URL + "post";
+    private static final String URL_POST_FORM = URL + "form";
+    private static final String URL_POST_JSON = URL + "json";
+    private static final String URL_POST_STREAM = URL + "stream";
+    private static final String URL_POST_FILES = URL + "files";
+    private static final String URL_GET_BYTES = URL + "getBytes";
+    private static final String URL_GET_BYTES_ZIP = URL + "getBytesZip";
 
     static {
         map.put("name", "张三");
         map.put("age", 20);
         map.put("salary", 10000.12);
     }
-
-    private String URL = "/demo/";
-    private String URL_GET = URL + "get";
-    private String URL_POST = URL + "post";
-    private String URL_POST_FORM = URL + "form";
-    private String URL_POST_JSON = URL + "json";
-    private String URL_POST_STREAM = URL + "stream";
-    private String URL_POST_FILES = URL + "files";
-    private String URL_GET_BYTES = URL + "getBytes";
-    private String URL_GET_BYTES_ZIP = URL + "getBytesZip";
 
     @Autowired
     //TestRestTemplate使用方法与RestTemplate一致，只是这里不需要启动服务就可以测试

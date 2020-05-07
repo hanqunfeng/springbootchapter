@@ -18,7 +18,6 @@ import org.springframework.util.MultiValueMap;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,16 +33,25 @@ import java.util.zip.GZIPOutputStream;
 @AutoConfigureMockMvc //启动自动配置MockMVC
 public class MockMvcTests {
 
-    static Map<String, Object> map = new HashMap<>();
-    static String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
-    static byte[] BYTES = JSON.getBytes(Charset.forName("UTF-8"));
-    static InputStream INPUTSTREAM = new ByteArrayInputStream(BYTES);
-    static InputStream INPUTSTREAM2 = new ByteArrayInputStream(BYTES);
-    static File[] files = new File[]{
+    private static final Map<String, Object> map = new HashMap<>();
+    private static final String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
+    private static final byte[] BYTES = JSON.getBytes(StandardCharsets.UTF_8);
+    private static final InputStream INPUTSTREAM = new ByteArrayInputStream(BYTES);
+    private static final InputStream INPUTSTREAM2 = new ByteArrayInputStream(BYTES);
+    private static final File[] files = new File[]{
             new File("../file.txt"),
             new File("../文件.txt")
     };
-    static MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+    private static final MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+    private static final String URL = "/demo/";
+    private static final String URL_GET = URL + "get";
+    private static final String URL_POST = URL + "post";
+    private static final String URL_POST_FORM = URL + "form";
+    private static final String URL_POST_JSON = URL + "json";
+    private static final String URL_POST_STREAM = URL + "stream";
+    private static final String URL_POST_FILES = URL + "files";
+    private static final String URL_GET_BYTES = URL + "getBytes";
+    private static final String URL_GET_BYTES_ZIP = URL + "getBytesZip";
 
     static {
         map.put("name", "张三");
@@ -52,22 +60,12 @@ public class MockMvcTests {
     }
 
     static {
-        if (map != null && map.size() > 0) {
+        if (map.size() > 0) {
             for (String key : map.keySet()) {
                 multiValueMap.add(key, map.get(key).toString());
             }
         }
     }
-
-    private String URL = "/demo/";
-    private String URL_GET = URL + "get";
-    private String URL_POST = URL + "post";
-    private String URL_POST_FORM = URL + "form";
-    private String URL_POST_JSON = URL + "json";
-    private String URL_POST_STREAM = URL + "stream";
-    private String URL_POST_FILES = URL + "files";
-    private String URL_GET_BYTES = URL + "getBytes";
-    private String URL_GET_BYTES_ZIP = URL + "getBytesZip";
 
     @Autowired
     private MockMvc mockMvc; //只需 autowire
