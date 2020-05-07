@@ -74,6 +74,15 @@ public class RestTemplateUtil {
         return restTemplate.getForObject(url, String.class);
     }
 
+    /**
+     * <p>get请求，返回字节数组</p>
+     *
+     * @param url
+     * @param map
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:42
+     */
     public static byte[] getBytes(String url, Map<String, Object> map) {
         if (map.size() > 0) {
             StringBuilder stringBuffer = new StringBuilder();
@@ -151,6 +160,15 @@ public class RestTemplateUtil {
         return restTemplate.postForObject(url, httpEntity, String.class);
     }
 
+    /**
+     * <p>post请求，返回字节数组</p>
+     *
+     * @param url
+     * @param params
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:42
+     */
     public static byte[] postBytes(String url, Map<String, Object> params) {
 
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
