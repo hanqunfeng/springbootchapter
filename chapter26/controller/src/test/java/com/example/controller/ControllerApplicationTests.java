@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 //这里一定要加上webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT，否则报TestRestTemplate没有定义
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerApplicationTests {
@@ -76,8 +77,6 @@ class ControllerApplicationTests {
         System.out.println("postParamGetBytesZip=" + new String(postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
 
     }
-
-
 
 
     public String get(String url) {
@@ -143,6 +142,15 @@ class ControllerApplicationTests {
         return restTemplate.getForObject(url, String.class);
     }
 
+    /**
+     * <p>get请求，返回字节数组</p>
+     *
+     * @param url
+     * @param map
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:41
+     */
     public byte[] getBytes(String url, Map<String, Object> map) {
         if (map.size() > 0) {
             StringBuilder stringBuffer = new StringBuilder();
@@ -216,6 +224,15 @@ class ControllerApplicationTests {
         return restTemplate.postForObject(url, httpEntity, String.class);
     }
 
+    /**
+     * <p>post请求，返回字节数组</p>
+     *
+     * @param url
+     * @param params
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:41
+     */
     public byte[] postBytes(String url, Map<String, Object> params) {
 
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
