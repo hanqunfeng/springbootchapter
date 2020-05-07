@@ -43,6 +43,7 @@ public class MockMvcTests {
             new File("../file.txt"),
             new File("../文件.txt")
     };
+    static MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
 
     static {
         map.put("name", "张三");
@@ -50,7 +51,6 @@ public class MockMvcTests {
         map.put("salary", 10000.12);
     }
 
-    static MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
     static {
         if (map != null && map.size() > 0) {
             for (String key : map.keySet()) {
@@ -74,15 +74,16 @@ public class MockMvcTests {
 
     @Test
     public void getTest() throws Exception {
-        System.out.println("getParam=" + get(URL_GET,multiValueMap));
-        System.out.println("getBytes=" + new String(getBytes(URL_GET_BYTES,multiValueMap), StandardCharsets.UTF_8));
-        System.out.println("getBytesZip=" + new String(getBytes(URL_GET_BYTES_ZIP,multiValueMap), StandardCharsets.UTF_8));
+        System.out.println("getParam=" + get(URL_GET, multiValueMap));
+        System.out.println("getBytes=" + new String(getBytes(URL_GET_BYTES, multiValueMap), StandardCharsets.UTF_8));
+        System.out.println("getBytesZip=" + new String(getBytes(URL_GET_BYTES_ZIP, multiValueMap), StandardCharsets.UTF_8));
     }
+
     @Test
     public void postTest() throws Exception {
-        System.out.println("post=" + post(URL_POST,multiValueMap));
-        System.out.println("postForm=" + postForm(URL_POST_FORM,multiValueMap));
-        System.out.println("postJson=" + postJson(URL_POST_JSON,JSON));
+        System.out.println("post=" + post(URL_POST, multiValueMap));
+        System.out.println("postForm=" + postForm(URL_POST_FORM, multiValueMap));
+        System.out.println("postJson=" + postJson(URL_POST_JSON, JSON));
         //服务端没有完成gzip解压缩，应该是filter没起作用
         System.out.println("postJsonZip=" + postJson(URL_POST_STREAM, JSON, true));
         System.out.println("postBytes=" + postBytes(URL_POST_STREAM, BYTES));
@@ -92,29 +93,45 @@ public class MockMvcTests {
         System.out.println("postFiles=" + postFiles(URL_POST_FILES, files));
         System.out.println("postParamFiles=" + postFiles(URL_POST_FILES, multiValueMap, files));
 
-        System.out.println("postParamGetBytes=" + new String(postBytes(URL_GET_BYTES,multiValueMap), StandardCharsets.UTF_8));
-        System.out.println("postParamGetBytesZip=" + new String(postBytes(URL_GET_BYTES_ZIP,multiValueMap), StandardCharsets.UTF_8));
+        System.out.println("postParamGetBytes=" + new String(postBytes(URL_GET_BYTES, multiValueMap), StandardCharsets.UTF_8));
+        System.out.println("postParamGetBytesZip=" + new String(postBytes(URL_GET_BYTES_ZIP, multiValueMap), StandardCharsets.UTF_8));
     }
 
+    /**
+     * <p>执行逻辑，返回字符串</p>
+     *
+     * @param requestBuilder
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:27
+     */
     private String exec(RequestBuilder requestBuilder) throws Exception {
         MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                //.andDo(MockMvcResultHandlers.print())
+                //.andDo(MockMvcResultHandlers.print()) //打印request和response信息
                 //.andExpect(MockMvcResultMatchers.content().string("{}"))
                 .andReturn();
         return mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
     }
 
+    /**
+     * <p>执行逻辑，返回字节数组</p>
+     *
+     * @param requestBuilder
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:28
+     */
     private byte[] execBytes(RequestBuilder requestBuilder) throws Exception {
         MvcResult mvcResult = mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                //.andDo(MockMvcResultHandlers.print())
+                //.andDo(MockMvcResultHandlers.print()) //打印request和response信息
                 //.andExpect(MockMvcResultMatchers.content().string("{}"))
                 .andReturn();
         byte[] bytes = mvcResult.getResponse().getContentAsByteArray();
 
         String header = mvcResult.getResponse().getHeader("Content-Encoding");
-        if(header!=null && header.contains("gzip")){
+        if (header != null && header.contains("gzip")) {
             GZIPInputStream gzipInputStream = null;
             ByteArrayOutputStream out = null;
             try {
@@ -141,46 +158,107 @@ public class MockMvcTests {
         return bytes;
     }
 
+    public String get(String url) throws Exception {
+        return get(url, new LinkedMultiValueMap<>());
+    }
 
-
-    public String get(String url,MultiValueMap<String, String> multiValueMap) throws Exception {
+    /**
+     * <p>get请求</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:29
+     */
+    public String get(String url, MultiValueMap<String, String> multiValueMap) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(url)
                 .params(multiValueMap);
         return exec(requestBuilder);
     }
 
-    public byte[] getBytes(String url,MultiValueMap<String, String> multiValueMap) throws Exception {
+    /**
+     * <p>get请求，返回字节数组</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:31
+     */
+    public byte[] getBytes(String url, MultiValueMap<String, String> multiValueMap) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get(url)
                 .params(multiValueMap);
         return execBytes(requestBuilder);
     }
 
+    public String post(String url) throws Exception {
+        return post(url, new LinkedMultiValueMap<>());
+    }
 
-    public String post(String url,MultiValueMap<String, String> multiValueMap) throws Exception {
+    /**
+     * <p>post请求</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:36
+     */
+    public String post(String url, MultiValueMap<String, String> multiValueMap) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(url)
                 .params(multiValueMap);
         return exec(requestBuilder);
     }
 
 
-    public String postForm(String url,MultiValueMap<String, String> multiValueMap) throws Exception {
+    /**
+     * <p>post请求，form</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:36
+     */
+    public String postForm(String url, MultiValueMap<String, String> multiValueMap) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(multiValueMap);
         return exec(requestBuilder);
     }
 
-    public byte[] postBytes(String url,MultiValueMap<String, String> multiValueMap) throws Exception {
+    /**
+     * <p>post请求，返回字节数组</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @return byte[]
+     * @author hanqf
+     * 2020/5/7 09:37
+     */
+    public byte[] postBytes(String url, MultiValueMap<String, String> multiValueMap) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(url)
                 .params(multiValueMap);
         return execBytes(requestBuilder);
     }
 
-    public String postJson(String url,String json) throws Exception {
-        return postJson(url,json,false);
+
+    public String postJson(String url, String json) throws Exception {
+        return postJson(url, json, false);
     }
 
-    public String postJson(String url,String json,boolean gzip) throws Exception {
+    /**
+     * <p>post请求，json</p>
+     *
+     * @param url
+     * @param json
+     * @param gzip
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:37
+     */
+    public String postJson(String url, String json, boolean gzip) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = null;
         if (gzip) {
             try {
@@ -201,7 +279,7 @@ public class MockMvcTests {
 
         } else {
             requestBuilder = MockMvcRequestBuilders.post(url)
-                    .contentType(new MediaType("application","json",StandardCharsets.UTF_8))
+                    .contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                     .content(json);
         }
 
@@ -209,10 +287,21 @@ public class MockMvcTests {
         return exec(requestBuilder);
     }
 
-    public String postBytes(String url,byte[] bytes) throws Exception {
-        return postBytes(url,bytes,false);
+    public String postBytes(String url, byte[] bytes) throws Exception {
+        return postBytes(url, bytes, false);
     }
-    public String postBytes(String url,byte[] bytes,boolean gzip) throws Exception {
+
+    /**
+     * <p>post请求，bytes请求</p>
+     *
+     * @param url
+     * @param bytes
+     * @param gzip
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:37
+     */
+    public String postBytes(String url, byte[] bytes, boolean gzip) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = null;
         if (gzip) {
             try {
@@ -238,11 +327,21 @@ public class MockMvcTests {
         return exec(requestBuilder);
     }
 
-    public String postStream(String url,InputStream is) throws Exception {
-        return postStream(url,is,false);
+    public String postStream(String url, InputStream is) throws Exception {
+        return postStream(url, is, false);
     }
 
-    public String postStream(String url,InputStream is,boolean gzip) throws Exception {
+    /**
+     * <p>post请求，流</p>
+     *
+     * @param url
+     * @param is
+     * @param gzip
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:38
+     */
+    public String postStream(String url, InputStream is, boolean gzip) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int ch;
@@ -257,19 +356,29 @@ public class MockMvcTests {
             e.printStackTrace();
         }
 
-        return postBytes(url,bytes,gzip);
+        return postBytes(url, bytes, gzip);
     }
 
-    public String postFiles(String url,File[] files) throws Exception {
-        return postFiles(url,new LinkedMultiValueMap<>(),files);
+    public String postFiles(String url, File[] files) throws Exception {
+        return postFiles(url, new LinkedMultiValueMap<>(), files);
     }
 
-    public String postFiles(String url,MultiValueMap<String, String> multiValueMap,File[] files) throws Exception {
+    /**
+     * <p>post请求，文件上传</p>
+     *
+     * @param url
+     * @param multiValueMap
+     * @param files
+     * @return java.lang.String
+     * @author hanqf
+     * 2020/5/7 09:38
+     */
+    public String postFiles(String url, MultiValueMap<String, String> multiValueMap, File[] files) throws Exception {
         MockMultipartHttpServletRequestBuilder multipart = MockMvcRequestBuilders.multipart(url);
-        for(File file:files){
+        for (File file : files) {
             String contentType = new MimetypesFileTypeMap().getContentType(file);
             //System.out.println(contentType);
-            multipart.file(new MockMultipartFile("files",file.getName(),contentType,new FileInputStream(file)));
+            multipart.file(new MockMultipartFile("files", file.getName(), contentType, new FileInputStream(file)));
         }
         MockHttpServletRequestBuilder requestBuilder = multipart
                 .params(multiValueMap);
