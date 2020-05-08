@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/redisusers")
 public class RedisDemoController {
@@ -31,38 +33,46 @@ public class RedisDemoController {
 
     @PostMapping("/save")
     public Mono<Boolean> saveUser(@RequestBody User user) {
-        ReactiveHashOperations hashOperations = reactiveStringRedisTemplate.opsForHash();
-        return hashOperations.put("USER_HS", String.valueOf(user.getId()), JSON.toJSONString(user));
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        return reactiveHashOperations.put("USER_HS", String.valueOf(user.getId()), JSON.toJSONString(user));
     }
 
     @GetMapping("/info/{id}")
     public Mono<User> info(@PathVariable Long id) {
-        ReactiveHashOperations reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
         Mono<String> hval = reactiveHashOperations.get("USER_HS", String.valueOf(id));
         return hval.map(e -> JSON.parseObject(e, User.class));
     }
 
     @GetMapping("/all")
     public Flux<User> findAll() {
-        ReactiveHashOperations reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
         //先获取hash中的全部key
         Flux<String> hkeys = reactiveHashOperations.keys("USER_HS");
 
         return hkeys.flatMap(id -> {
             //通过每一个key获取对应的值，即json字符串，并转换为User对象
-            Mono<String> user_hs = reactiveHashOperations.get("USER_HS", String.valueOf(id));
-            return user_hs.map(e -> JSON.parseObject(e, User.class));
+            Mono<String> userHs = reactiveHashOperations.get("USER_HS", String.valueOf(id));
+            return userHs.map(e -> JSON.parseObject(e, User.class));
         });
     }
 
     @GetMapping("/all2")
     public Flux<User> findAll2() {
-        ReactiveHashOperations reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
         //先获取hash中的全部key
         Flux<String> hvalues = reactiveHashOperations.values("USER_HS");
-
         return hvalues.map(value -> JSON.parseObject(value, User.class));
     }
+
+    @GetMapping("/all3")
+    public Flux<User> findAll3() {
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        Flux<Map.Entry<String,String>> hentries = reactiveHashOperations.entries("USER_HS");
+        return hentries.map(map -> JSON.parseObject(map.getValue(), User.class));
+    }
+
+
 
 
 }
