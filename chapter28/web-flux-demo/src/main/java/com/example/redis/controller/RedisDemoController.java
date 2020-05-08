@@ -10,10 +10,12 @@ import com.example.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Map;
 
 @RestController
@@ -70,6 +72,15 @@ public class RedisDemoController {
         ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
         Flux<Map.Entry<String,String>> hentries = reactiveHashOperations.entries("USER_HS");
         return hentries.map(map -> JSON.parseObject(map.getValue(), User.class));
+    }
+
+    //curl http://localhost:8080/redisusers/stream
+    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Flux<User> findAllStream() {
+        ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
+        Flux<Map.Entry<String,String>> hentries = reactiveHashOperations.entries("USER_HS");
+        return hentries.map(map -> JSON.parseObject(map.getValue(), User.class))
+                .delayElements(Duration.ofSeconds(1)); //每秒返回一条数据，模拟流式响应
     }
 
 

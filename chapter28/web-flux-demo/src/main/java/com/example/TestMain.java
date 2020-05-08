@@ -138,6 +138,7 @@ public class TestMain {
         System.out.println(TestMain.getTimes());
         System.out.println(TestMain.getTimes2());
         TestMain.mongoUsers();
+        TestMain.redisUsers();
     }
 
     public static void mongoUsers() {
@@ -145,6 +146,16 @@ public class TestMain {
                 .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；
                 .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
                 .flatMapMany(response -> response.bodyToFlux(MongoUser.class))   // 使用flatMap来将ClientResponse映射为Flux；
+                .log()
+                .doOnNext(System.out::println)  // 只读地peek每个元素，然后打印出来，它并不是subscribe，所以不会触发流；
+                .blockLast();   // 在收到最后一个元素前会阻塞，响应式业务场景中慎用
+    }
+
+    public static void redisUsers() {
+        CLIENT.get().uri("/redisusers/stream")
+                .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；
+                .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
+                .flatMapMany(response -> response.bodyToFlux(User.class))   // 使用flatMap来将ClientResponse映射为Flux；
                 .log()
                 .doOnNext(System.out::println)  // 只读地peek每个元素，然后打印出来，它并不是subscribe，所以不会触发流；
                 .blockLast();   // 在收到最后一个元素前会阻塞，响应式业务场景中慎用
