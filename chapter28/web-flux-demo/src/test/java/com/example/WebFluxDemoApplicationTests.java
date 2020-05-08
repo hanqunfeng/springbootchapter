@@ -90,4 +90,25 @@ class WebFluxDemoApplicationTests {
                 .expectStatus().isOk()
                 .expectBodyList(User.class).consumeWith(System.out::println);
     }
+
+    @Test
+    public void testTime() {
+        webTestClient.get()
+                .uri("/time")
+                .accept(MediaType.TEXT_PLAIN)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).consumeWith(System.out::println);
+    }
+
+    @Test
+    public void testDate() {
+        webTestClient.get()
+                .uri("/date")
+                .accept(MediaType.TEXT_PLAIN)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).consumeWith(System.out::println);
+    }
+
 }
