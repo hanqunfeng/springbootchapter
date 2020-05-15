@@ -1,0 +1,54 @@
+
+###get
+GET {{url}}/get?name={{name}}&age={{age}}
+
+
+
+###post
+POST {{url}}/post
+Content-Type: application/x-www-form-urlencoded
+
+name={{name}}&age={{age}}
+
+
+
+###json
+POST {{url}}/json
+Content-Type: application/json;charset=utf8
+
+{
+  "name": {{name}},
+  "age": {{age}}
+}
+
+
+###files
+POST {{url}}/files
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename={{file1-name}}
+Content-Type: text/plain
+
+#文件路径不能用变量替换，会报错
+< /Users/hanqf/idea_workspaces/springbootchapter/chapter26/file.txt
+
+--WebAppBoundary--
+Content-Disposition: form-data; name="files"; filename={{file2-name}}  #文件名要转码，否则乱码
+Content-Type: text/plain
+
+< /Users/hanqf/idea_workspaces/springbootchapter/chapter26/文件.txt
+
+--WebAppBoundary
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+{{name}}
+
+--WebAppBoundary--
+Content-Disposition: form-data; name="age"
+Content-Type: text/plain
+
+{{age}}
+
+
