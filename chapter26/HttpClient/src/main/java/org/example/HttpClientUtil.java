@@ -49,11 +49,11 @@ public class HttpClientUtil {
      */
     private static final RequestConfig requestConfig = RequestConfig.custom()
             // 设置连接超时时间(单位毫秒)
-            .setConnectTimeout(5000)
+            .setConnectTimeout(60000)
             // 设置请求超时时间(单位毫秒)
-            .setConnectionRequestTimeout(5000)
+            .setConnectionRequestTimeout(60000)
             // socket读写超时时间(单位毫秒)
-            .setSocketTimeout(5000)
+            .setSocketTimeout(60000)
             // 设置是否允许重定向(默认为true)
             .setRedirectsEnabled(true)
             //是否启用内容压缩，默认true
@@ -64,6 +64,7 @@ public class HttpClientUtil {
      */
     private static final CloseableHttpClient HTTP_CLIENT = HttpClientBuilder.create()
             .setRetryHandler(new DefaultHttpRequestRetryHandler()) //失败重试，默认3次
+            .setMaxConnTotal(4000)
             .build();
 
     /**
@@ -414,6 +415,23 @@ public class HttpClientUtil {
         try {
             URI uri = new URIBuilder(url).addParameters(list).build();
             httpPost = new HttpPost(uri);
+        } catch (Exception e) {
+            log.info("Get responseResult：", e);
+            e.printStackTrace();
+        }
+
+        return executeBytes(httpPost);
+    }
+
+
+    public static byte[] postBytes(String url, byte[] bytes) {
+        HttpPost httpPost = null;
+        try {
+            URI uri = new URIBuilder(url).build();
+            httpPost = new HttpPost(uri);
+
+            ByteArrayEntity entity = new ByteArrayEntity(bytes, ContentType.create("text/plain", "utf-8"));
+            httpPost.setEntity(entity);
         } catch (Exception e) {
             log.info("Get responseResult：", e);
             e.printStackTrace();

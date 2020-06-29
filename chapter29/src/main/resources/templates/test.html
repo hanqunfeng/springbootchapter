@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="str:${list}">
+    <span th:text="${str}"></span>
+</div>
+<div>
+    <span th:text="${#numbers.formatDecimal(num, 1, 2)}"></span>
+</div>
+</body>
+</html>

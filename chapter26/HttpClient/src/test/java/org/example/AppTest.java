@@ -62,4 +62,8 @@ public class AppTest {
         System.out.println("postParamGetBytes=" + new String(HttpClientUtil.postBytes(URL_GET_BYTES, map), StandardCharsets.UTF_8));
         System.out.println("postParamGetBytesZip=" + new String(HttpClientUtil.postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
     }
+
+
+
+
 }

@@ -28,3 +28,4 @@
 ### chapter26----springboot HttpClient 和 OkHttpClient
 ### chapter27----springboot 动态刷新外部属性文件 @PropertySource(value = "file:demo.properties")
 ### chapter28----springWebFlux 一个Demo
+### chapter29----email 简单文本、附件、html、图片、thymeleaf模板
