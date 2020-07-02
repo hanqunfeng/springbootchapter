@@ -36,6 +36,8 @@ mvn dependency:copy-dependencies -DoutputDirectory=target/lib -DincludeScope=com
 ## 运行项目jar
 ```bash
 java -Dloader.path=target/lib -jar target/chapter30-0.0.1-SNAPSHOT.jar
+
+# loader.path用来指定外部依赖路径,多个使用逗号分割
 ```
 
 ## 说明
