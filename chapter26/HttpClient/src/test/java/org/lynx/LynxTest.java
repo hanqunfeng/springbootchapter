@@ -14,7 +14,9 @@ import java.util.zip.ZipException;
 
 public class LynxTest {
 
-    private static String LYNX_CLOUD_URL = "https://lynx.picooapp.com/lynx/cloud";
+    //private static String LYNX_CLOUD_URL = "https://lynx.picooapp.com/lynx/cloud";
+    //private static String LYNX_CLOUD_URL = "http://localhost:8080/lynx/cloud";
+    private static String LYNX_CLOUD_URL = "https://lynx-di1q2xdk.tunnelto.dev/lynx/cloud";
 
     /**
      * <p>方法执行入口</p>
@@ -45,5 +47,19 @@ public class LynxTest {
     public void testLynx() throws ZipException {
         String requestBody = "{\"command\":\"purchaselist\",\"userInfo\":{\"userName\":\"maguangkun2016@gmail.com\",\"accessToken\":\"a417ad0dd9174a45b1415beea36015de#974512#maguangkun2016@gmail.com\"},\"softwareInfo\":{\"version\":\"1\",\"os\":\"351\",\"partner\":\"1\",\"language\":\"en_US\",\"protocol\":\"2.0\",\"imsi\":\"\"}}";
         exec(requestBody);
+    }
+
+    @Test
+    public void testLogin() throws ZipException {
+        String requestBody = "{\"command\":\"nqlogin\",\"userInfo\":{\"userName\":\"maguangkun2016@gmail.com\"},\"password\":\"694e17fcad0138f34597e064cd1d5a1d3e519685\",\"softwareInfo\":{\"version\":\"1\",\"os\":\"351\",\"partner\":\"1\",\"language\":\"en_US\",\"protocol\":\"2.0\",\"imsi\":\"\"}}";
+        exec(requestBody);
+
+    }
+
+    @Test
+    public void testRegister() throws ZipException {
+        String requestBody = "{\"command\":\"register\",\"userInfo\":{\"userName\":\"maguangkun2017@gmail.com\"},\"password\":\"694e17fcad0138f34597e064cd1d5a1d3e519685\",\"softwareInfo\":{\"version\":\"1\",\"os\":\"351\",\"partner\":\"1\",\"language\":\"en_US\",\"protocol\":\"2.0\",\"imsi\":\"\"}}";
+        exec(requestBody);
+
     }
 }
