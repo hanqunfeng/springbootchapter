@@ -30,4 +30,4 @@
 ### chapter28----springWebFlux 一个Demo
 ### chapter29----springboot email 简单文本、附件、html、图片、thymeleaf模板
 ### chapter30----SpringBoot jar包瘦身，方便部署
-### chapter31----SpringBoot 优雅关闭服务
+### chapter31----SpringBoot 优雅关闭服务 springboot2.3+支持
