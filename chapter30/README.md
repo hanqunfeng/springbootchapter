@@ -11,12 +11,16 @@
                 <groupId>nothing</groupId>
                 <artifactId>nothing</artifactId>
             </include>
+            <include>  # 这里指定要打包到jar中的依赖，这里只会引入指定的依赖，而该依赖的依赖不会被引入的，一般多模块开发时配置为自己项目的模块
+                <groupId>com.cxzh</groupId> 
+                <artifactId>horoscopes-core</artifactId>
+            </include>
         </includes>
     </configuration>
     <executions>
         <execution>
             <goals>
-                <goal>repackage</goal> # 指定触发时机，运行 mvn package 即可
+                <goal>repackage</goal> # 可以不配置的，这里指定触发时机，运行 mvn package 即可
             </goals>
         </execution>
     </executions>
@@ -37,8 +41,9 @@ mvn dependency:copy-dependencies -DoutputDirectory=target/lib -DincludeScope=run
 ```bash
 java -Dloader.path=target/lib -jar target/chapter30-0.0.1-SNAPSHOT.jar
 
-# loader.path用来指定外部依赖路径,多个使用逗号分割
+# loader.path用来指定外部依赖路径。【多个使用逗号分割，但测试中将logback.xml放到其它目录下未生效】
 ```
 
 ## 说明
-这种方式是将内部依赖改为外部依赖，同时不影响本地开发测试
+1. 这种方式是将内部依赖改为外部依赖，同时不影响本地开发测试
+2. 这种情况下logback不生效，需要将logback.xml也拷贝到lib目录下才行
