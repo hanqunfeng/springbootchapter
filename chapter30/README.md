@@ -30,7 +30,7 @@ mvn clean package #此时生成的jar中是不包含依赖的，所以生成的j
 
 ## 导出依赖jar到指定路径
 ```bash
-mvn dependency:copy-dependencies -DoutputDirectory=target/lib -DincludeScope=compile
+mvn dependency:copy-dependencies -DoutputDirectory=target/lib -DincludeScope=runtime
 ```
 
 ## 运行项目jar
