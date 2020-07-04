@@ -26,13 +26,13 @@ public class DemoRunner implements CommandLineRunner {
         map.put("jobName","demo");
         map.put("jobGroup","demo-group");
         jobUtils.createJobByCron("demo","demo-group","0/5 * * * * ?",DemoJob.class,map,true);
-        //Thread.sleep(10000);
-        //jobUtils.removeJob("demo","demo-group");
-        //
-        //Thread.sleep(5000);
-        //jobUtils.removeJob("demo","demo-group");
-        //
-        ////不执行shutdown，后台进程会一直运行
-        //jobUtils.shutdown();
+        Thread.sleep(10000);
+        jobUtils.removeJob("demo","demo-group");
+
+        Thread.sleep(5000);
+        jobUtils.removeJob("demo","demo-group");
+
+        //不执行shutdown，后台进程会一直运行
+        jobUtils.shutdown();
     }
 }
