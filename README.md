@@ -1,5 +1,5 @@
 # springboot 学习笔记
-## 基于springboot-2.2.5
+## 基于springboot-2.2.5+
 ### chapter01----声明、注册，获取bean对象，关联spring-xml配置文件
 ### chapter02----bean的生命周期
 ### chapter03----如何在非springboot项目中获取属性文件对象、@Conditional
@@ -33,4 +33,5 @@
 ### chapter31----SpringBoot 优雅关闭服务 springboot2.3+支持
 ### chapter32----SpringBoot Quartz 定时任务之内存
 ### chapter33----SpringBoot Quartz 定时任务之jdbc
-### chapter34----数据结构 二叉树的遍历
+### chapter34----数据结构 二叉树的遍历，本来想整xxl-job分布式任务调度平台，后来发现官网说的过于详细了，没必要整demo了
+

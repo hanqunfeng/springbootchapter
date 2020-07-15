@@ -83,7 +83,43 @@ public class VTAppTest {
         //
         //Thread.sleep(300000);
 
-        String requestBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>    <Request><Protocol>3.4.5</Protocol><Command>10</Command><Mandatory>0</Mandatory><ClientInfo><Model>U00tRzk1MDA=</Model><Language>1</Language><Country>86</Country><SoftLanguage>1</SoftLanguage><Business>130</Business><IMEI>354763080697654</IMEI><IMSI></IMSI><SC></SC><CI>2476</CI><APN>WIFI</APN><InstallReferrer><![CDATA[]]></InstallReferrer></ClientInfo><UserInfo><UID>1488668289</UID><Level>32</Level></UserInfo><AppInfo><OS>351</OS><ID>130</ID><Version>220282</Version><Partner>205863</Partner></AppInfo><SeqId></SeqId><PaymentResult>-1</PaymentResult><GoogleInApp><SignedData></SignedData><Signature></Signature><TransactionRef></TransactionRef></GoogleInApp></Request>\n";
+        String requestBody = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>    " +
+                "<Request>" +
+                "<CloudSignIn>vault@163.com</CloudSignIn>" +
+                "<Protocol>3.4.5</Protocol>" +
+                "<Command>10</Command>" +
+                "<Mandatory>0</Mandatory>" +
+                "<ClientInfo>" +
+                    "<Model>U00tRzk1MDA=</Model>" +
+                    "<Language>1</Language>" +
+                    "<Country>86</Country>" +
+                    "<SoftLanguage>1</SoftLanguage>" +
+                    "<Business>130</Business>" +
+                    "<IMEI>354763080697654</IMEI>" +
+                    "<IMSI></IMSI>" +
+                    "<SC></SC>" +
+                    "<CI>2476</CI>" +
+                    "<APN>WIFI</APN>" +
+                    "<InstallReferrer><![CDATA[]]></InstallReferrer>" +
+                "</ClientInfo>" +
+                "<UserInfo>" +
+                    "<UID>1488668289</UID>" +
+                    "<Level>32</Level>" +
+                "</UserInfo>" +
+                "<AppInfo>" +
+                    "<OS>351</OS>" +
+                    "<ID>130</ID>" +
+                    "<Version>220283</Version>" +
+                    "<Partner>205863</Partner>" +
+                "</AppInfo>" +
+                "<SeqId></SeqId>" +
+                "<PaymentResult>-1</PaymentResult>" +
+                "<GoogleInApp>" +
+                    "<SignedData></SignedData>" +
+                    "<Signature></Signature>" +
+                    "<TransactionRef></TransactionRef>" +
+                "</GoogleInApp>" +
+                "</Request>\n";
 
         for (int j = 0; j < 10; j++) {
             System.out.println("======" + j + "========");
@@ -179,7 +215,7 @@ public class VTAppTest {
                 "  <AppInfo>\n" +
                 "    <OS>351</OS>\n" +
                 "    <ID>130</ID>\n" +
-                "    <Version>220281</Version>\n" +
+                "    <Version>220283</Version>\n" +
                 "    <Partner>205863</Partner>\n" +
                 "  </AppInfo>\n" +
                 "  <SubscribeScene>42</SubscribeScene>\n" +

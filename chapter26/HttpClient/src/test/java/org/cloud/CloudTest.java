@@ -42,14 +42,27 @@ public class CloudTest {
 
     @Test
     /**
-     * <p>用户订购列表，基于此判断用户状态是否为会员</p>
+     * <p>用户注册</p>
      * @author hanqf
      * 2020/5/26 15:28
      */
     public void testRegister() throws ZipException {
-        //language=JSON
-        String requestBody = "{\"command\":\"register\",\"userInfo\":{\"uid\":\"1488668289\",\"userName\":\"maguangkun2016466@163.com\",\"level\":32},\"password\":\"SHA1-694e17fcad0138f34597e064cd1d5a1d3e519685\",\"softwareInfo\":{\"version\":\"220282\",\"os\":\"351\",\"partner\":\"205863\",\"language\":\"zh_CN\"}}\n";
-        exec(requestBody);
+        for(int i=0;i<10;i++) {
+            String email = "abc@163.com" + i;
+            String requestBody = "{\"command\":\"register\",\"userInfo\":{\"uid\":\"1488668289\",\"userName\":\""+email+"\",\"level\":32},\"password\":\"SHA1-694e17fcad0138f34597e064cd1d5a1d3e519685\",\"softwareInfo\":{\"version\":\"220282\",\"os\":\"351\",\"partner\":\"205863\",\"language\":\"zh_CN\"}}\n";
+            exec(requestBody);
+        }
+    }
+
+
+    @Test
+    public void testLogin() throws ZipException {
+        for(int i=0;i<10;i++) {
+            System.out.println(String.format("i==%d",i));
+            String requestBody = "{\"command\":\"nqlogin\",\"userInfo\":{\"uid\":\"1492257658\",\"userName\":\"hanqf2008@163.com\",\"level\":4},\"password\":\"SHA1-7c4a8d09ca3762af61e59520943dc26494f8941b\",\"softwareInfo\":{\"version\":\"220267\",\"os\":\"351\",\"partner\":\"205863\",\"language\":\"zh_CN\"}}";
+            exec(requestBody);
+        }
+
     }
 
 
