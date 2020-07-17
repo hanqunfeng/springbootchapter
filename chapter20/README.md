@@ -1,4 +1,4 @@
-# springboot redis 事务 批量执行 Lua脚本
+# springboot redis 事务 批量执行 Lua脚本 分布式锁
 
 ```java
 @Configuration
