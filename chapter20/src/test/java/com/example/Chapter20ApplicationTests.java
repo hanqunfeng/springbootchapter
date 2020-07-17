@@ -1,6 +1,9 @@
 package com.example;
 
+import com.example.config.RedisDistributedLock;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
@@ -14,15 +17,17 @@ import java.util.concurrent.TimeUnit;
 class Chapter20ApplicationTests {
 
     @Autowired
+    RedisDistributedLock redisDistributedLock;
+    @Autowired
+    RedissonClient redissonClient;
+    @Autowired
     private RedisTemplate redisTemplate;
-
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-
     //Lua脚本
     @Test
-    void testLua1(){
+    void testLua1() {
         DefaultRedisScript<String> defaultRedisScript = new DefaultRedisScript<>();
         //设置脚本
         defaultRedisScript.setScriptText("return 'hello redis'");
@@ -31,12 +36,12 @@ class Chapter20ApplicationTests {
         //执行脚本
         String result = (String) redisTemplate.execute(defaultRedisScript, redisTemplate.getStringSerializer(), redisTemplate.getStringSerializer(), null);
 
-        System.out.println("result=="+result);
+        System.out.println("result==" + result);
     }
 
     //Lua是原子操作，这里比较两个key的value，如果相等则返回1，不相等返回0
     @Test
-    void testLua2(){
+    void testLua2() {
         String script = "redis.call('set', KEYS[1] , ARGV[1]) \n" +
                 "redis.call('set', KEYS[2], ARGV[2] ) \n" +
                 "local str1 = redis.call('get' , KEYS[1]) \n" +
@@ -61,25 +66,24 @@ class Chapter20ApplicationTests {
         String value2 = "lua";
         //第一个序列化器是key的，第二个是参数的即value
         Long result = (Long) redisTemplate.execute(defaultRedisScript, redisTemplate.getStringSerializer(), redisTemplate.getStringSerializer(), keyList, value1, value2);
-        System.out.println("result=="+result);
+        System.out.println("result==" + result);
     }
-
 
     //流水线执行
     @Test
-    void testPipeLine(){
+    void testPipeLine() {
 
-        for(int i=0;i<100000;i++) {
+        for (int i = 0; i < 100000; i++) {
             //此时命令只是进入队列，不会真正执行，待到最后一次性一起执行，这里要注意数据量，一次执行量过大会导致内存益处
             redisTemplate.delete("pipeline_" + i);
         }
 
         //十万次写入大约400~500ms
         Long start = System.currentTimeMillis();
-        List list = (List)redisTemplate.executePipelined(new SessionCallback() {
+        List list = (List) redisTemplate.executePipelined(new SessionCallback() {
             @Override
             public Object execute(RedisOperations redisOperations) throws DataAccessException {
-                for(int i=0;i<100000;i++) {
+                for (int i = 0; i < 100000; i++) {
                     //此时命令只是进入队列，不会真正执行，待到最后一次性一起执行，这里要注意数据量，一次执行量过大会导致内存益处
                     redisOperations.opsForValue().set("pipeline_" + i, "value_" + i);
                 }
@@ -103,7 +107,7 @@ class Chapter20ApplicationTests {
 
         //这里设置一个监控key
         redisTemplate.opsForValue().set("key", "yes");
-        List list = (List)redisTemplate.execute(new SessionCallback() {
+        List list = (List) redisTemplate.execute(new SessionCallback() {
             @Override
             public Object execute(RedisOperations redisOperations) throws DataAccessException {
                 //1.监控key是否发生变化
@@ -112,7 +116,7 @@ class Chapter20ApplicationTests {
                 redisOperations.multi();
                 redisOperations.opsForValue().set("t1", "value01");
                 //对字符串做自增会报错，但是不会影响事务执行
-                redisOperations.opsForValue().increment("key2",1);
+                redisOperations.opsForValue().increment("key2", 1);
                 redisOperations.opsForValue().set("t2", "value02");
                 redisOperations.opsForValue().set("t3", "value03");
                 //3.执行exec命令，先判断key是否在监控后发生变化，如果是则不执行事务操作，否则就执行
@@ -147,7 +151,6 @@ class Chapter20ApplicationTests {
         Thread.sleep(10001);
         System.out.println("email:" + stringRedisTemplate.opsForValue().get("email"));
     }
-
 
     @Test
     void testHash() {
@@ -185,7 +188,6 @@ class Chapter20ApplicationTests {
 
 
     }
-
 
     @Test
     void testList() {
@@ -313,6 +315,68 @@ class Chapter20ApplicationTests {
             System.out.println(typedTuple.getValue() + "||" + typedTuple.getScore());
         }
         System.out.println("======================");
+    }
+
+    @Test
+    void testRedisDistributedLock() {
+        boolean redisLock = redisDistributedLock.tryGetDistributedLock("redisLock", 30000);
+        if (redisLock) {
+            try {
+                //执行业务逻辑
+                Thread.sleep(10000);
+                System.out.println(123);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                redisDistributedLock.releaseDistributedLock("redisLock");
+            }
+        }
+    }
+
+    @Test
+    void testRedissonLock() {
+        RLock myLock = redissonClient.getLock("myLock");
+        //设置锁超时时间，防止异常造成死锁，也可以不设置，默认30秒
+        //myLock.lock();
+        myLock.lock(20, TimeUnit.SECONDS);
+        try {
+            //执行业务逻辑
+            Thread.sleep(10000);
+            System.out.println(123);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            myLock.unlock();
+        }
+
+    }
+
+
+    @Test
+    void testRedissonLock2() {
+        RLock myLock = redissonClient.getLock("myLock");
+        //执行业务逻辑
+        try {
+            //设置锁超时时间，防止异常造成死锁，也可以不设置，默认30秒
+            myLock.lock();
+            Thread.sleep(10000);
+            System.out.println(123);
+
+            myLock.lock(); //同一个客户端可与锁多次，但是释放时也要释放多次
+            Thread.sleep(10000);
+            System.out.println(456);
+
+            myLock.unlock();
+            Thread.sleep(10000);
+            myLock.unlock();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
 }

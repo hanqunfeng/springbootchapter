@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
+        <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -35,6 +35,14 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>3.2.0</version>
+        </dependency>
+
+
+        <!-- 基于redisson的分布式锁 -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.13.2</version>
         </dependency>
 
 
