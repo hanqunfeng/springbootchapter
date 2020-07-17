@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisDistributedLock {
     /**
-     * LUA 删除锁，自己的锁自己珊
+     * LUA 删除锁，自己的锁自己珊，可能也没啥必要，直接用delete方法也可以
      */
     private static String RELEASE_LOCK_SCRIPT = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
     @Autowired
@@ -27,7 +27,7 @@ public class RedisDistributedLock {
      * <p>尝试获取锁</p>
      *
      * @param lockKey    锁key
-     * @param value      锁value，这里可以设置一个有意义的值，比如用户Id，业务名称等，可以用于区分锁是谁加的
+     * @param value      锁value，这里可以设置一个有意义的值，比如用户Id，业务名称等，可以用于区分锁是谁加的，当然了，可能也没啥必要
      * @param expireTime 锁的过期时间，单位毫秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
      * @return boolean
      * @author hanqf
@@ -35,6 +35,19 @@ public class RedisDistributedLock {
      */
     public boolean tryGetDistributedLock(String lockKey, String value, long expireTime) {
         return stringRedisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * <p>尝试获取锁，不关心value</p>
+     *
+     * @param lockKey    锁key
+     * @param expireTime 锁的过期时间，单位毫秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
+     * @return boolean
+     * @author hanqf
+     * 2020/7/17 11:45
+     */
+    public boolean tryGetDistributedLock(String lockKey, long expireTime) {
+        return tryGetDistributedLock(lockKey, "lock:" + System.currentTimeMillis(), expireTime);
     }
 
     /**
@@ -69,7 +82,7 @@ public class RedisDistributedLock {
     }
 
     /**
-     * <p>释放锁</p>
+     * <p>基于key和value释放锁</p>
      *
      * @param lockKey 锁key
      * @param value   锁value
@@ -82,5 +95,17 @@ public class RedisDistributedLock {
         Long execute = stringRedisTemplate.execute(redisScript, Collections.singletonList(lockKey), value);
         return execute == 1L ? true : false;
 
+    }
+
+    /**
+     * <p>基于key释放锁</p>
+     *
+     * @param lockKey 锁key
+     * @return boolean
+     * @author hanqf
+     * 2020/7/17 11:45
+     */
+    public boolean releaseDistributedLock(String lockKey) {
+        return stringRedisTemplate.delete(lockKey);
     }
 }
