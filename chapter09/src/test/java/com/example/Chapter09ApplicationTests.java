@@ -10,12 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 class Chapter09ApplicationTests {
 
     @Autowired
@@ -29,9 +28,11 @@ class Chapter09ApplicationTests {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private LockService lockService;
 
     @Test
-    void getRoleAll(){
+    void getRoleAll() {
         List<Role> roleList = roleRepository.findAll();
         roleList.stream().forEach(new Consumer<Role>() {
             @Override
@@ -44,19 +45,18 @@ class Chapter09ApplicationTests {
     }
 
     @Test
-    void getBookAll(){
+    void getBookAll() {
         List<Book> bookList = bookRepository.findAll();
         bookList.stream().forEach(System.out::println);
     }
 
     @Test
-    void getAddressAll(){
+    void getAddressAll() {
         List<Address> addressList = addressRepository.findAll();
         addressList.stream().forEach(System.out::println);
         Address address = addressRepository.findById(1L).get();
         System.out.println(address.getUser().getUserAddress());
     }
-
 
     @Test
     void testFindAll() {
@@ -65,14 +65,14 @@ class Chapter09ApplicationTests {
     }
 
     @Test
-    void testFindbyId(){
+    void testFindbyId() {
         User user = jpaUserRepository.findById(65L).get();
         System.out.println(user);
         user.getRoles().stream().forEach(System.out::println);
     }
 
     @Test
-    void testSave(){
+    void testSave() {
         User user = new User();
         user.setName("jpa");
         user.setAge(10);
@@ -84,7 +84,7 @@ class Chapter09ApplicationTests {
     //级联
     //ALL PERSIST
     @Test
-    void testSavePERSIST(){
+    void testSavePERSIST() {
         User user = new User();
         user.setName("PERSIST");
         user.setAge(10);
@@ -103,7 +103,7 @@ class Chapter09ApplicationTests {
 
     //ALL MERGE
     @Test
-    void testSaveMERGE(){
+    void testSaveMERGE() {
         User user = jpaUserRepository.findById(65L).get();
         user.setName("222");
 
@@ -115,22 +115,30 @@ class Chapter09ApplicationTests {
         jpaUserRepository.save(user);
     }
 
-    @Autowired
-    private LockService lockService;
-
     @Test
-    void testLock(){
-        boolean lock = lockService.tryLock("myLock", 30);
-        if(lock){
-            try {
-                Thread.sleep(10000);
-                System.out.println(123);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }finally {
-                lockService.unlock("myLock");
+    void testLock() {
+
+        for (int i1 = 0; i1 < 4; i1++) {
+            boolean lock = lockService.tryLock("myLock", 30);
+            if (lock) {
+                try {
+                    System.out.println("get lock ==" + i1);
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    //lockService.unlock("myLock");
+                }
+            } else {
+                try {
+                    System.out.println("can't get lock ==" + i1);
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
     }
 
 }

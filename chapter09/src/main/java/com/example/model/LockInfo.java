@@ -41,6 +41,9 @@ public class LockInfo {
         this.expirationTime=expirationTime;
     }
 
+    public LockInfo() {
+    }
+
     public Long getId() {
         return id;
     }

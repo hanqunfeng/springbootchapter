@@ -26,7 +26,7 @@ public class LockService {
      * <p>尝试获得锁</p>
      * 只有两种情况下可以获得锁：
      * 1.锁不存在
-     * 2.锁过期，正常情况下应该谁创建谁释放，但是又是业务可能异常，导致没有执行释放操作，所以这里通过过期时间判断是否可以获得锁，如果已经过期，则采用先珊后建的方式重新获得锁
+     * 2.锁过期，正常情况下应该谁创建谁释放，但是又是业务可能异常，导致没有执行释放操作，所以这里通过过期时间判断是否可以获得锁，如果已经过期，则采用先珊后建的方式重新获得锁，或者基于tag和上次过期时间进行更新
      *
      * @param tag            锁标识，类似于redis的key，该字段必须创建唯一索引
      * @param expiredSeconds 过期时间，单位秒
@@ -48,11 +48,16 @@ public class LockService {
             LocalDateTime expiredTime = lockInfo.getExpirationTime();
             LocalDateTime now = LocalDateTime.now();
             if (expiredTime.isBefore(now)) {
-                //看到好多网上的例子，这里都是用的update过期时间方式，多线程情况下会导致多个线程获得锁，所以这里先删除原来的锁，再通过save创建新的锁
+                //看到好多网上的例子，这里都是用的基于tag直接更新过期时间方式，多线程情况下会导致多个线程获得锁，所以这里先删除原来的锁，再通过save创建新的锁
                 //删除锁时，避免多线程情况下删除了新创建的数据，所以这里要带上过期时间参数
-                lockInfoRepository.deleteByTagAndExpirationTime(tag,expiredTime);
-                lockInfoRepository.save(new LockInfo(tag, LocalDateTime.now().plusSeconds(expiredSeconds)));
-                return true;
+                //lockInfoRepository.deleteByTagAndExpirationTime(tag,expiredTime);
+                //lockInfoRepository.save(new LockInfo(tag, LocalDateTime.now().plusSeconds(expiredSeconds)));
+
+                //也可以使用基于上次过期时间进行更新，这样一个语句就可以搞定
+                Integer integer = lockInfoRepository.updateByTagAndExpirationTime(tag, LocalDateTime.now().plusSeconds(expiredSeconds), expiredTime);
+                if (integer == 1) {
+                    return true;
+                }
             }
         }
         return false;
