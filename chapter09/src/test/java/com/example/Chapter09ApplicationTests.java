@@ -5,6 +5,7 @@ import com.example.dao.BookRepository;
 import com.example.dao.JpaUserRepository;
 import com.example.dao.RoleRepository;
 import com.example.model.*;
+import com.example.service.LockService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -112,6 +113,24 @@ class Chapter09ApplicationTests {
         user.setUserAddress(address);
         //保存前会再查询一次，如果没有变化，则不会发送修改sql
         jpaUserRepository.save(user);
+    }
+
+    @Autowired
+    private LockService lockService;
+
+    @Test
+    void testLock(){
+        boolean lock = lockService.tryLock("myLock", 30);
+        if(lock){
+            try {
+                Thread.sleep(10000);
+                System.out.println(123);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }finally {
+                lockService.unlock("myLock");
+            }
+        }
     }
 
 }

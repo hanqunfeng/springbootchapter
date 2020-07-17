@@ -1,4 +1,4 @@
-# jpa,springboot，一对一、一对多、多对一、多对多关联映射
+# jpa,springboot，一对一、一对多、多对一、多对多关联映射，分布式锁
 
 注意：一定要开启@Transactional，否则延迟加载会报no session错误
 
