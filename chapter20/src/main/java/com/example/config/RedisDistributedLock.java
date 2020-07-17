@@ -28,13 +28,13 @@ public class RedisDistributedLock {
      *
      * @param lockKey    锁key
      * @param value      锁value，这里可以设置一个有意义的值，比如用户Id，业务名称等，可以用于区分锁是谁加的
-     * @param expireTime 锁的过期时间，单位秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
+     * @param expireTime 锁的过期时间，单位毫秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
      * @return boolean
      * @author hanqf
      * 2020/7/17 10:54
      */
     public boolean tryGetDistributedLock(String lockKey, String value, long expireTime) {
-        return stringRedisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, TimeUnit.SECONDS);
+        return stringRedisTemplate.opsForValue().setIfAbsent(lockKey, value, expireTime, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -42,9 +42,9 @@ public class RedisDistributedLock {
      *
      * @param lockKey     锁key
      * @param value       锁value
-     * @param expireTime  锁的过期时间，单位秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
-     * @param waitTime    等待时间，单位秒
-     * @param waitPerTime 等待间隔时间，单位秒
+     * @param expireTime  锁的过期时间，单位毫秒，根据业务执行时间设置过期时间，设置过期时间的目的是防止发生异常不能正确释放锁
+     * @param waitTime    等待时间，单位毫秒
+     * @param waitPerTime 等待间隔时间，单位毫秒
      * @return boolean
      * @author hanqf
      * 2020/7/17 10:56
@@ -53,7 +53,7 @@ public class RedisDistributedLock {
         long waitAlready = 0L;
         if (!tryGetDistributedLock(lockKey, value, expireTime) && waitAlready < waitTime) {
             try {
-                Thread.sleep(waitPerTime * 1000);
+                Thread.sleep(waitPerTime);
             } catch (InterruptedException e) {
                 System.out.println(String.format("Interrupted when trying to get a lock. key:[%s]", lockKey));
             }
