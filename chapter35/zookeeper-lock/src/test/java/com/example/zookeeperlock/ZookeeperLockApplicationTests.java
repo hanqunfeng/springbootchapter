@@ -1,6 +1,7 @@
 package com.example.zookeeperlock;
 
 import com.example.zookeeperlock.common.BaseLockHandler;
+import com.example.zookeeperlock.common.LockUtil;
 import com.example.zookeeperlock.common.ShardReentrantLockComponent;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.utils.CloseableUtils;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class ZookeeperLockApplicationTests {
@@ -35,6 +37,9 @@ class ZookeeperLockApplicationTests {
      */
     private int count;
 
+    @Autowired
+    private LockUtil lockUtil;
+
     @BeforeEach
     public void before() throws Exception {
         //模拟一个zookeeper节点，端口号为 2181
@@ -43,7 +48,7 @@ class ZookeeperLockApplicationTests {
 
     @AfterEach
     public void after() {
-        if(server != null) {
+        if (server != null) {
             //关闭资源
             CloseableUtils.closeQuietly(server);
         }
@@ -52,6 +57,7 @@ class ZookeeperLockApplicationTests {
     /**
      * 不加锁实现多个线程同时对 count 执行 ++ 操作
      * 会出现数据不一致现象
+     *
      * @throws Exception
      */
     @Test
@@ -60,7 +66,7 @@ class ZookeeperLockApplicationTests {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         //使用 CountDownLatch 实现线程的协调
         CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
-        for(int i = 0; i < THREAD_COUNT; i++) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
             final int index = i;
             //提交线程
             executorService.submit(() -> {
@@ -86,6 +92,7 @@ class ZookeeperLockApplicationTests {
 
     /**
      * 使用 zookeeper 加锁实现多个线程同时对 count 执行 ++ 操作
+     *
      * @throws Exception
      */
     @Test
@@ -97,7 +104,7 @@ class ZookeeperLockApplicationTests {
         //使用 CountDownLatch 实现线程的协调
         CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
 
-        for(int i = 0; i < THREAD_COUNT; i++) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
             final int index = i;
             //提交线程
             executorService.submit(() -> {
@@ -127,6 +134,40 @@ class ZookeeperLockApplicationTests {
                             return this.getPath();
                         }
                     });
+                }
+                //调用countDown方法，表示该线程执行完毕
+                countDownLatch.countDown();
+            });
+        }
+        //使该方法阻塞住，不然看不到效果
+        countDownLatch.await();
+    }
+
+    @Test
+    public void acquireLockTest2() throws Exception {
+        //要加锁节点的路径
+        String path = lockUtil.path;
+        //初始化一个拥有 100 个线程的线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        //使用 CountDownLatch 实现线程的协调
+        CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
+
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            final int index = i;
+            //提交线程
+            executorService.submit(() -> {
+                //name 表示该线程的名称
+                String name = "client" + (index + 1);
+                //result 获取执行完业务逻辑后返回值
+                boolean lock = false;
+                while (!lock) {
+                    lock = lockUtil.tryLock(path,300, TimeUnit.MICROSECONDS);
+                    if (lock) {
+                        //打印各个线程执行结果
+                        System.out.println(name + "    执行业务方法，对count++ : " + count);
+                        count++;
+                        lockUtil.releaseLock(path);
+                    }
                 }
                 //调用countDown方法，表示该线程执行完毕
                 countDownLatch.countDown();
