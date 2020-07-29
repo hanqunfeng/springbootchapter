@@ -58,7 +58,7 @@ class ZookeeperLockApplicationTests {
      * 不加锁实现多个线程同时对 count 执行 ++ 操作
      * 会出现数据不一致现象
      *
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Test
     public void noAcquireLockTest() throws Exception {
@@ -93,7 +93,7 @@ class ZookeeperLockApplicationTests {
     /**
      * 使用 zookeeper 加锁实现多个线程同时对 count 执行 ++ 操作
      *
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Test
     public void acquireLockTest() throws Exception {
