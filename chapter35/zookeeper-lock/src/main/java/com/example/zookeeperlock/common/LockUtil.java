@@ -18,14 +18,17 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LockUtil {
 
-    public String path = "/path/test";
+    /**
+     * 缺省的路径
+    */
+    public String defaultPath = "/path/test";
     @Autowired
     private CuratorFramework curatorFramework;
     private Map<String, InterProcessMutex> map = new HashMap<>();
 
     @PostConstruct
     public void init() {
-        map.put(path, new InterProcessMutex(this.curatorFramework, path));
+        map.put(defaultPath, new InterProcessMutex(this.curatorFramework, defaultPath));
     }
 
 
@@ -43,7 +46,12 @@ public class LockUtil {
         //用于标识是否获取了锁
         boolean acquire = false;
         try {
-            acquire = map.get(path).acquire(timeOut, timeUnit);
+            InterProcessMutex interProcessMutex = map.get(path);
+            if (interProcessMutex == null) {
+                map.put(path, new InterProcessMutex(this.curatorFramework, path));
+                interProcessMutex = map.get(path);
+            }
+            acquire = interProcessMutex.acquire(timeOut, timeUnit);
         } catch (Exception e) {
             e.printStackTrace();
         }

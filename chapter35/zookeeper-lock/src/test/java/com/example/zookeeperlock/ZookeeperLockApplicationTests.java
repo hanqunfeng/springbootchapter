@@ -146,7 +146,8 @@ class ZookeeperLockApplicationTests {
     @Test
     public void acquireLockTest2() throws Exception {
         //要加锁节点的路径
-        String path = lockUtil.path;
+        //String path = lockUtil.defaultPath;
+        String path = "/path/test2";
         //初始化一个拥有 100 个线程的线程池
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         //使用 CountDownLatch 实现线程的协调
