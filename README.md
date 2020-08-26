@@ -38,5 +38,6 @@
 
 ## 后续更新计划
 ### chapter36----Springboot SpringSecurity，JWT,CAS
-### chapter37----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
+### chapter37----Springboot Junit5 断言
+### chapter38----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
 

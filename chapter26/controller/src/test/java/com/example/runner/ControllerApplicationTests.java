@@ -1,5 +1,6 @@
 package com.example.runner;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,14 @@ import java.util.zip.GZIPOutputStream;
 //这里一定要加上webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT，否则报TestRestTemplate没有定义
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ControllerApplicationTests {
+
+    @Test
+    void contextLoads() {
+        int a = 1;
+        int b = 11;
+        //junit5的断言对象
+        Assertions.assertEquals(a, b,"值不相等");
+    }
 
     private static final Map<String, Object> map = new HashMap<>();
     private static final String JSON = "{\"name\":\"张三\",\"salary\":\"10000.12\",\"age\":\"20\"}";
