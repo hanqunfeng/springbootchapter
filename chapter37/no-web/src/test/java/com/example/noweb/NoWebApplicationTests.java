@@ -44,7 +44,7 @@ class NoWebApplicationTests {
     /**
      * @Disabled 不测试该方法，相当于JUnit4中的 @Ignore
     */
-    @Disabled
+    @Disabled("不测试的原因，可以不设置")
     @Test
     void test3() {
         int a = 1;
