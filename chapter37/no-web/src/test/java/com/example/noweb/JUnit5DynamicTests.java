@@ -18,6 +18,15 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class JUnit5DynamicTests {
 
+    /**
+     * 动态测试允许声明和运行在运行时生成的测试用例。
+     *
+     * 与在编译时定义固定数量的测试用例的静态测试相反，动态测试允许我们在运行时动态定义测试用例。
+     *
+     * 动态测试可以通过使用*@TestFactory注释的工厂方法生成。
+     *
+     * 工厂方法必须返回Stream，Collection，Iterable或Iterator。
+    */
     @TestFactory
     Collection dynamicTests() {
         return Arrays.asList(

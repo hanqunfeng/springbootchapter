@@ -2,6 +2,7 @@ package com.example.web;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,12 @@ import org.springframework.boot.web.server.LocalServerPort;
  * 如果您使用的是JUnit 5，则不需要添加与@SpringBootTest等价的@ExtendWith(SpringExtension.class)。
  *
  * webEnvironment: 默认为Mock模式，这里配置为随机端口模式，启动容器时端口随机
+ *
+ *
+ * @DisplayName("我的测试类") 用于指定测试类或方法的名称，默认为类和方法名称
 */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DisplayName("我的测试类")
 class WebApplicationTests {
 
     /**
@@ -40,6 +45,7 @@ class WebApplicationTests {
     }
 
     @Test
+    @DisplayName("我的测试方法")
     void test1() {
 
         String forObject = restTemplate.getForObject("/index/zhangsan", String.class);
