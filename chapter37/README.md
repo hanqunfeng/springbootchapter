@@ -16,4 +16,4 @@ JUnit4 | JUnit5 | 说明
 @RunWith |@ExtendWith |@Runwith就是放在测试类名之前，用来确定这个类怎么运行的
 @Rule| @ExtendWith |Rule是一组实现了TestRule接口的共享类，提供了验证、监视TestCase和外部资源管理等能力
 @ClassRule| @ExtendWith| @ClassRule用于测试类中的静态变量，必须是TestRule接口的实例，且访问修饰符必须为public。
-
+@Rule  | @TempDir | 临时目录,@Rule 声明于TemporaryFolder,@TempDir 声明于Path or File
