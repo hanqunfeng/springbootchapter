@@ -38,13 +38,13 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>2.2</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- 不需要单独添加，spring-boot-starter-test 已经包含该依赖了 -->
+<!--        <dependency>-->
+<!--            <groupId>org.hamcrest</groupId>-->
+<!--            <artifactId>hamcrest</artifactId>-->
+<!--            <version>2.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
 
 
