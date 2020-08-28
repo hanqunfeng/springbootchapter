@@ -12,8 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
  * Created by hanqf on 2020/8/27 15:56.
  */
 
-
-public class TimeoutTests {
+class TimeoutTests {
 
     /**
      * 当前类中所有测试方法执行前执行一次,相当于JUnit4中的 @BeforeClass
