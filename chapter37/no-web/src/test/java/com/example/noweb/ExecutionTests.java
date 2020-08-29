@@ -2,16 +2,16 @@ package com.example.noweb;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.*;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
  * <p>扩展测试用例</p>
  * Created by hanqf on 2020/8/29 20:09.
+ *
+ * @ExtendWith 可以声明在类和方法上
  *
  * BeforeAllCallBack //(1)
  *     @BeforeAll  //(2)
@@ -42,7 +42,7 @@ import java.lang.reflect.Method;
  * 12	interface org.junit.jupiter.api.extension.AfterAllCallback	            在执行容器的所有测试之后执行扩展代码
  */
 
-@ExtendWith({BeforeAllCallbackExecution.class,AfterEachCallbackExecution.class})
+@ExtendWith({BeforeAllCallbackExecution.class,AfterEachCallbackExecution.class,TimingExtension.class,IgnoreIOExceptionExtension.class})
 public class ExecutionTests {
 
     @BeforeAll
@@ -87,5 +87,48 @@ class AfterEachCallbackExecution implements AfterEachCallback {
         System.out.println("testMethodName==" + testMethodName);
 
         System.out.println(context.getTestMethod().get().getName());
+    }
+}
+
+/**
+ * 数据可以共享：context.getStore().put/get/remove
+*/
+class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+
+
+    private static final String START_TIME = "start time";
+
+    @Override
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
+        getStore(context).put(START_TIME, System.currentTimeMillis());
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        Method testMethod = context.getRequiredTestMethod();
+        long startTime = getStore(context).remove(START_TIME, long.class);
+        long duration = System.currentTimeMillis() - startTime;
+
+        System.out.println(String.format("Method [%s] took %s ms.", testMethod.getName(), duration));
+    }
+
+    private ExtensionContext.Store getStore(ExtensionContext context) {
+        return context.getStore(ExtensionContext.Namespace.create(getClass(), context.getRequiredTestMethod()));
+    }
+}
+
+/**
+ * 异常处理扩展，这里对IOException不做任何处理
+*/
+class IgnoreIOExceptionExtension implements TestExecutionExceptionHandler {
+
+    @Override
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable)
+            throws Throwable {
+
+        if (throwable instanceof IOException) {
+            return;
+        }
+        throw throwable;
     }
 }
