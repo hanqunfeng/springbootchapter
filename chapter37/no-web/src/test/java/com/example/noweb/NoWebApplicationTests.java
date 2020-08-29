@@ -1,9 +1,15 @@
 package com.example.noweb;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.condition.JRE.JAVA_8;
+import static org.junit.jupiter.api.condition.JRE.JAVA_9;
+
 /**
+ * 类说明
+ *
  * @RunWith(SpringRunner.class) JUnit4 需要声明该注解，Junit5 只需要声明@SpringBootTest
  *
  * @TestMethodOrder(MethodOrderer.OrderAnnotation.class) 指定测试方法执行顺序基于@Order中的值，值越小越先执行
@@ -28,7 +34,24 @@ import org.springframework.boot.test.context.SpringBootTest;
  *    </configuration>
  * </plugin>
  *
+ * @Tag标签不能为空或 null。
+ * 不能包含空格。不能包含ISO控制字符。
+ * 不能包含以下任何保留字符:
+ * ,逗号 (左括号 )右括号 &与 |竖线 !非
  *
+ *
+ * 条件注解，有许多条件注解，可以看一下源码包，比如存在某个JVM系统属性、环境变量时，等等
+ * @EnabledXXXXX : 符合条件时执行
+ * @EnabledOnOs(OS.MAC)
+ * @EnabledOnJre({ JAVA_9, JAVA_8 })
+ * @EnabledIfSystemProperty(named = "os.arch", matches = ".*64.*")
+ * @EnabledIfEnvironmentVariable(named = "ENV", matches = "staging-server")
+ *
+ * @DisabledXXXXX : 符合条件时不执行
+ * @DisabledOnOs(OS.MAC)
+ * @DisabledOnJre(JAVA_8)
+ * @DisabledIfSystemProperty(named = "ci-server", matches = "true")
+ * @DisabledIfEnvironmentVariable(named = "ENV", matches = ".*development.*")
 */
 
 @Tag("NoWebApplicationTests")
@@ -110,6 +133,38 @@ public class NoWebApplicationTests {
 
     @Test
     void test5() {
+        System.out.println("test5");
+        int a = 1;
+        int b = 1;
+        //junit5的断言对象
+        Assertions.assertEquals(a, b,"值不相等");
+    }
+
+    @Test
+    @EnabledOnOs(OS.MAC)
+    @EnabledOnJre({ JAVA_9, JAVA_8 })
+    void test6() {
+        System.out.println("test5");
+        int a = 1;
+        int b = 1;
+        //junit5的断言对象
+        Assertions.assertEquals(a, b,"值不相等");
+    }
+
+    @Test
+    @DisabledOnOs(OS.MAC)
+    void test7() {
+        System.out.println("test5");
+        int a = 1;
+        int b = 1;
+        //junit5的断言对象
+        Assertions.assertEquals(a, b,"值不相等");
+    }
+
+
+    @Test
+    @DisabledOnJre(JAVA_8)
+    void test8() {
         System.out.println("test5");
         int a = 1;
         int b = 1;

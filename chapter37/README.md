@@ -1,7 +1,9 @@
 # chapter37----Springboot Junit5 断言
 
 
-参考 ：Junit5 入门系列 https://blog.csdn.net/ryo1060732496/category_9276134.html
+参考 ：
+* Junit5 入门系列 https://blog.csdn.net/ryo1060732496/category_9276134.html
+* JUnit5用户手册 https://www.cnblogs.com/followerofjests/p/10466070.html
 
 JUnit4 | JUnit5 | 说明
 ---- | ---- | ----
