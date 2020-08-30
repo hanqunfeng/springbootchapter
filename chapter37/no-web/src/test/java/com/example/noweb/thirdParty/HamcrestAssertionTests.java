@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.*;
  * <p>Hamcrest第三方测试包</p>
  *
  * 使用第三方测试包，好处就是测试方法更多一些，逻辑更清晰
- * springboot test类库就是使用的AssertJ 和 Hamcrest，实际上AssertJ依赖于Hamcrest
+ * springboot test类库同时提供AssertJ 和 Hamcrest的支持，实际上AssertJ依赖于Hamcrest
  *
  * Created by hanqf on 2020/8/28 16:30.
  * <p>
