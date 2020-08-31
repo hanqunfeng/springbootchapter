@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @author hanqf
  * @date 2020/3/5 11:13
  */
-@Configuration()
+@Configuration
 @ComponentScan("org.example")
 //启用AspectJAutoProxy
 @EnableAspectJAutoProxy

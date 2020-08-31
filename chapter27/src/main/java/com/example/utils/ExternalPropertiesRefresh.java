@@ -76,7 +76,7 @@ public class ExternalPropertiesRefresh {
     /**
      * <p>获取属性名称，去除前缀</p>
      *
-     * @param key   属性key
+     * @param key    属性key
      * @param prefix 属性key前缀
      * @return java.lang.String
      * @author hanqf
@@ -194,12 +194,13 @@ public class ExternalPropertiesRefresh {
 
     /**
      * <p>刷新指定属性类</p>
+     *
+     * @param beanName bean的注册名称，默认类名称首字母小写
      * @author hanqf
      * 2020/4/18 12:24
-     * @param beanName bean的注册名称，默认类名称首字母小写
      */
     @SneakyThrows
-    public void refresh(String beanName){
+    public void refresh(String beanName) {
         log.info("refresh " + beanName + " start");
         Class<?> cls = configurableListableBeanFactory.getType(beanName);
         Object bean = configurableListableBeanFactory.getBean(cls);
