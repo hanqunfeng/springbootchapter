@@ -23,7 +23,7 @@ public class DemoController {
     public String index() throws ExecutionException, InterruptedException {
         Future<String> stringFuture = service.asyncMethodWithReturnType();
         service.asyncMethodWithVoidReturnType();
-        return stringFuture.get();
+        return stringFuture.get(); //通过get方法获取执行结果，该方法会阻塞直到任务返回结果。
     }
 
     /**
