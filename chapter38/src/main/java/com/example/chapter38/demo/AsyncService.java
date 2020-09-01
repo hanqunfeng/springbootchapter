@@ -13,8 +13,8 @@ import java.util.concurrent.Future;
  * 异步方法的返回值只支持如下四种：具体查看AsyncExecutionAspectSupport.doSubmit()
  * void
  * java.util.concurrent.Future
- * org.springframework.util.concurrent.ListenableFuture
- * java.util.concurrent.CompletableFuture
+ * org.springframework.util.concurrent.ListenableFuture 其是Future子类
+ * java.util.concurrent.CompletableFuture  其是Future子类
  */
 
 @Service
@@ -48,6 +48,8 @@ public class AsyncService {
             //休眠5秒，模拟业务执行时间
             Thread.sleep(5000);
             System.out.println("asyncMethodWithReturnType return");
+
+            //AsyncResult是ListenableFuture子类，ListenableFuture是Future子类
             return new AsyncResult<String>("hello world !!!!");
         } catch (InterruptedException e) {
             System.out.println("InterruptedException error");
