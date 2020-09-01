@@ -40,5 +40,6 @@
 ### chapter37----Springboot Junit5 断言
 
 ## 后续更新计划
-### chapter38----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
+### chapter38----Springboot @Async 异步调用
+### chapter39----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
 
