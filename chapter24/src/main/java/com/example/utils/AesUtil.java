@@ -1,7 +1,5 @@
 package com.example.utils;
 
-import org.apache.tomcat.util.codec.binary.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -12,6 +10,8 @@ import java.security.SecureRandom;
 /**
  * <p></p>
  * Created by hanqf on 2020/9/2 13:28.
+ *
+ * 对称加密
  */
 
 
@@ -39,7 +39,7 @@ public class AesUtil {
             // 加密
             final byte[] result = cipher.doFinal(byteContent);
             // 通过Base64转码返回
-            return Base64.encodeBase64String(result);
+            return java.util.Base64.getEncoder().encodeToString(result);
         } catch (final Exception ex) {
             throw new RuntimeException(ex.fillInStackTrace());
         }
@@ -63,7 +63,7 @@ public class AesUtil {
             // 使用密钥初始化，设置为解密模式
             cipher.init(Cipher.DECRYPT_MODE, getSecretKey(password));
             // 执行操作
-            final byte[] result = cipher.doFinal(Base64.decodeBase64(content));
+            final byte[] result = cipher.doFinal(java.util.Base64.getDecoder().decode(content));
             // 采用UTF-8编码转化为字符串
             return new String(result, CHARSETNAME);
         } catch (final Exception ex) {

@@ -28,4 +28,9 @@ public @interface RequestDecrypt {
      * 解密方法名称
      */
     String decryptMethod() default "decrypt";
+
+    /**
+     * 密钥
+     */
+    String key() default "";
 }

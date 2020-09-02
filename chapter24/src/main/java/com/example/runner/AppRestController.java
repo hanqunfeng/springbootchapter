@@ -7,7 +7,7 @@ import com.example.common.RequestDecrypt;
 import com.example.common.ResponseEncrypt;
 import com.example.model.RequestDataBody;
 import com.example.model.ResponseResult;
-import com.example.utils.DesUtil;
+import com.example.utils.RsaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
@@ -29,7 +29,7 @@ public class AppRestController {
      * 响应数据 加密
      */
     @GetMapping(value = "/sendResponseEncryData")
-    @ResponseEncrypt(encryptClass = DesUtil.class)
+    @ResponseEncrypt(encryptClass = RsaUtil.class)
     public ResponseResult sendResponseEncryData() {
         ResponseResult responseResult = ResponseResult.createResult().setSuccess(true);
         responseResult.setDataValue("name", "spring好好玩");
@@ -44,7 +44,7 @@ public class AppRestController {
      * {"data":"1kDc9KiEuI7j4N+EzycxgJpzxS+PxeWoFK9Zf3EznaNXuz7Q8j2XJly554SA5ASGt/zWSBk3/2kM\nBo60dRnUOw=="}
      */
     @PostMapping(value = "/getRequestData")
-    @RequestDecrypt(decryptClass = DesUtil.class)
+    @RequestDecrypt(decryptClass = RsaUtil.class)
     @ResponseEncrypt
     public ResponseResult getRequestData(@Nullable @RequestBody RequestDataBody requestDataBody) {
         ResponseResult responseResult = ResponseResult.createResult().setSuccess(true);

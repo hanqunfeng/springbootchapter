@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
@@ -51,8 +52,16 @@ public class EncryResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                             String srcData = JSON.toJSONString(responseResult.getData());
                             //加密
                             Class encryptClass = responseEncrypt.encryptClass();
-                            Method method = encryptClass.getMethod(responseEncrypt.encryptMethod(), String.class);
-                            String returnStr = (String) method.invoke(null, srcData);
+                            Method method;
+                            String returnStr;
+                            if(StringUtils.hasText(responseEncrypt.key())){
+                                method = encryptClass.getMethod(responseEncrypt.encryptMethod(), String.class,String.class);
+                                returnStr = (String) method.invoke(null, srcData,responseEncrypt.key());
+                            }else {
+                                method = encryptClass.getMethod(responseEncrypt.encryptMethod(), String.class);
+                                returnStr = (String) method.invoke(null, srcData);
+                            }
+
                             log.info("原始数据={},加密后数据={}", srcData, returnStr);
                             //清空map
                             responseResult.getData().clear();

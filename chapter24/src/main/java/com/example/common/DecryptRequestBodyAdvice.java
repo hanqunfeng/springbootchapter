@@ -65,8 +65,16 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
                             if (StringUtils.hasText(srcData)) { //有数据才进行解密
                                 //解密数据
                                 Class decryptClass = requestDecrypt.decryptClass();
-                                Method method = decryptClass.getMethod(requestDecrypt.decryptMethod(), String.class);
-                                String dealData = (String) method.invoke(null, srcData);
+                                Method method;
+                                String dealData;
+                                if(StringUtils.hasText(requestDecrypt.key())){
+                                    method = decryptClass.getMethod(requestDecrypt.decryptMethod(), String.class,String.class);
+                                    dealData = (String) method.invoke(null, srcData,requestDecrypt.key());
+                                }else {
+                                    method = decryptClass.getMethod(requestDecrypt.decryptMethod(), String.class);
+                                    dealData = (String) method.invoke(null, srcData);
+                                }
+
                                 log.info("原始数据={},解密后数据={}", srcData, dealData);
                                 requestDataBody.setData(dealData);
                                 return requestDataBody;

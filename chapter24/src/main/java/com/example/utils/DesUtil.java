@@ -2,8 +2,6 @@ package com.example.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -13,6 +11,8 @@ import java.security.SecureRandom;
 /**
  * <p>DES工具类</p>
  * Created by hanqf on 2020/9/2 10:30.
+ *
+ * 对称加密
  */
 
 
@@ -54,11 +54,9 @@ public class DesUtil {
      * 2020/9/2 10:30
      */
     public static String decrypt(String srcData,String password) {
-        // 基于BASE64编码，接收byte[]并转换成String
-        BASE64Decoder base64decoder = new BASE64Decoder();
         try {
             // 将字符串decode成byte[]
-            byte[] bytes = base64decoder.decodeBuffer(srcData);
+            byte[] bytes = java.util.Base64.getDecoder().decode(srcData);
             // 获取解密对象
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             // 初始化解密信息
@@ -86,8 +84,6 @@ public class DesUtil {
      * 2020/9/2 10:31
      */
     public static String encrypt(String srcData,String password) {
-        // 基于BASE64编码，接收byte[]并转换成String
-        BASE64Encoder base64encoder = new BASE64Encoder();
         try {
             // 按UTF8编码
             byte[] bytes = srcData.getBytes(CHARSETNAME);
@@ -98,7 +94,7 @@ public class DesUtil {
             // 加密
             byte[] doFinal = cipher.doFinal(bytes);
             // byte[]to encode好的String并返回
-            return base64encoder.encode(doFinal);
+            return java.util.Base64.getEncoder().encodeToString(doFinal);
         } catch (Exception e) {
             log.error("DESUtil 加密 Exception ：", e);
             throw new RuntimeException(e);

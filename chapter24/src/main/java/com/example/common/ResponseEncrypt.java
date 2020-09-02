@@ -27,4 +27,9 @@ public @interface ResponseEncrypt {
      * 加密方法名称
     */
     String encryptMethod() default "encrypt";
+    
+    /**
+     * 密钥
+    */
+    String key() default "";
 }
