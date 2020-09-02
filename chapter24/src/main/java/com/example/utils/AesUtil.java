@@ -84,9 +84,9 @@ public class AesUtil {
      */
     private static SecretKeySpec getSecretKey(final String password) {
         // 返回生成指定算法密钥生成器的 KeyGenerator 对象
-        KeyGenerator kg = null;
+        KeyGenerator keyGenerator = null;
         try {
-            kg = KeyGenerator.getInstance(KEY_ALGORITHM);
+            keyGenerator = KeyGenerator.getInstance(KEY_ALGORITHM);
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
             secureRandom.setSeed(password.getBytes());
             // AES 要求密钥长度为 128，192，256
@@ -96,9 +96,9 @@ public class AesUtil {
             //2.或者在代码中指定：Security.setProperty("crypto.policy", "unlimited");
 
             //这里没做任何处理，查看java.security发现，默认值就是不限制,java version "1.8.0_211"
-            kg.init(256, secureRandom);
+            keyGenerator.init(256, secureRandom);
             // 生成一个密钥
-            final SecretKey secretKey = kg.generateKey();
+            final SecretKey secretKey = keyGenerator.generateKey();
             // 转换为AES专用密钥
             return new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
         } catch (final NoSuchAlgorithmException ex) {
