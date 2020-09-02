@@ -23,7 +23,7 @@
 ### chapter21----springboot redis集群 不支持事务
 ### chapter22----springboot redis注解式缓存
 ### chapter23----springboot redis发布订阅
-### chapter24----springboot MVC thymeleaf i18n 跨域
+### chapter24----springboot MVC thymeleaf i18n 跨域 基于RequestBodyAdvice和ResponseBodyAdvice的请求和响应数据加解密
 ### chapter25----springboot JPA 自定义JpaRepositories接口
 ### chapter26----springboot HttpClient 和 OkHttpClient
 ### chapter27----springboot 动态刷新外部属性文件 @PropertySource(value = "file:demo.properties")
