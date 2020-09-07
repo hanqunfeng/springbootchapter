@@ -36,10 +36,11 @@
 ### chapter34----数据结构 二叉树的遍历，本来想整xxl-job分布式任务调度平台，后来发现官网说的过于详细了，没必要整demo了
 ### chapter35----分布式锁 zookeeper redis db
 
-### chapter36----Springboot SpringSecurity，JWT,CAS (未完成，只做了个基于内存的demo)
 ### chapter37----Springboot Junit5 断言
+### chapter38----Springboot @Async 异步调用
 
 ## 后续更新计划
-### chapter38----Springboot @Async 异步调用
+### chapter36----Springboot SpringSecurity，JWT,CAS (未完成，只做了个基于内存的demo)
 ### chapter39----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
+
 
