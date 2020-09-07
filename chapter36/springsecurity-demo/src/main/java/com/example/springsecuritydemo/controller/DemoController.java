@@ -1,7 +1,7 @@
 package com.example.springsecuritydemo.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping("/demo")
 public class DemoController {
 
-    @GetMapping("/index")
+    @PreAuthorize("hasRole('admin')")
+    @GetMapping({"/","/index"})
     public String index(){
         return "hello world!";
     }
