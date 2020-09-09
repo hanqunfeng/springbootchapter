@@ -1,5 +1,6 @@
 package com.example.springsecuritydemo.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -106,12 +107,13 @@ import java.util.List;
  * 另外，userDetailsService()方法也需要重写，这里是自定义用户的地方
  */
 
+@ConditionalOnProperty(prefix = "security",name = "config",havingValue = "default",matchIfMissing = true)
 @Configuration
 // 启用web安全认证，springboot mvc环境可以不用配置，自动配置WebSecurityEnablerConfiguration中已经启用，参考：http://www.zhihesj.com/?id=26
 @EnableWebSecurity
 //开启方法级别的安全验证注解，参考 https://www.jianshu.com/p/77b4835b6e8e
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfigByDefault extends WebSecurityConfigurerAdapter {
 
     @Bean
     // 密码加密策略
