@@ -2,13 +2,29 @@ package com.example.springsecuritydemo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p></p>
@@ -79,6 +95,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * ...
  * return userList;
  * }
+ * <p>
+ * <p>
+ * WebSecurityConfigurerAdapter:
+ * 主要规则通过实现WebSecurityConfigurerAdapter的三个configure方法来设置
+ * 1.configure(AuthenticationManagerBuilder auth) ：用户管理，用于设置用户的验证方式
+ * 2.configure(WebSecurity web) ：指定不拦截的路径规则
+ * 3.configure(HttpSecurity http) ：过滤器管理，用于设置资源权限、登录注销方式、session管理方式，自定义过滤器绑定，等等
+ * <p>
+ * 另外，userDetailsService()方法也需要重写，这里是自定义用户的地方
  */
 
 @Configuration
@@ -94,14 +119,179 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 用户管理，用于设置用户的验证方式
+     */
     @Override
-    // 配置内存用户策略
-    // 登录: /login  注销: /logout
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 测试时，可以直接用下面的方式
         // User.UserBuilder builder = User.withDefaultPasswordEncoder();
-        User.UserBuilder builder = User.builder().passwordEncoder(passwordEncoder()::encode);
-        auth.inMemoryAuthentication().withUser(builder.username("admin").password("123456").roles("admin").build());
-        auth.inMemoryAuthentication().withUser(builder.username("guest").password("123456").roles("guest").build());
+
+        //内存用户的一般创建方式，不过这种方式不支持rememberMe
+        //User.UserBuilder builder = User.builder().passwordEncoder(passwordEncoder()::encode);
+        //auth.inMemoryAuthentication().withUser(builder.username("admin").password("123456").roles("admin").build());
+        //auth.inMemoryAuthentication().withUser(builder.username("guest").password("123456").roles("guest").build());
+
+        // 绑定UserDetailsService
+        auth.userDetailsService(userDetailsService())
+                .passwordEncoder(passwordEncoder()); // 绑定密码规则
+
     }
+
+
+    /**
+     * 用户策略设置，这里使用内存用户策略，自定义策略需要实现UserDetailsService接口
+     */
+    @Override
+    protected UserDetailsService userDetailsService() {
+        User.UserBuilder builder = User.builder().passwordEncoder(passwordEncoder()::encode);
+        UserDetails userDetails1 = builder.username("admin").password("123456").roles("admin").build();
+        UserDetails userDetails2 = builder.username("guest").password("123456").roles("guest").build();
+        return new InMemoryUserDetailsManager(userDetails1, userDetails2);
+    }
+
+    /**
+     * 指定不拦截的路径规则
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //设置不需要拦截的路径，也就是不需要认证的路径
+        //web.ignoring().antMatchers("/**/*.xml", "/**/*.jsp");
+    }
+
+    /**
+     * 过滤器管理，用于设置资源权限、登录注销方式、session管理方式，自定义过滤器绑定，等等
+     *
+     * 表达式	                            描述
+     * hasRole([role])	                用户拥有制定的角色时返回true （Spring security默认会带有ROLE_前缀）,去除参考Remove the ROLE_
+     * hasAnyRole([role1,role2])	    用户拥有任意一个制定的角色时返回true
+     * hasAuthority([authority])	    等同于hasRole,但不会带有ROLE_前缀
+     * hasAnyAuthority([auth1,auth2])	等同于hasAnyRole
+     * permitAll	                    永远返回true
+     * denyAll	                        永远返回false
+     * anonymous	                    当前用户是anonymous时返回true
+     * rememberMe	                    当前勇士是rememberMe用户返回true
+     * authentication	                当前登录用户的authentication对象
+     * fullAuthenticated	            当前用户既不是anonymous也不是rememberMe用户时返回true
+     * hasIpAddress('192.168.1.0/24'))	请求发送的IP匹配时返回true
+     */
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //super.configure(http);
+
+        //解决不支持iframe的问题
+        http.headers().frameOptions().disable();
+
+        // 拦截路径规则设置
+        http.authorizeRequests()
+                .accessDecisionManager(accessDecisionManager()) //访问决策管理器，默认支持三种决策者：RoleVoter、AuthenticatedVoter、WebExpressionVoter。一般需要添加自定义决策者
+                //.antMatchers("/").access("ROLE_ADMIN") // 基于权限 RoleVoter
+                .antMatchers("/accessDenied").authenticated() // WebExpressionVoter 登录后就可访问的路径
+                .antMatchers("/demo").fullyAuthenticated() // AuthenticatedVoter 完全登录后就可访问的路径，就是必须从登录页面登录，而不能是rememberMe
+                .antMatchers("/guest/*").hasAnyRole("guest", "admin") // 基于表达式 需要登录用户具备任意权限都可以访问
+                //.antMatchers("/**/*").hasRole("admin") // 需要登录用户具备指定权限才能访问
+                .antMatchers("/**/*").access("hasRole('admin') or hasRole('user')") // 基于表达式 参考：https://my.oschina.net/liuyuantao/blog/1924776
+                //.antMatchers(HttpMethod.GET,"/**/*").access("hasRole('ADMIN') and hasRole('USER')") // 基于请求类型和表达式
+                .anyRequest().authenticated(); // 除以上规则外，其它路径只要登录就可以访问
+
+        // 访问拒绝页面，认证后访问没有权限的路径，将跳转到指定路径，这里不能直接跳转到/login
+        http.exceptionHandling().accessDeniedPage("/accessDenied");
+
+        // 开启csrf，默认为开启，生成页面时会自动在每个form中增加一个隐藏属性<input type="hidden" name="_csrf" value="95e8706b-8d22-4d62-9a27-3da5993e0a7d">，
+        // 也可以手工配置(没必要)，thymeleaf中就是<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />，js中如果需要使用时也可以使用该属性
+        //http.csrf().ignoringAntMatchers("/**/*.json","/**/*.xml"); //哪些不需要csrf，非浏览器直接访问的地址需要进行屏蔽，因为csrf标签只有页面会自动生成
+
+        // 关闭csrf，一般情况下，如果服务中大部分请求都是基于浏览器访问的，则应该开启csrf，如果大部分都是接口，则可以关闭csrf，因为只有在页面的form中才会自动生成隐藏属性，所以接口需要自己在参数中传递，反倒麻烦
+        http.csrf().disable();
+
+        // 登录设置
+        http.formLogin()
+                //.loginPage("/login.do")  // 自定义登录路径，默认 /login
+                //.failureUrl("/login.do?login_error=1") // 自定义认证失败路径
+                .defaultSuccessUrl("/", false) //缺省的登录成功页面，这里设置为false，表示如果指定了具体路径则登录成功后跳转到指定的路径
+                .loginProcessingUrl("/j_spring_security_check") // 默认 /login
+                .usernameParameter("j_username")  // 默认username
+                .passwordParameter("j_password")  // 默认password
+                .permitAll(); // 允许任意用户访问login页面，这个是表达式语句
+
+        // 注销设置，这里需要注意的是，如果启用了csrf(默认就是开启)，则logout只能是post提交，如果要get提交，则必须如下配置
+        http.logout() // 注销: 默认 /logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) //get
+                //.logoutUrl("/logout")  //post
+                .logoutSuccessUrl("/login") //注销成功跳转路径
+                //.deleteCookies("cookie1","cookie2") // 注销时删除无用的cookie
+                .invalidateHttpSession(true); //注销后使session无效
+
+        // rememberMe设置，参考：https://www.cnblogs.com/xuwenjin/p/9933218.html
+        http.rememberMe()
+                // 服务端token存储位置默认为内存中(InMemoryTokenRepositoryImpl)，客户端会携带cookie中的token与服务端比对，服务重启则失效
+                // 可以使用JdbcTokenRepositoryImpl将信息存储到数据库，需要配置datasource，其支持自动创建数据表，待结合数据库时再具体说明
+                .tokenRepository(new InMemoryTokenRepositoryImpl()) // 默认内存存储服务端token
+                //.rememberMeParameter("_spring_security_remember_me") // 默认 remember-me
+                //.tokenValiditySeconds(1209600); // 单位秒 两周=60*60*24*14  默认14天
+                .tokenValiditySeconds(1814400); // 21天
+
+        // session管理
+        http.sessionManagement()
+                //.invalidSessionUrl("/login") // 无效session跳转地址
+                .maximumSessions(1) // 最大并发登录，这里设置为1次，只要用户重新登录，则之前的登录就会失效
+                //.maxSessionsPreventsLogin(true) // 达到最大并发后阻止后续的登录，默认false
+                .expiredUrl("/access/sameLogin.do"); // 达到最大并发后，前一个用户session会失效，再次访问资源时的跳转地址
+    }
+
+    /**
+     * 访问决策管理器：配置各种投决策，用以决定是否通过验证
+     *
+     * 可以增加自定义决策，当前配置为默认配置
+     *
+     * 类名	                描述
+     * AffirmativeBased	如果有任何一个投票器允许访问，请求将被立刻允许，而不管之前可能有的拒绝决定。
+     * ConsensusBased	多数票（允许或拒绝）决定了AccessDecisionManager的结果。平局的投票和空票（全是弃权的）的结果是可配置的。
+     * UnanimousBased	所有的投票器必须全是允许的，否则访问将被拒绝。
+     *
+     * RoleVoter:
+     *      Spring Security内置的一个AccessDecisionVoter，其会将ConfigAttribute简单的看作是一个角色名称，在投票的时如果拥有该角色即投赞成票。
+     *      如果ConfigAttribute是以“ROLE_”开头的，则将使用RoleVoter进行投票。当用户拥有的权限中有一个或多个能匹配受保护对象配置的以“ROLE_”开头的ConfigAttribute时其将投赞成票；
+     *      如果用户拥有的权限中没有一个能匹配受保护对象配置的以“ROLE_”开头的ConfigAttribute，则RoleVoter将投反对票；如果受保护对象配置的ConfigAttribute中没有以“ROLE_”开头的，则RoleVoter将弃权。
+     *      支持的方法：.access("ROLE_ADMIN")
+     *
+     * AuthenticatedVoter:
+     *      Spring Security内置的一个AccessDecisionVoter实现。其主要用来区分匿名用户、通过Remember-Me认证的用户和完全认证的用户。完全认证的用户是指由系统提供的登录入口进行成功登录认证的用户。
+     *      支持的方法：.rememberMe() .fullyAuthenticated() .anonymous()
+    */
+    @Bean(name = "accessDecisionManager")
+    public AccessDecisionManager accessDecisionManager() {
+        //决策者列表
+        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList();
+        decisionVoters.add(new RoleVoter()); // 基于角色名称的验证，必须以ROLE_开头 .access("ROLE_ADMIN")
+        decisionVoters.add(new AuthenticatedVoter()); // .rememberMe()  .fullyAuthenticated() .anonymous()
+        decisionVoters.add(new WebExpressionVoter()); // 基于表达式的验证，如：.access("hasRole('admin') or hasRole('user')") .permitAll() .hasRole("admin") .authenticated() 等等
+
+        //AffirmativeBased ：任意决策者通过则通过
+        AffirmativeBased accessDecisionManager = new AffirmativeBased(decisionVoters);
+        return accessDecisionManager;
+    }
+
+    /**
+     * 认证事件监听器，打印日志
+     *
+     * 如：认证失败/成功、注销，等等
+    */
+    @Bean
+    public org.springframework.security.authentication.event.LoggerListener loggerListener() {
+        org.springframework.security.authentication.event.LoggerListener loggerListener = new org.springframework.security.authentication.event.LoggerListener();
+        return loggerListener;
+    }
+
+    /**
+     * 资源访问事件监听器，打印日志
+     *
+     * 如：没有访问权限
+    */
+    @Bean
+    public org.springframework.security.access.event.LoggerListener eventLoggerListener() {
+        org.springframework.security.access.event.LoggerListener eventLoggerListener = new org.springframework.security.access.event.LoggerListener();
+        return eventLoggerListener;
+    }
+
 }
