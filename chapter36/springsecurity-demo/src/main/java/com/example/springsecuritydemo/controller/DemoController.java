@@ -1,5 +1,6 @@
 package com.example.springsecuritydemo.controller;
 
+import com.example.springsecuritydemo.common.AuthenticationUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ public class DemoController {
     @PreAuthorize("hasRole('admin')")
     @GetMapping({"/"})
     public String index(){
-        return "hello world!";
+        return "hello world! " + AuthenticationUtil.getUsername();
     }
 
     @GetMapping({"/get/{id}"})
@@ -34,7 +35,7 @@ public class DemoController {
 
     @GetMapping({"/demo"})
     public String demo(){
-        return "demo";
+        return "demo " + AuthenticationUtil.getUsername();
     }
 
 
