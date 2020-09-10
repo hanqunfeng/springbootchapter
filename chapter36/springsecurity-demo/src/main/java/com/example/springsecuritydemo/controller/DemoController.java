@@ -3,6 +3,7 @@ package com.example.springsecuritydemo.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -21,7 +22,7 @@ public class DemoController {
      * 简单理解就是，配置类中定义的权限是针对url的，而该注解是针对方法的，两者没有关联
     */
     @PreAuthorize("hasRole('admin')")
-    @GetMapping({"/","/index"})
+    @GetMapping({"/"})
     public String index(){
         return "hello world!";
     }
@@ -37,8 +38,18 @@ public class DemoController {
     }
 
 
-    @GetMapping({"/accessDenied"})
+    @RequestMapping({"/accessDenied"})
     public String accessDenied(){
         return "accessDenied";
+    }
+
+    @RequestMapping({"/sameLogin"})
+    public String sameLogin(){
+        return "sameLogin";
+    }
+
+    @RequestMapping({"/fail"})
+    public String fail(){
+        return "fail";
     }
 }

@@ -1,5 +1,6 @@
 package com.example.springsecuritydemo.config;
 
+import com.example.springsecuritydemo.common.DynamicRoleVoter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -238,7 +239,7 @@ public class WebSecurityConfigByDefault extends WebSecurityConfigurerAdapter {
                 //.invalidSessionUrl("/login") // 无效session跳转地址
                 .maximumSessions(1) // 最大并发登录，这里设置为1次，只要用户重新登录，则之前的登录就会失效
                 //.maxSessionsPreventsLogin(true) // 达到最大并发后阻止后续的登录，默认false
-                .expiredUrl("/access/sameLogin.do"); // 达到最大并发后，前一个用户session会失效，再次访问资源时的跳转地址
+                .expiredUrl("/sameLogin"); // 达到最大并发后，前一个用户session会失效，再次访问资源时的跳转地址
     }
 
     /**
@@ -267,6 +268,7 @@ public class WebSecurityConfigByDefault extends WebSecurityConfigurerAdapter {
         List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList();
         decisionVoters.add(new RoleVoter()); // 基于角色名称的验证，必须以ROLE_开头 .access("ROLE_ADMIN")
         decisionVoters.add(new AuthenticatedVoter()); // .rememberMe()  .fullyAuthenticated() .anonymous()
+        decisionVoters.add(new DynamicRoleVoter());  // 自定投票器
         decisionVoters.add(new WebExpressionVoter()); // 基于表达式的验证，如：.access("hasRole('admin') or hasRole('user')") .permitAll() .hasRole("admin") .authenticated() 等等
 
         //AffirmativeBased ：任意决策者通过则通过
