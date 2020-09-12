@@ -8,6 +8,8 @@
     <title>Index</title>
 </head>
 <body>
-this index,<span th:text="#{common.menu}"></span>
+this index,
+<span th:text="#{common.menu}"></span>
+<span th:text="${#httpServletRequest.getContextPath()}"></span>
 </body>
 </html>

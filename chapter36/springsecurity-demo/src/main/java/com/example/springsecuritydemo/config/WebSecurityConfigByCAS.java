@@ -23,6 +23,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,6 +55,16 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
     @Autowired
     private CasProperties casProperties;
 
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public DynamicRoleVoter dynamicRoleVoter() {
+        return new DynamicRoleVoter();
+    }
+
     /**
      * 用户管理，用于设置用户的验证方式
      */
@@ -71,11 +83,12 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
      * <p>
      * 此处仅仅为了演示方便，正式使用时还是自定义一个UserDetailsService实现类吧
      */
+    @Bean
     @Override
     protected UserDetailsService userDetailsService() {
         User.UserBuilder builder = User.builder();
         UserDetails userDetails1 = builder.username("casuser").password("123456").roles("admin").build();
-        UserDetails userDetails2 = builder.username("guest").password("123456").roles("guest").build();
+        UserDetails userDetails2 = builder.username("admin").password("123456").roles("admin").build();
         return new InMemoryUserDetailsManager(userDetails1, userDetails2);
     }
 
@@ -225,6 +238,12 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
     /**
      * 设置票据校验地址-CAS地址
      *
+     * https://github.com/apereo/java-cas-client
+     * Cas10ServiceTicketValidator
+     * Cas20ServiceTicketValidator
+     * Cas30ServiceTicketValidator
+     *
+     *
      * @return
      */
     @Bean
@@ -278,7 +297,7 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
         List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList();
         decisionVoters.add(new RoleVoter()); // 基于角色名称的验证，必须以ROLE_开头 .access("ROLE_ADMIN")
         decisionVoters.add(new AuthenticatedVoter()); // .rememberMe()  .fullyAuthenticated() .anonymous()
-        decisionVoters.add(new DynamicRoleVoter());  // 自定投票器
+        decisionVoters.add(dynamicRoleVoter());  // 自定投票器
         decisionVoters.add(new WebExpressionVoter()); // 基于表达式的验证，如：.access("hasRole('admin') or hasRole('user')") .permitAll() .hasRole("admin") .authenticated() 等等
 
         //AffirmativeBased ：任意决策者通过则通过
