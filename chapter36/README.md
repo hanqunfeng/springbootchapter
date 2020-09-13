@@ -1,5 +1,6 @@
 # chapter36----Springboot SpringSecurity，CAS 
 * 因本地只安装了jdk1.8，所以cas-server使用的是5.3.14，其是支持jdk1.8的最后一个版本
+* 部分cas属性名称发生变化，注意查看CasConfigurationProperties中的配置
 
 ## cas单点退出
 
