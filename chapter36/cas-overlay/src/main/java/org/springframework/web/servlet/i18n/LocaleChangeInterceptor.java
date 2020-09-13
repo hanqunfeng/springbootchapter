@@ -67,6 +67,7 @@ public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException, IOException {
         String newLocale = request.getParameter(this.getParamName());
         if (newLocale != null && this.checkHttpMethod(request.getMethod())) {
+            //解决locale=en?locale=en?locale=en，语言参数无限连接的问题
             if(newLocale.contains("?")){
                 int index = newLocale.indexOf("?");
                 newLocale = newLocale.substring(0,index);

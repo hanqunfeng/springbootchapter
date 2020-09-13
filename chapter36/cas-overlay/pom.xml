@@ -166,6 +166,16 @@
                 </dependency>
                 <!-- 本地代码依赖支持 end -->
 
+                <!-- Password Management JDBC Begin -->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-support-pm-jdbc</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <!-- Password Management JDBC End -->
+
+
+
 
 
 
