@@ -66,6 +66,7 @@
         <finalName>cas</finalName>
     </build>
 
+
     <properties>
         <cas.version>5.3.14</cas.version>
         <springboot.version>1.5.18.RELEASE</springboot.version>
@@ -82,7 +83,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-<!--        <mysql.driver.version>5.1.46</mysql.driver.version>-->
+        <!--        <mysql.driver.version>5.1.46</mysql.driver.version>-->
         <mysql.driver.version>8.0.19</mysql.driver.version>
     </properties>
 
@@ -139,6 +140,7 @@
                     <version>${mysql.driver.version}</version>
                 </dependency>
 
+
                 <dependency>
                     <groupId>org.apereo.cas</groupId>
                     <artifactId>cas-server-support-jdbc</artifactId>
@@ -174,10 +176,58 @@
                 </dependency>
                 <!-- Password Management JDBC End -->
 
+                <!-- 添加将service存储到数据库中 Begin -->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-support-jpa-service-registry</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-services-api</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-authentication-attributes</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <!-- 添加将service存储到数据库中 End -->
 
 
+                <!-- 集成SwaggerAPI start -->
+                <!--                描述	                网址-->
+                <!--                Swagger API规范	    https://cas.example.org:8443/cas/v2/api-docs-->
+                <!--                Swagger UI	        https://cas.example.org:8443/cas/swagger-ui.html-->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-documentation-swagger</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <!-- 集成SwaggerAPI end -->
 
+<!--                <dependency>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--                    <version>${springboot.version}</version>-->
+<!--                    <exclusions>-->
+<!--                        <exclusion>-->
+<!--                            <groupId>ch.qos.logback</groupId>-->
+<!--                            <artifactId>logback-classic</artifactId>-->
+<!--                        </exclusion>-->
+<!--                    </exclusions>-->
+<!--                </dependency>-->
 
+<!--                <dependency>-->
+<!--                    <groupId>org.springframework.security</groupId>-->
+<!--                    <artifactId>spring-security-config</artifactId>-->
+<!--                    <version>4.2.2.RELEASE</version>-->
+<!--                </dependency>-->
+<!--                <dependency>-->
+<!--                    <groupId>org.springframework.security</groupId>-->
+<!--                    <artifactId>spring-security-web</artifactId>-->
+<!--                    <version>4.2.2.RELEASE</version>-->
+<!--                </dependency>-->
 
 
 
