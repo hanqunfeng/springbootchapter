@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
 import java.util.List;
@@ -94,8 +97,8 @@ public class ServiceController {
 
     /**
      * 删除service异常
-     * 方法执行报错，估计是内部逻辑bug，实际上在数据库中删除对应的数据即可
-     * 所以改用jdbcTemplate的方式删除数据
+     * 方法执行报错，估计是内部逻辑bug，用try catch处理即可，不影响删除数据
+     * 实际上在数据库中删除对应的数据即可，可以改用jdbcTemplate的方式删除数据
      * tableName:regexregisteredservice
      *
      * @param serviceId
@@ -104,12 +107,28 @@ public class ServiceController {
     @PostMapping("/deleteClient.do")
     public Object deleteClient(String serviceId) {
         try {
+            boolean has_data = false;
+
             //RegisteredService service = servicesManager.findServiceBy(serviceId);
-            //servicesManager.delete(service); //执行会抛出异常，估计是cas内部逻辑bug
+            //if (service != null) {
+            //    try {
+            //        has_data = true;
+            //        servicesManager.delete(service); //执行会抛出异常，估计是cas内部逻辑bug，用try catch处理即可，不影响删除数据
+            //    } catch (Exception e) {
+            //        //啥也不做
+            //    }
+            //
+            //}
+
 
             List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from regexregisteredservice where serviceId = '" + serviceId + "'");
             if (list != null && list.size() > 0) {
+                has_data = true;
                 jdbcTemplate.update("delete from regexregisteredservice where serviceId = '" + serviceId + "'");
+            }
+
+
+            if (has_data) {
                 //执行load生效
                 servicesManager.load();
 
@@ -117,7 +136,7 @@ public class ServiceController {
                 returnMessage.setCode(200);
                 returnMessage.setMessage("删除成功");
                 return returnMessage;
-            }else {
+            } else {
                 ReturnMessage returnMessage = new ReturnMessage();
                 returnMessage.setCode(200);
                 returnMessage.setMessage("serviceId不存在");
