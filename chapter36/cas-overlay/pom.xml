@@ -121,6 +121,7 @@
             </activation>
             <id>default</id>
             <dependencies>
+                <!-- https://mvnrepository.com/artifact/org.apereo.cas/cas-server-webapp-tomcat/5.3.14 -->
                 <dependency>
                     <groupId>org.apereo.cas</groupId>
                     <artifactId>cas-server-webapp${app.server}</artifactId>
@@ -145,7 +146,7 @@
                     <groupId>org.apereo.cas</groupId>
                     <artifactId>cas-server-support-jdbc</artifactId>
                     <version>${cas.version}</version>
-                    <scope>runtime</scope>
+<!--                    <scope>runtime</scope>-->
                     <exclusions>
                         <exclusion>
                             <groupId>net.shibboleth.tool</groupId>
@@ -154,6 +155,7 @@
                     </exclusions>
                 </dependency>
                 <!--   mysql 数据库支持  end -->
+
                 <!-- 本地代码依赖支持 start -->
                 <dependency>
                     <groupId>org.apereo.cas</groupId>
@@ -195,7 +197,7 @@
                 <!-- 添加将service存储到数据库中 End -->
 
 
-                <!-- 集成SwaggerAPI start -->
+                <!-- 集成Swagger2 API start -->
                 <!--                描述	                网址-->
                 <!--                Swagger API规范	    https://cas.example.org:8443/cas/v2/api-docs-->
                 <!--                Swagger UI	        https://cas.example.org:8443/cas/swagger-ui.html-->
@@ -204,32 +206,21 @@
                     <artifactId>cas-server-documentation-swagger</artifactId>
                     <version>${cas.version}</version>
                 </dependency>
-                <!-- 集成SwaggerAPI end -->
+                <!-- 集成Swagger2 API end -->
 
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-starter-data-jpa</artifactId>-->
-<!--                    <version>${springboot.version}</version>-->
-<!--                    <exclusions>-->
-<!--                        <exclusion>-->
-<!--                            <groupId>ch.qos.logback</groupId>-->
-<!--                            <artifactId>logback-classic</artifactId>-->
-<!--                        </exclusion>-->
-<!--                    </exclusions>-->
-<!--                </dependency>-->
-
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.security</groupId>-->
-<!--                    <artifactId>spring-security-config</artifactId>-->
-<!--                    <version>4.2.2.RELEASE</version>-->
-<!--                </dependency>-->
-<!--                <dependency>-->
-<!--                    <groupId>org.springframework.security</groupId>-->
-<!--                    <artifactId>spring-security-web</artifactId>-->
-<!--                    <version>4.2.2.RELEASE</version>-->
-<!--                </dependency>-->
-
-
+                <!-- 本地接口鉴权 start 这里去除logback-classic 是为了解决jar包冲突 -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                    <version>${springboot.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ch.qos.logback</groupId>
+                            <artifactId>logback-classic</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <!-- 本地接口鉴权 end-->
 
             </dependencies>
         </profile>

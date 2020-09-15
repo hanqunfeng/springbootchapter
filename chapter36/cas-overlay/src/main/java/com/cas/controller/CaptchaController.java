@@ -1,14 +1,17 @@
 package com.cas.controller;
 
+import com.cas.utils.AesUtil;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.WebUtils;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
@@ -24,15 +27,15 @@ import java.util.Random;
  */
 
 @Controller
-public class CaptchaController extends BaseController{
-
-    //CaptchaConfiguration中注入进来的
-    @Autowired
-    private CasConfigurationProperties casConfigurationProperties;
+public class CaptchaController extends BaseController {
 
     public static final int WIDTH = 120;//生成图片的宽度
     public static final int HEIGHT = 30;//生成图片的高度
     public static final int WORDS_NUMBER = 4;//验证码中字符的个数
+    public static final String CHECK_CODE_NAME = "CHECK_CODE";//验证码session中的名称
+    //CaptchaConfiguration中注入进来的
+    @Autowired
+    private CasConfigurationProperties casConfigurationProperties;
 
     @RequestMapping("/checkcode/bimage")
     public void creatImageCode(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -52,7 +55,14 @@ public class CaptchaController extends BaseController{
         String randomString = this.drawRandomNum(g, createTypeFlag);
 
         //将随机数存在session中
-        req.getSession(true).setAttribute("checkcode", randomString);
+        //req.getSession(true).setAttribute(CHECK_CODE_NAME, randomString);
+        WebUtils.setSessionAttribute(req, CHECK_CODE_NAME, randomString);
+
+        //http访问时获取session的值为null，所以这里使用cookie再存储一份，取的时候，先判断session是否存在，不存在就读取cookie，cookie的值最好加密处理
+        Cookie cookie = new Cookie(CHECK_CODE_NAME, AesUtil.encrypt(randomString));
+        //当maxAge属性为负数，则表示该Cookie只是一个临时Cookie，不会被持久化，仅在本浏览器窗口或者本窗口打开的子窗口中有效，关闭浏览器后该Cookie立即失效。
+        cookie.setMaxAge(-1);
+        resp.addCookie(cookie);
 
         //设置响应头通知浏览器以图片的形式打开
         resp.setContentType("image/jpeg");
@@ -68,21 +78,28 @@ public class CaptchaController extends BaseController{
 
     @RequestMapping("/checkcode/check")
     @ResponseBody
-    public Map<String,Object> checkCode(@Nullable String code,HttpServletRequest req){
+    public Map<String, Object> checkCode(@Nullable String code, HttpServletRequest req) {
         //返回值
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
 
-        if(!StringUtils.hasText(code)){
-            map.put("error",true);
-            map.put("msg",getMessage("login.checkcode.check.null"));
-        }else{
-            String checkcode = (String) req.getSession(true).getAttribute("checkcode");
-            if(code.trim().equalsIgnoreCase(checkcode)){
-                map.put("error",false);
-                map.put("msg",getMessage("login.checkcode.check.success"));
-            }else{
-                map.put("error",true);
-                map.put("msg",getMessage("login.checkcode.check.fail"));
+        if (!StringUtils.hasText(code)) {
+            map.put("error", true);
+            map.put("msg", getMessage("login.checkcode.check.null"));
+        } else {
+            //String checkcode = (String) req.getSession(true).getAttribute(CHECK_CODE_NAME);
+            String checkcode = (String) WebUtils.getSessionAttribute(req, CHECK_CODE_NAME);
+            if (checkcode == null) {
+                Cookie cookie = WebUtils.getCookie(req, CHECK_CODE_NAME);
+                if (cookie != null) {
+                    checkcode = AesUtil.decrypt(cookie.getValue());
+                }
+            }
+            if (code.trim().equalsIgnoreCase(checkcode)) {
+                map.put("error", false);
+                map.put("msg", getMessage("login.checkcode.check.success"));
+            } else {
+                map.put("error", true);
+                map.put("msg", getMessage("login.checkcode.check.fail") + checkcode);
             }
         }
         return map;
