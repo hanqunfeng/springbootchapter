@@ -1,4 +1,4 @@
-package com.example.springsecuritydemo.common;
+package com.cas.utils;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -26,6 +26,7 @@ public class AuthenticationUtil {
      * @return java.lang.String 当前用户名
      */
     public static String getUsername() {
+        //SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
         SecurityContext context = SecurityContextHolder.getContext();
         if (context != null) {
             if (context instanceof SecurityContext) {

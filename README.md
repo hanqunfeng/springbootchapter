@@ -35,7 +35,7 @@
 ### chapter33----SpringBoot Quartz 定时任务之jdbc
 ### chapter34----数据结构 二叉树的遍历，本来想整xxl-job分布式任务调度平台，后来发现官网说的过于详细了，没必要整demo了
 ### chapter35----分布式锁 zookeeper redis db
-### chapter36----Springboot SpringSecurity，CAS
+### chapter36----Springboot SpringSecurity，CAS-server,CAS-client
 ### chapter37----Springboot Junit5 断言
 ### chapter38----Springboot @Async 异步调用
 

@@ -1,5 +1,6 @@
 package com.cas.controller;
 
+import com.cas.utils.AuthenticationUtil;
 import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -149,6 +151,17 @@ public class ServiceController {
             returnMessage.setMessage("删除失败");
             return returnMessage;
         }
+    }
+
+    @GetMapping("/index.do")
+    public Object index(){
+        String username = "none";
+        if(AuthenticationUtil.isAuthenticated()){
+            username = AuthenticationUtil.getUsername();
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("username",username);
+        return map;
     }
 
 
