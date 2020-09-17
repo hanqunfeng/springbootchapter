@@ -161,6 +161,9 @@ public class ServiceController {
         }
         Map<String, String> map = new HashMap<>();
         map.put("username",username);
+
+        logger.info("username=="+username);
+
         return map;
     }
 

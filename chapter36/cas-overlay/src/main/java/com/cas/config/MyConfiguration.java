@@ -88,4 +88,15 @@ public class MyConfiguration {
         return new ServiceController();
     }
 
+
+    //session共享，参考：https://www.it1352.com/995116.html
+    //@Value("${tomcat.jvmroute}")
+    //private String jvmRoute;
+    //
+    //@PostConstruct
+    //public void setJvmRoute() {
+    //    // embedded tomcat uses this property to set the jvmRoute
+    //    System.setProperty("jvmRoute", jvmRoute);
+    //}
+
 }
