@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.cas.config.MyConfiguration,\
+  com.cas.config.Swagger3Config,\
+  com.cas.config.DataSourceConfig

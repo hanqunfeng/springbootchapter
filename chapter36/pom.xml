@@ -11,6 +11,8 @@
 
     <artifactId>chapter36</artifactId>
     <packaging>pom</packaging>
+    <modules>
+    </modules>
 
 
 </project>

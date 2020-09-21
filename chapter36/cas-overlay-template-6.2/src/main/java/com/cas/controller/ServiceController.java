@@ -1,6 +1,8 @@
 package com.cas.controller;
 
 import com.cas.utils.AuthenticationUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,8 @@ import java.util.Map;
  * <p>动态service</p>
  * Created by hanqf on 2020/9/13 20:58.
  */
-
+@Api(tags = {"动态service控制器"})
+//@Tag(name = "动态service控制器")
 @RestController
 @RequestMapping("/service")
 public class ServiceController {
@@ -33,8 +35,10 @@ public class ServiceController {
     @Autowired
     @Qualifier("servicesManager")
     private ServicesManager servicesManager;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
 
     /**
      * {
@@ -67,6 +71,8 @@ public class ServiceController {
      * @author hanqf
      * 2020/9/13 21:11
      */
+    @ApiOperation(value = "新增",notes = "新增动态service,注意serviceId的格式")
+    //@Operation(summary = "新增",tags = {"新增动态service,注意serviceId的格式"})
     @PostMapping("/addClient.do")
     public Object addClient(String serviceId, String name, long id, int evaluationOrder, String logoutUrl) {
         try {
@@ -78,7 +84,7 @@ public class ServiceController {
             service.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
             service.setName(name);
             //这个是为了单点登出而作用的
-            service.setLogoutUrl(new URL(logoutUrl));
+            service.setLogoutUrl(logoutUrl);
             service.setEvaluationOrder(evaluationOrder);
 
             servicesManager.save(service);
@@ -106,8 +112,11 @@ public class ServiceController {
      * @param serviceId
      * @return
      */
+    @ApiOperation(value = "删除",notes = "删除service,注意serviceId的格式")
+    //@Operation(summary = "删除",tags = {"删除动态service,注意serviceId的格式"})
     @PostMapping("/deleteClient.do")
     public Object deleteClient(String serviceId) {
+        logger.info("deleteClient,serviceId="+serviceId);
         try {
             boolean has_data = false;
 
@@ -115,9 +124,10 @@ public class ServiceController {
             //if (service != null) {
             //    try {
             //        has_data = true;
-            //        servicesManager.delete(service); //执行会抛出异常，估计是cas内部逻辑bug
+            //        //servicesManager.delete(service); //执行会抛出异常，估计是cas内部逻辑bug
+            //        servicesManager.delete(service.getId());
             //    } catch (Exception e) {
-            //
+            //        e.printStackTrace();
             //    }
             //
             //}
@@ -153,7 +163,9 @@ public class ServiceController {
         }
     }
 
-    @GetMapping("/index.do")
+    @ApiOperation(value = "测试",notes = "无意义")
+    //@Operation(summary = "测试",tags = {"无意义"})
+    @GetMapping(value = "/index.do",produces = "application/json; charset=UTF-8")
     public Object index(){
         String username = "none";
         if(AuthenticationUtil.isAuthenticated()){
@@ -168,8 +180,13 @@ public class ServiceController {
     }
 
 
-    @GetMapping("/findClients.do")
+    @ApiOperation(value = "查询",notes = "查询全部service")
+    //@Operation(summary = "查询",tags = {"查询全部service"})
+    //默认返回格式是xml，所以这里加上了produces = "application/json; charset=UTF-8"
+    @GetMapping(value = "/findClients.do",produces = "application/json; charset=UTF-8")
     public Object findClients() {
+        logger.info("findClients");
+        //Collection<RegisteredService> allServices = servicesManager.getAllServices();
         List<Map<String, Object>> list = jdbcTemplate.queryForList("select serviceId,name,evaluation_order,logout_url from regexregisteredservice");
         return list;
     }
