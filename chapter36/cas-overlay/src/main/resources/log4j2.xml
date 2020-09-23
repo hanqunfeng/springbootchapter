@@ -97,6 +97,11 @@
             <AppenderRef ref="casMy"/>
         </AsyncLogger>
 
+<!--        <AsyncLogger name="org.apereo.cas" level="error" additivity="false" includeLocation="true">-->
+<!--            <AppenderRef ref="casConsole"/>-->
+<!--            <AppenderRef ref="casFile"/>-->
+<!--        </AsyncLogger>-->
+
         <AsyncLogger name="com.couchbase" level="off" additivity="false" includeLocation="true">
             <AppenderRef ref="casConsole"/>
             <AppenderRef ref="casFile"/>

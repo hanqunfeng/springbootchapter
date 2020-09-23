@@ -1,11 +1,16 @@
 package com.example.springsecuritydemo.controller;
 
 import com.example.springsecuritydemo.common.AuthenticationUtil;
+import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.Map;
 
 /**
  * <p></p>
@@ -24,7 +29,18 @@ public class DemoController {
     */
     @PreAuthorize("hasRole('admin')")
     @GetMapping({"/"})
-    public String index(){
+    public String index(HttpServletRequest request){
+        //传递不过来啊
+        Principal principal  = request.getUserPrincipal();
+        if(principal instanceof AttributePrincipal){
+            //cas传递过来的数据
+            Map<String,Object> result =( (AttributePrincipal)principal).getAttributes();
+            for(Map.Entry<String, Object> entry :result.entrySet()) {
+                String key = entry.getKey();
+                Object val = entry.getValue();
+                System.out.printf("%s:%s\r\n",key,val);
+            }
+        }
         return "hello world! " + AuthenticationUtil.getUsername();
     }
 

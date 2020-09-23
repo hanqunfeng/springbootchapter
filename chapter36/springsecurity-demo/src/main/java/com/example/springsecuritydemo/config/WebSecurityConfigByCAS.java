@@ -3,7 +3,7 @@ package com.example.springsecuritydemo.config;
 import com.example.springsecuritydemo.common.CasProperties;
 import com.example.springsecuritydemo.common.DynamicRoleVoter;
 import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
+import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -229,7 +229,7 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
         //设置Cas授权认证器相关配置
         casAuthenticationProvider.setServiceProperties(serviceProperties());
         //设置票据校验器
-        casAuthenticationProvider.setTicketValidator(cas20ServiceTicketValidator());
+        casAuthenticationProvider.setTicketValidator(cas30ServiceTicketValidator());
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
 
         return casAuthenticationProvider;
@@ -247,8 +247,8 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
      * @return
      */
     @Bean
-    public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
-        return new Cas20ServiceTicketValidator(casProperties.getCasServerUrl());
+    public Cas30ServiceTicketValidator cas30ServiceTicketValidator() {
+        return new Cas30ServiceTicketValidator(casProperties.getCasServerUrl());
     }
 
     /**

@@ -222,6 +222,42 @@
                 </dependency>
                 <!-- 本地接口鉴权 end-->
 
+                <!-- 自定义认证策略 start-->
+                <!-- Custom Authentication -->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-authentication-api</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+
+                <!-- Custom Configuration -->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-configuration-api</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+
+<!--                <dependency>-->
+<!--                    <groupId>org.apereo.cas</groupId>-->
+<!--                    <artifactId>cas-server-support-jdbc-authentication</artifactId>-->
+<!--                    <version>${cas.version}</version>-->
+<!--                </dependency>-->
+                <!-- 自定义认证策略 end-->
+
+                <!-- 自定义登录表单信息 start -->
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-webflow</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apereo.cas</groupId>
+                    <artifactId>cas-server-core-webflow-api</artifactId>
+                    <version>${cas.version}</version>
+                </dependency>
+                <!-- 自定义登录表单信息 end -->
+
             </dependencies>
         </profile>
 

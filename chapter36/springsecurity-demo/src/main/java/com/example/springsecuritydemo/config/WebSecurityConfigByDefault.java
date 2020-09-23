@@ -175,8 +175,11 @@ public class WebSecurityConfigByDefault extends WebSecurityConfigurerAdapter {
      * anonymous	                    当前用户是anonymous时返回true
      * rememberMe	                    当前勇士是rememberMe用户返回true
      * authentication	                当前登录用户的authentication对象
-     * fullAuthenticated	            当前用户既不是anonymous也不是rememberMe用户时返回true
+     * isFullyAuthenticated()	        当前用户既不是anonymous也不是rememberMe用户时返回true
      * hasIpAddress('192.168.1.0/24'))	请求发送的IP匹配时返回true
+     * isAnonymous()                    当前用户是否是一个匿名用户
+     * isRememberMe()                   表示当前用户是否是通过Remember-Me自动登录的
+     * isAuthenticated()                表示当前用户是否已经登录认证成功了。
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {

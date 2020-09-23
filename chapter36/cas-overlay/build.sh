@@ -45,7 +45,7 @@ function debug() {
 }
 
 function run() {
-	package && java -jar target/cas.war
+	package && java -jar -server target/cas.war
 }
 
 function runalone() {

@@ -89,6 +89,7 @@
                                        size="15"
                                        tabindex="3"
                                        th:accesskey="#{screen.welcome.label.checkcode.accesskey}"
+                                       th:field="*{captcha}"
                                        autocomplete="off"/>
 
                                 <a href="javascript:void(0);" onclick="getNewCode()" th:title="#{login.image.alt}"
@@ -218,6 +219,7 @@
                                 }
                             });
                             return result;
+                            // return true; //测试后台比较验证码时使用，自定义登录策略
                         }
 
                         //设定验证码的错误提示消息

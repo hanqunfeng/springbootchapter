@@ -1,0 +1,18 @@
+{
+  "@class" : "org.apereo.cas.services.RegexRegisteredService",
+  "serviceId" : "^(https|http|imaps)://www.hanqunfeng.com:8083.*",
+  "name" : "client4",
+  "id" : 10000009,
+  "description" : "https config demo",
+  "evaluationOrder" : 13,
+  "logoutType" : "BACK_CHANNEL",
+  "logoutUrl" : "https://www.hanqunfeng.com:8083/",
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+  },
+  "accessStrategy" : {
+    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "enabled" : true,
+    "ssoEnabled" : true
+  }
+}

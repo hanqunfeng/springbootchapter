@@ -163,6 +163,8 @@ public class ServiceController {
         }
     }
 
+    //@PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "测试",notes = "无意义")
     //@Operation(summary = "测试",tags = {"无意义"})
     @GetMapping(value = "/index.do",produces = "application/json; charset=UTF-8")
