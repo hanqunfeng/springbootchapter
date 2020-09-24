@@ -29,7 +29,7 @@ public class DemoController {
      * 如果配置类中的设置验证通过，但是该注解设置的权限验证不通过，该方法也不可以执行，
      * 简单理解就是，配置类中定义的权限是针对url的，而该注解是针对方法的，两者没有关联
     */
-    //@PreAuthorize("hasRole('admin')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping({"/"})
     public String index(HttpServletRequest request){
 

@@ -108,8 +108,8 @@ public class WebSecurityConfigByCASByAttrs extends WebSecurityConfigurerAdapter 
         // 拦截路径规则设置
         http.authorizeRequests()
                 .accessDecisionManager(accessDecisionManager()) //访问决策管理器，默认支持三种决策者：RoleVoter、AuthenticatedVoter、WebExpressionVoter。一般需要添加自定义决策者
-                //.anyRequest().access("hasRole('admin')"); // 基于表达式 参考：https://my.oschina.net/liuyuantao/blog/1924776
-                .anyRequest().hasRole("ADMIN"); // cas-server返回属性都是大写，所以这里要是大写的角色名称
+                //.anyRequest().access("hasRole('ADMIN')"); // 基于表达式 参考：https://my.oschina.net/liuyuantao/blog/1924776
+                .anyRequest().hasRole("ADMIN");
 
 
         // cas
