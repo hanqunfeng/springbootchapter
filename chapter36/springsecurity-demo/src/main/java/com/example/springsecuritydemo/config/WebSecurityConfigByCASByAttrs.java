@@ -2,6 +2,7 @@ package com.example.springsecuritydemo.config;
 
 import com.example.springsecuritydemo.common.CasProperties;
 import com.example.springsecuritydemo.common.DynamicRoleVoter;
+import com.example.springsecuritydemo.common.UserDetailsServiceImplByAttrs;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas30ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.cas.ServiceProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
-import org.springframework.security.cas.userdetails.GrantedAuthorityFromAssertionAttributesUserDetailsService;
 import org.springframework.security.cas.web.CasAuthenticationEntryPoint;
 import org.springframework.security.cas.web.CasAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,10 +26,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -44,13 +40,13 @@ import java.util.List;
  * Created by hanqf on 2020/9/10 10:14.
  */
 
-@ConditionalOnProperty(prefix = "security", name = "config", havingValue = "cas")
+@ConditionalOnProperty(prefix = "security", name = "config", havingValue = "casattr")
 @Configuration
 // 启用web安全认证，springboot mvc环境可以不用配置，自动配置WebSecurityEnablerConfiguration中已经启用，参考：http://www.zhihesj.com/?id=26
 @EnableWebSecurity
 //开启方法级别的安全验证注解，参考 https://www.jianshu.com/p/77b4835b6e8e
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfigByCASByAttrs extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
@@ -75,22 +71,6 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
         //configure(HttpSecurity http)方法中如果绑定了casAuthenticationProvider，此处也可以不进行绑定，则该方法就不需要Override
         auth.authenticationProvider(casAuthenticationProvider());
 
-    }
-
-    /**
-     * 用户策略设置，这里使用内存用户策略，自定义策略需要实现UserDetailsService接口
-     * <p>
-     * 此时这里的用户名用于验证客户端是否存在该用户，这里密码没用，只依赖cas服务端的数据
-     * <p>
-     * 此处仅仅为了演示方便，正式使用时还是自定义一个UserDetailsService实现类吧
-     */
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        User.UserBuilder builder = User.builder();
-        UserDetails userDetails1 = builder.username("casuser").password("NO_PASSWORD").roles("admin").build();
-        UserDetails userDetails2 = builder.username("admin").password("NO_PASSWORD").roles("admin").build();
-        return new InMemoryUserDetailsManager(userDetails1, userDetails2);
     }
 
     /**
@@ -235,16 +215,18 @@ public class WebSecurityConfigByCAS extends WebSecurityConfigurerAdapter {
         casAuthenticationProvider.setTicketValidator(cas30ServiceTicketValidator());
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
 
-        //以下两个service，只会有一个生效，最后设置的生效
-        //setUserDetailsService，setAuthenticationUserDetailsService
-        //集成自定义授权认证器
-        casAuthenticationProvider.setUserDetailsService(userDetailsService());
-        //可以接收cas服务端传递属性，不过都被客户端认为是角色
-        String[] attributes = {"email","expired","username","role"}; //设置接收哪些属性
-        GrantedAuthorityFromAssertionAttributesUserDetailsService grantedAuthorityFromAssertionAttributesUserDetailsService = new GrantedAuthorityFromAssertionAttributesUserDetailsService(attributes);
-        casAuthenticationProvider.setAuthenticationUserDetailsService(grantedAuthorityFromAssertionAttributesUserDetailsService);
+
+        //绑定自定义返回服务端属性的UserDetailsService，
+        // 注意这里要使用setAuthenticationUserDetailsService，而不是setUserDetailsService
+        casAuthenticationProvider.setAuthenticationUserDetailsService(userDetailsServiceImplByAttrs());
 
         return casAuthenticationProvider;
+    }
+
+    @Bean
+    public UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs(){
+        UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs = new UserDetailsServiceImplByAttrs();
+        return userDetailsServiceImplByAttrs;
     }
 
     /**

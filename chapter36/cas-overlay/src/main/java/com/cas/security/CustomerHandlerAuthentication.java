@@ -105,11 +105,14 @@ public class CustomerHandlerAuthentication extends AbstractPreAndPostProcessingA
             throw new AccountDisabledException("Account has been disabled");
         } else {
 
-            //可自定义返回给客户端的多个属性信息
+            //可自定义返回给客户端的多个属性信息,springsecurity接收属性值时，
+            // 如果使用的是GrantedAuthorityFromAssertionAttributesUserDetailsService，则属性值都是大写的
+            // 客户端可以自定义UserDetailsService，参考客户端demo
             Map<String, Object> returnInfo = new HashMap<>();
             returnInfo.put("username", info.getUsername());
             returnInfo.put("email", info.getEmail());
             returnInfo.put("expired", info.getExpired());
+            returnInfo.put("role", "ROLE_ADMIN"); //此处也可以返回List<String>，什么类型重点看客户端怎么接收
 
             final List<MessageDescriptor> list = new ArrayList<>();
 
