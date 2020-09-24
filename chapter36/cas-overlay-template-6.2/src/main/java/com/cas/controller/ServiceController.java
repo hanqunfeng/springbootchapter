@@ -133,10 +133,11 @@ public class ServiceController {
             //}
 
 
-            List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from regexregisteredservice where serviceId = '" + serviceId + "'");
+            //这里注意6.xx和5.xx使用的表名称不一样
+            List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from regex_registered_service where service_Id = '" + serviceId + "'");
             if (list != null && list.size() > 0) {
                 has_data = true;
-                jdbcTemplate.update("delete from regexregisteredservice where serviceId = '" + serviceId + "'");
+                jdbcTemplate.update("delete from regex_registered_service where service_Id = '" + serviceId + "'");
             }
 
 
@@ -189,7 +190,7 @@ public class ServiceController {
     public Object findClients() {
         logger.info("findClients");
         //Collection<RegisteredService> allServices = servicesManager.getAllServices();
-        List<Map<String, Object>> list = jdbcTemplate.queryForList("select serviceId,name,evaluation_order,logout_url from regexregisteredservice");
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("select service_Id,name,evaluation_order,logout_url from regex_registered_service");
         return list;
     }
 
