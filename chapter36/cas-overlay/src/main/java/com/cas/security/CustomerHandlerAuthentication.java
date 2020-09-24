@@ -26,10 +26,7 @@ import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p></p>
@@ -112,7 +109,8 @@ public class CustomerHandlerAuthentication extends AbstractPreAndPostProcessingA
             returnInfo.put("username", info.getUsername());
             returnInfo.put("email", info.getEmail());
             returnInfo.put("expired", info.getExpired());
-            returnInfo.put("role", "ROLE_ADMIN"); //此处也可以返回List<String>，什么类型重点看客户端怎么接收
+            List<String> rolesList = Arrays.asList("ROLE_ADMIN","ROLE_TEST");
+            returnInfo.put("roles", rolesList); //此处也可以返回List<String>，什么类型重点看客户端怎么接收
 
             final List<MessageDescriptor> list = new ArrayList<>();
 
