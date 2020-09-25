@@ -8,6 +8,8 @@
     <packaging>war</packaging>
     <version>1.0</version>
 
+    <name>cas-overlay-template-5.3.12</name>
+
     <build>
         <plugins>
             <plugin>

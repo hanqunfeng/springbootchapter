@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>springsecurity-demo</artifactId>
+    <artifactId>springsecurity-client-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springsecurity-demo</name>
+    <name>springsecurity-clients-demo</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
