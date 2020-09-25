@@ -92,7 +92,7 @@ public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        if(newLocale != null){
+        if(newLocale != null){ //重定向后去掉locale参数
             response.sendRedirect(request.getContextPath());
         }
 

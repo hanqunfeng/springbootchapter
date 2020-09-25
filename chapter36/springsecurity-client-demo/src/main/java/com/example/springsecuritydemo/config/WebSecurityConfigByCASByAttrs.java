@@ -79,7 +79,7 @@ public class WebSecurityConfigByCASByAttrs extends WebSecurityConfigurerAdapter 
     @Override
     public void configure(WebSecurity web) throws Exception {
         //设置不需要拦截的路径，也就是不需要认证的路径
-        web.ignoring().antMatchers("/accessDenied*", "/error*","/fail*");
+        web.ignoring().antMatchers("/accessDenied*", "/error*", "/fail*");
     }
 
     /**
@@ -199,8 +199,6 @@ public class WebSecurityConfigByCASByAttrs extends WebSecurityConfigurerAdapter 
     }
 
 
-
-
     /**
      * cas 认证 Provider
      */
@@ -216,27 +214,30 @@ public class WebSecurityConfigByCASByAttrs extends WebSecurityConfigurerAdapter 
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
 
 
-        //绑定自定义返回服务端属性的UserDetailsService，
-        // 注意这里要使用setAuthenticationUserDetailsService，而不是setUserDetailsService
+        //setUserDetailsService和setAuthenticationUserDetailsService只能设置一个，其目的都是为了初始化属性authenticationUserDetailsService
+        //setUserDetailsService的类型为UserDetailsService
+        //setAuthenticationUserDetailsService的类型为AuthenticationUserDetailsService<CasAssertionAuthenticationToken>
+        // 如果使用setUserDetailsService，则其会对UserDetailsService进行封装，new UserDetailsByNameServiceWrapper(userDetailsService)，
+        // 将其转换为AuthenticationUserDetailsService<CasAssertionAuthenticationToken>类型
+        //这里使用setAuthenticationUserDetailsService是为了接收cas服务端返回的属性，因为CasAssertionAuthenticationToken会接收到返回的属性
         casAuthenticationProvider.setAuthenticationUserDetailsService(userDetailsServiceImplByAttrs());
 
         return casAuthenticationProvider;
     }
 
     @Bean
-    public UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs(){
+    public UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs() {
         UserDetailsServiceImplByAttrs userDetailsServiceImplByAttrs = new UserDetailsServiceImplByAttrs();
         return userDetailsServiceImplByAttrs;
     }
 
     /**
      * 设置票据校验地址-CAS地址
-     *
+     * <p>
      * https://github.com/apereo/java-cas-client
      * Cas10ServiceTicketValidator
      * Cas20ServiceTicketValidator
      * Cas30ServiceTicketValidator
-     *
      *
      * @return
      */
