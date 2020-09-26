@@ -33,6 +33,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 //@EnableSwagger2
 public class Swagger3Config {
 
+    // 访问路径：/swagger-ui/ 或 /swagger-ui/index.html
     @Bean
     public Docket createRestApiForService() {
         return new Docket(DocumentationType.OAS_30)
