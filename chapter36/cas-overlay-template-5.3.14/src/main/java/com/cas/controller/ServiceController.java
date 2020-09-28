@@ -153,7 +153,7 @@ public class ServiceController {
         }
     }
 
-    @GetMapping("/index.do")
+    @GetMapping(value = "/index.do",produces = "application/json; charset=UTF-8")
     public Object index(){
         String username = "none";
         if(AuthenticationUtil.isAuthenticated()){
