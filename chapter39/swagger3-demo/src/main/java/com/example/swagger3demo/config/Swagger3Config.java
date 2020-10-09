@@ -17,18 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p></p>
- * Created by hanqf on 2020/9/21 14:25.
- * 参考：https://www.cnblogs.com/ruiyeclub/p/13334826.html
- * Swagger3  -> springdoc
- * @ApiParam -> @Parameter
- * @ApiOperation -> @Operation
- * @Api -> @Tag
- * @ApiImplicitParams -> @Parameters
- * @ApiImplicitParam -> @Parameter
- * @ApiIgnore -> @Parameter(hidden = true) or @Operation(hidden = true) or @Hidden
- * @ApiModel -> @Schema
- * @ApiModelProperty -> @Schema
+ * <p>实际上不做任何配置，swagger3就可以使用，默认扫描所有的url</p>
  */
 
 @Configuration
