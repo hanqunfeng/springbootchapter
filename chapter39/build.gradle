@@ -1,0 +1,154 @@
+/**
+ * gradle 自身需要资源定义
+ */
+buildscript {
+	ext {
+		springBootVersion = '2.3.4.RELEASE'
+		springBootManagementVersion = '1.0.10.RELEASE'
+		REPOSITORY_HOME = "https://maven.aliyun.com"
+	}
+	repositories {
+		maven { url '${REPOSITORY_HOME}/repository/public/' }
+		mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+	}
+}
+
+
+/**
+ * 所有项目公共资源
+ */
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'maven-publish'
+	group = 'com.example'
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+/**
+ * 子项目通用配置
+ */
+subprojects {
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	// java编译的时候缺省状态下会因为中文字符而失败
+	[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+	//仓库
+	repositories {
+		maven { url '${REPOSITORY_HOME}/nexus/content/groups/public/' }
+		mavenLocal()
+		mavenCentral()
+	}
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter'
+		compileOnly 'org.projectlombok:lombok'
+		developmentOnly 'org.springframework.boot:spring-boot-devtools'
+		annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+		annotationProcessor 'org.projectlombok:lombok'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+	}
+
+	dependencyManagement {
+		imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+	}
+
+/**
+ * 发布插件
+ */
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
+				versionMapping {
+					usage('java-api') {
+						fromResolutionOf('runtimeClasspath')
+					}
+					usage('java-runtime') {
+						fromResolutionResult()
+					}
+				}
+			}
+		}
+		repositories {
+			maven {
+				// change URLs to point to your repos, e.g. http://my.org/repo
+				def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
+				def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
+				url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+				credentials {
+					username nexusUser
+					password nexusPassword
+				}
+			}
+		}
+	}
+
+	configurations {
+		[apiElements, runtimeElements].each {
+			it.outgoing.artifacts.removeIf {
+				it.buildDependencies.getDependencies(null).contains(jar)
+			}
+			it.outgoing.artifact(bootJar)
+		}
+	}
+
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+}
+
+
+
+
+
+
+//自动生成的配置
+//plugins {
+//	id 'org.springframework.boot' version '2.3.4.RELEASE'
+//	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+//	id 'java'
+//}
+//
+//group = 'com.example'
+//version = '0.0.1-SNAPSHOT'
+//sourceCompatibility = '1.8'
+//
+//configurations {
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+//}
+//
+//repositories {
+//	mavenCentral()
+//}
+//
+//dependencies {
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	compileOnly 'org.projectlombok:lombok'
+//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//	annotationProcessor 'org.projectlombok:lombok'
+//	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+//		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+//	}
+//}
+//
+//test {
+//	useJUnitPlatform()
+//}

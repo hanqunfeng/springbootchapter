@@ -72,7 +72,7 @@ public class ServiceController {
      * 2020/9/13 21:11
      */
     @ApiOperation(value = "新增",notes = "新增动态service,注意serviceId的格式")
-    //@Operation(summary = "新增",tags = {"新增动态service,注意serviceId的格式"})
+    //@Operation(summary = "新增",description = "新增动态service,注意serviceId的格式")
     @PostMapping("/addClient.do")
     public Object addClient(String serviceId, String name, long id, int evaluationOrder, String logoutUrl) {
         try {
@@ -113,7 +113,7 @@ public class ServiceController {
      * @return
      */
     @ApiOperation(value = "删除",notes = "删除service,注意serviceId的格式")
-    //@Operation(summary = "删除",tags = {"删除动态service,注意serviceId的格式"})
+    //@Operation(summary = "删除",description = "删除动态service,注意serviceId的格式")
     @PostMapping("/deleteClient.do")
     public Object deleteClient(String serviceId) {
         logger.info("deleteClient,serviceId="+serviceId);
@@ -167,7 +167,7 @@ public class ServiceController {
     //@PreAuthorize("hasRole('admin')")
     //@PreAuthorize("isAuthenticated()")
     @ApiOperation(value = "测试",notes = "无意义")
-    //@Operation(summary = "测试",tags = {"无意义"})
+    //@Operation(summary = "测试",description = "无意义")
     @GetMapping(value = "/index.do",produces = "application/json; charset=UTF-8")
     public Object index(){
         String username = "none";
@@ -184,7 +184,7 @@ public class ServiceController {
 
 
     @ApiOperation(value = "查询",notes = "查询全部service")
-    //@Operation(summary = "查询",tags = {"查询全部service"})
+    //@Operation(summary = "查询",description = "查询全部service")
     //默认返回格式是xml，所以这里加上了produces = "application/json; charset=UTF-8"
     @GetMapping(value = "/findClients.do",produces = "application/json; charset=UTF-8")
     public Object findClients() {

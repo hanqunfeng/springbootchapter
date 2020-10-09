@@ -41,7 +41,7 @@ public class CaptchaController extends BaseController {
     private CasConfigurationProperties casConfigurationProperties;
 
     //@ApiOperation(value = "生成验证码",notes = "4位长度，字母或数字")
-    @Operation(summary = "生成验证码",tags = {"4位长度，字母或数字"})
+    @Operation(summary = "生成验证码",description = "4位长度，字母或数字")
     @RequestMapping("/checkcode/bimage")
     public void creatImageCode(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // TODO Auto-generated method stub
@@ -82,7 +82,7 @@ public class CaptchaController extends BaseController {
     }
 
     //@ApiOperation(value = "比对验证码",notes = "判断验证码是否有效")
-    @Operation(summary = "比对验证码",tags = {"判断验证码是否有效"})
+    @Operation(summary = "比对验证码",description = "判断验证码是否有效")
     @RequestMapping("/checkcode/check")
     @ResponseBody
     public Map<String, Object> checkCode(@Nullable String code, HttpServletRequest req) {

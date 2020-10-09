@@ -38,9 +38,6 @@
 ### chapter36----Springboot SpringSecurity，CAS-server,CAS-client
 ### chapter37----Springboot Junit5 断言
 ### chapter38----Springboot @Async 异步调用
-
-## 后续更新计划
-
-### chapter39----Springboot 消息中间件 rabbitMQ、rocketMQ、kafka
+### chapter39----Springboot 集成API组件 Swagger3
 
 
