@@ -25,6 +25,15 @@ import java.util.Map;
 public class DemoSecurityContriller {
 
 
+    /**
+     * <p>demoMap 一个例子</p>
+     *
+     * @param request HttpServletRequest
+     * @param name    姓名
+     * @return java.util.Map<java.lang.String, java.lang.String> 封装对象map
+     * @author hanqf
+     * 2020/10/10 15:52
+     */
     @Operation(summary = "demoSecurity", description = "swagger api demo security")
     @PostMapping("/demoMap")
     public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name) {
@@ -50,15 +59,24 @@ public class DemoSecurityContriller {
 
     }
 
+    /**
+     * <p>提交订单</p>
+     *
+     * @param request  HttpServletRequest
+     * @param params   订单map
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author hanqf
+     * 2020/10/10 15:54
+     */
     @ApiImplicitParams({
-            @ApiImplicitParam(name="userid",value="用户id",dataTypeClass = Long.class, paramType = "query",example="12345"),
-            @ApiImplicitParam(name="goodsid",value="商品id",dataTypeClass = Integer.class, paramType = "query",example="12345"),
-            @ApiImplicitParam(name="mobile",value="手机号",dataTypeClass = String.class, paramType = "query",example="13866668888"),
-            @ApiImplicitParam(name="comment",value="发货备注",dataTypeClass = String.class, paramType = "query",example="请在情人节当天送到")
+            @ApiImplicitParam(name = "userid", value = "用户id", dataTypeClass = Long.class, paramType = "query", example = "12345"),
+            @ApiImplicitParam(name = "goodsid", value = "商品id", dataTypeClass = Integer.class, paramType = "query", example = "12345"),
+            @ApiImplicitParam(name = "mobile", value = "手机号", dataTypeClass = String.class, paramType = "query", example = "13866668888"),
+            @ApiImplicitParam(name = "comment", value = "发货备注", dataTypeClass = String.class, paramType = "query", example = "请在情人节当天送到")
     })
     @Operation(summary = "提交订单")
     @PostMapping("/order")
-    public Map<String, String> demoMap(HttpServletRequest request,@ApiIgnore @RequestParam Map<String,String> params) {
+    public Map<String, String> demoMap(HttpServletRequest request, @ApiIgnore @RequestParam Map<String, String> params) {
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -80,8 +98,8 @@ public class DemoSecurityContriller {
     }
 
     @Operation(summary = "json测试")
-    @PostMapping(value = "/json",headers = "Content-Type=application/json;charset=utf8")
-    public Map<String, String> demoJson(HttpServletRequest request,@RequestBody Map<String,String> params) {
+    @PostMapping(value = "/json", headers = "Content-Type=application/json;charset=utf8")
+    public Map<String, String> demoJson(HttpServletRequest request, @RequestBody Map<String, String> params) {
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -103,8 +121,8 @@ public class DemoSecurityContriller {
     }
 
     @Operation(summary = "上传附件测试")
-    @PostMapping(value = "/files",consumes = "multipart/*" ,headers = "Content-Type=multipart/form-data")
-    public Map<String, String> fileUpload(@Parameter(description = "上传图片", required = true,in = ParameterIn.QUERY)@RequestParam(required = true) MultipartFile multipartFile){
+    @PostMapping(value = "/files", consumes = "multipart/*", headers = "Content-Type=multipart/form-data")
+    public Map<String, String> fileUpload(@Parameter(description = "上传图片", required = true, in = ParameterIn.QUERY) @RequestParam(required = true) MultipartFile multipartFile) {
         Map<String, String> map = new HashMap<>();
 
         System.out.println(multipartFile.getOriginalFilename());
