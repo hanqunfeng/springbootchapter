@@ -28,7 +28,7 @@ public class DemoSecurityContriller {
 
     @Operation(summary = "demoSecurity", description = "swagger api demo security")
     @PostMapping("/demoMap")
-    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = true) String name) {
+    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name) {
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
