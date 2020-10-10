@@ -5,10 +5,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +75,40 @@ public class DemoSecurityContriller {
             map.put("Authorization", "fail");
             return map;
         }
+
+
+    }
+
+    @Operation(summary = "json测试")
+    @PostMapping(value = "/json",headers = "Content-Type=application/json;charset=utf8")
+    public Map<String, String> demoJson(HttpServletRequest request,@RequestBody Map<String,String> params) {
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String header = headerNames.nextElement();
+            System.out.println(header + ":" + request.getHeader(header));
+        }
+
+        Map<String, String> map = new HashMap<>();
+        //String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader("token");
+        if ("security".equals(authorization)) {
+            return params;
+        } else {
+            map.put("Authorization", "fail");
+            return map;
+        }
+
+
+    }
+
+    @Operation(summary = "上传附件测试")
+    @PostMapping(value = "/files",consumes = "multipart/*" ,headers = "Content-Type=multipart/form-data")
+    public Map<String, String> fileUpload(@Parameter(description = "上传图片", required = true,in = ParameterIn.QUERY)@RequestParam(required = true) MultipartFile multipartFile){
+        Map<String, String> map = new HashMap<>();
+
+        System.out.println(multipartFile.getOriginalFilename());
+        return map;
 
 
     }
