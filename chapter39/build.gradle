@@ -8,8 +8,8 @@ buildscript {
 		REPOSITORY_HOME = "https://maven.aliyun.com"
 	}
 	repositories {
-		maven { url '${REPOSITORY_HOME}/repository/public/' }
 		mavenLocal()
+		maven { url '${REPOSITORY_HOME}/repository/public/' }
 		mavenCentral()
 	}
 	dependencies {
@@ -56,8 +56,8 @@ subprojects {
 
 	//仓库
 	repositories {
-		maven { url '${REPOSITORY_HOME}/nexus/content/groups/public/' }
 		mavenLocal()
+		maven { url '${REPOSITORY_HOME}/nexus/content/groups/public/' }
 		mavenCentral()
 	}
 
@@ -76,12 +76,17 @@ subprojects {
 		imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
 	}
 
-/**
- * 发布插件
- */
+	/**
+	 * 发布插件
+	 */
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
+				groupId = project.group
+				artifactId = project.name
+				version = project.version
+				//如果不定义，则会安装以上默认值执行
+
 				from components.java
 				versionMapping {
 					usage('java-api') {
@@ -123,6 +128,25 @@ subprojects {
 	test {
 		useJUnitPlatform()
 	}
+
+	//javadoc，如果用jdk11，默认就支持中文
+	//查看可以配置的属性：https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+	tasks.withType(Javadoc) {
+		options.version = true
+		options.author = true
+		options.encoding = "UTF-8" //解决中文乱码
+		options.charSet = "UTF-8"  //解决中文乱码
+	}
+
+	//功能同上
+//	javadoc {
+//		options {
+//			encoding "UTF-8"
+//			charSet "UTF-8"
+//			author true
+//			version true
+//		}
+//	}
 }
 
 

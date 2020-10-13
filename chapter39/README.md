@@ -2,7 +2,7 @@
 * https://github.com/herionZhang/gradle-parent
 * https://www.jianshu.com/p/7a24d202b395
 * [spring boot:用swagger3生成接口文档，支持全局通用参数(swagger 3.0.0 / spring boot 2.3.2)](https://www.cnblogs.com/architectforest/p/13470170.html)
-
+* [使用Gradle发布jar到Maven中央仓库](https://segmentfault.com/a/1190000018026290)
 
 ## YApi 可视化接口管理平台
 

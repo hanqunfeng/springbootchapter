@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>DemoController</p>
+ * <h1>DemoController</h1>
  * Created by hanqf on 2020/10/9 12:47.
  */
 
@@ -28,6 +28,7 @@ public class DemoController {
         map.put("age","33");
         return map;
     }
+
 
     //附件不好使，不会显示file上传按钮，导入到yapi后也不会被识别，需要自己定义file参数
     //curl -X POST "http://localhost:8080/demo/files" -H "accept: */*" -H "Content-Type: multipart/form-data" -F "multipartFile=@/Users/hanqf/Desktop/me.png"

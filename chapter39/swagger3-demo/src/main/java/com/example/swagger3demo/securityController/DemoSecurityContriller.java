@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p></p>
- * Created by hanqf on 2020/10/9 15:43.
+ * <h1>一个需要认证的demo</h1>
+ * Create on  2020/10/9 15:43.
+ *
+ * @author hanqf
+ * @version 1.0
  */
 @Api(tags = "安全认证接口-DemoSecurityContriller")
 @RestController
@@ -26,17 +29,17 @@ public class DemoSecurityContriller {
 
 
     /**
-     * <p>demoMap 一个例子</p>
+     * <h2>demoMap 一个例子</h2>
+     * Create on 2020/10/10 15:52
      *
      * @param request HttpServletRequest
      * @param name    姓名
-     * @return java.util.Map<java.lang.String, java.lang.String> 封装对象map
+     * @return java.util.Map&lt;java.lang.String, java.lang.String&gt; 封装对象map
      * @author hanqf
-     * 2020/10/10 15:52
      */
     @Operation(summary = "demoSecurity", description = "swagger api demo security")
     @PostMapping("/demoMap")
-    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name) {
+    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name) throws RuntimeException, NullPointerException {
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -60,13 +63,13 @@ public class DemoSecurityContriller {
     }
 
     /**
-     * <p>提交订单</p>
+     * <h2>提交订单</h2>
+     * Create on  2020/10/10 15:54
      *
-     * @param request  HttpServletRequest
-     * @param params   订单map
-     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @param request HttpServletRequest
+     * @param params  订单map
+     * @return java.util.Map&lt;java.lang.String, java.lang.String&gt;
      * @author hanqf
-     * 2020/10/10 15:54
      */
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userid", value = "用户id", dataTypeClass = Long.class, paramType = "query", example = "12345"),
@@ -97,9 +100,14 @@ public class DemoSecurityContriller {
 
     }
 
+    /**
+     * @param request
+     * @param params
+     * @return
+     */
     @Operation(summary = "json测试")
     @PostMapping(value = "/json", headers = "Content-Type=application/json;charset=utf8")
-    public Map<String, String> demoJson(HttpServletRequest request, @RequestBody Map<String, String> params) {
+    public Map<String, String> demoJson(HttpServletRequest request, @RequestBody Map<String, String> params){
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -120,6 +128,7 @@ public class DemoSecurityContriller {
 
     }
 
+    
     @Operation(summary = "上传附件测试")
     @PostMapping(value = "/files", consumes = "multipart/*", headers = "Content-Type=multipart/form-data")
     public Map<String, String> fileUpload(@Parameter(description = "上传图片", required = true, in = ParameterIn.QUERY) @RequestParam(required = true) MultipartFile multipartFile) {
@@ -129,5 +138,10 @@ public class DemoSecurityContriller {
         return map;
 
 
+    }
+
+
+    public void demo(String a) throws RuntimeException{
+        //return "";
     }
 }
