@@ -1,66 +1,66 @@
-
-
 //引用插件(不生成离线文档可以不引入)
 plugins {
-	id 'org.asciidoctor.convert' version '2.3.0'
-	id "io.github.lhotari.swagger2markup" version "1.3.3.1"
+    id 'org.asciidoctor.convert' version '2.3.0'
+    id "io.github.lhotari.swagger2markup" version "1.3.3.1"
 }
 
 //设置输出文件夹及swagger版本
 ext {
-	swaggerVersion = "3.0.0"
-	swagger2markupVersion = "1.3.3"
-	//项目最上层的路径，也就是parent的项目根路径：project.rootDir
-	swaggerOutputDir = file("${project.projectDir}/api/swagger")
-	asciiDocOutputDir = file("${project.projectDir}/api/asciidoc")
-	snippetsOutputDir = file("${project.projectDir}/api/snippets")
+    swaggerVersion = "3.0.0"
+    swagger2markupVersion = "1.3.3"
+    springRestdocsMockmvcVersion = "2.0.5.RELEASE"
+    //项目最上层的路径，也就是parent的项目根路径：project.rootDir
+    swaggerOutputDir = file("${project.projectDir}/api/swagger")
+    asciiDocOutputDir = file("${project.projectDir}/api/asciidoc")
+    snippetsOutputDir = file("${project.projectDir}/api/snippets")
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: "${swaggerVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: "${swaggerVersion}"
 //	implementation(project(:"xxxx"))
-	// 离线文档生成 依赖(不生成离线文档可以不引入)
-	implementation group: 'io.github.swagger2markup', name: 'swagger2markup', version: swagger2markupVersion
-	// 测试 依赖(不生成离线文档可以不引入)
-	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    // 离线文档生成 依赖(不生成离线文档可以不引入)
+    testImplementation group: 'io.github.swagger2markup', name: 'swagger2markup', version: swagger2markupVersion
+    // 测试 依赖(不生成离线文档可以不引入)spring-restdocs-mockmvc 用于生成单元测试的文档片段，然后可以整合到离线文档中，不过目前这个swagger2markup版本是不支持的
+    testImplementation group: 'org.springframework.restdocs', name: 'spring-restdocs-mockmvc', version: springRestdocsMockmvcVersion
 }
 
 
 // 设置全局离线文档输出地址 (不生成离线文档可以不设置)
 test {
-	systemProperty 'io.springfox.staticdocs.outputDir', swaggerOutputDir
-	systemProperty 'io.springfox.staticdocs.snippetsOutputDir', snippetsOutputDir
+    systemProperty 'io.springfox.staticdocs.outputDir', swaggerOutputDir
+    systemProperty 'io.springfox.staticdocs.snippetsOutputDir', snippetsOutputDir
 //	 构建时忽略 生成文件的测试
-	exclude '**/DemoApplicationTests.class'
+//    exclude '**/Swagger3DemoApplicationTests.class'
 }
 // 添加离线文档转换task (不生成离线文档可以不设置)
 convertSwagger2markup {
-	dependsOn test
-	swaggerInput "${swaggerOutputDir}/swagger.json"
-	outputDir asciiDocOutputDir
-	config = [
-			'swagger2markup.pathsGroupedBy'                          : 'TAGS',
-			'swagger2markup.extensions.springRestDocs.snippetBaseUri': snippetsOutputDir.getAbsolutePath()]
+    dependsOn test
+    swaggerInput "${swaggerOutputDir}/swagger.json"
+    outputDir asciiDocOutputDir
+    config = [
+            'swagger2markup.pathsGroupedBy'                          : 'TAGS',
+            'swagger2markup.extensions.springRestDocs.snippetBaseUri': snippetsOutputDir.getAbsolutePath()]
 }
 // 添加离线文档生成task (不生成离线文档可以不设置)
 asciidoctor {
-	dependsOn convertSwagger2markup
-	sourceDir = file("${swaggerOutputDir}")
-	sources {
-		include 'index.adoc'
-	}
-	backends = ['html5']
-	attributes = [
-			doctype    : 'book',
-			toc        : 'left',
-			toclevels  : '3',
-			numbered   : '',
-			sectlinks  : '',
-			sectanchors: '',
-			hardbreaks : '',
-			generated  : swaggerOutputDir
-	]
-	outputDir = swaggerOutputDir
+    dependsOn convertSwagger2markup
+    sourceDir = file("${swaggerOutputDir}")
+    sources {
+        //就是通过adoc文件生成html的
+        include 'index.adoc'
+    }
+    backends = ['html5']
+    attributes = [
+            doctype    : 'book',
+            toc        : 'left',
+            toclevels  : '3',
+            numbered   : '',
+            sectlinks  : '',
+            sectanchors: '',
+            hardbreaks : '',
+            generated  : swaggerOutputDir
+    ]
+    outputDir = swaggerOutputDir
 }
 

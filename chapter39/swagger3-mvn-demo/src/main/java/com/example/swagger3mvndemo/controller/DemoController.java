@@ -1,4 +1,4 @@
-package com.example.swagger3demo.controller;
+package com.example.swagger3mvndemo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +23,9 @@ public class DemoController {
 
     @ApiOperation(value = "demo",notes = "swagger api demo")
     @GetMapping("/demoMap")
-    public Map<String,String> demoMap(String name){
+    public Map<String,String> demoMap(){
         Map<String, String> map = new HashMap<>();
-        map.put("name",name);
+        map.put("name","张三");
         map.put("age","33");
         return map;
     }
