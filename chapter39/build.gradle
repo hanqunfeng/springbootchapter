@@ -1,5 +1,6 @@
 /**
  * gradle 自身需要资源定义
+ * 构建脚本使用的依赖及查找仓库在此处声明，如插件或者task中需要使用的对象，等等
  */
 buildscript {
 	ext {
@@ -52,7 +53,7 @@ subprojects {
 	}
 
 	// java编译的时候缺省状态下会因为中文字符而失败
-	[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 	//仓库
 	repositories {
@@ -85,7 +86,7 @@ subprojects {
 				groupId = project.group
 				artifactId = project.name
 				version = project.version
-				//如果不定义，则会安装以上默认值执行
+				//如果不定义，则会按照以上默认值执行
 
 				from components.java
 				versionMapping {
@@ -100,10 +101,12 @@ subprojects {
 		}
 		repositories {
 			maven {
-				// change URLs to point to your repos, e.g. http://my.org/repo
+				// 发布仓库配置，这里基于version后缀是否为SNAPSHOT来区分发布到release库还是snapshots库
 				def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
 				def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
 				url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+				//认证用户和密码，在配置文件gradle.properties中配置
 				credentials {
 					username nexusUser
 					password nexusPassword
@@ -134,7 +137,7 @@ subprojects {
 	tasks.withType(Javadoc) {
 		options.version = true
 		options.author = true
-		options.encoding = "UTF-8" //解决中文乱码
+		options.encoding = "UTF-8"
 		options.charSet = "UTF-8"  //解决中文乱码
 	}
 
@@ -147,6 +150,12 @@ subprojects {
 //			version true
 //		}
 //	}
+
+	//自定义任务，依赖javadoc
+	task hello{
+		dependsOn javadoc
+		println "hello world"
+	}
 }
 
 

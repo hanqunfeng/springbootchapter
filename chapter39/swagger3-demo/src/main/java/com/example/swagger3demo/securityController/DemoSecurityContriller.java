@@ -39,7 +39,7 @@ public class DemoSecurityContriller {
      */
     @Operation(summary = "demoSecurity", description = "swagger api demo security")
     @PostMapping("/demoMap")
-    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name) throws RuntimeException, NullPointerException {
+    public Map<String, String> demoMap(HttpServletRequest request, @Parameter(description = "姓名", example = "张三") @RequestParam(required = false) String name){
 
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -140,8 +140,4 @@ public class DemoSecurityContriller {
 
     }
 
-
-    public void demo(String a) throws RuntimeException{
-        //return "";
-    }
 }
