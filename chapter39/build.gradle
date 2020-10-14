@@ -9,8 +9,8 @@ buildscript {
 		REPOSITORY_HOME = "https://maven.aliyun.com"
 	}
 	repositories {
-		mavenLocal()
 		maven { url '${REPOSITORY_HOME}/repository/public/' }
+		mavenLocal()
 		mavenCentral()
 	}
 	dependencies {
@@ -57,8 +57,8 @@ subprojects {
 
 	//仓库
 	repositories {
+		maven { url '${REPOSITORY_HOME}/repository/public/' }
 		mavenLocal()
-		maven { url '${REPOSITORY_HOME}/nexus/content/groups/public/' }
 		mavenCentral()
 	}
 

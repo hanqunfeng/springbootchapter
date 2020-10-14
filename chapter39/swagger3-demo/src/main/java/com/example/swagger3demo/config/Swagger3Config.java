@@ -1,7 +1,6 @@
 package com.example.swagger3demo.config;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -13,6 +12,7 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,13 +20,25 @@ import java.util.List;
 
 /**
  * <p>实际上不做任何配置，swagger3就可以使用，默认扫描所有的url</p>
+ *  访问路径：/swagger-ui/ 或 /swagger-ui/index.html
  */
 
 @Configuration
 //@EnableOpenApi  //可以不配置
 public class Swagger3Config {
 
-    // 访问路径：/swagger-ui/ 或 /swagger-ui/index.html
+    //缺省配置，default
+    @Bean
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.example.swagger3demo"))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+
     @Bean
     public Docket createRestApiForDemo() {
         return new Docket(DocumentationType.OAS_30)
