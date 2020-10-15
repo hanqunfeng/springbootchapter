@@ -50,3 +50,66 @@ snakeyaml-1.23-android.jar.sha1
 
 
 ./gradlew smartDocRestHtml
+
+
+## asciidoctor adoc格式转html或者pdf
+* [官网](https://github.com/asciidoctor/asciidoctor/blob/master/README-zh_CN.adoc)
+## mac安装
+$ brew install asciidoctor
+$ asciidoctor -v
+
+## 转html
+$ asciidoctor index.adoc #当前目录下生成index.html
+$ asciidoctor -D output index.adoc # 输出到指定路径
+
+## 转pdf
+$ asciidoctor-pdf -a pdf-style=basic-theme.yml -a pdf-fontsdir=/Library/Fonts/Microsoft index.adoc
+
+### 说明
+* basic-theme.yml，参考：[http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc](http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc)
+```yaml
+extends: base
+
+font:
+  catalog:
+    merge: false # set value to true to merge catalog with theme you're extending
+    SimHei: #这里设置字体名称，解决中文乱码，所以要设置一个中文字体
+      normal: SimHei.ttf
+      italic: SimHei.ttf
+      bold: SimHei.ttf
+      bold_italic: SimHei.ttf
+
+page:
+  layout: portrait
+  margin: [0.75in, 1in, 0.75in, 1in]
+  size: Letter
+base:
+  font-color: #333333
+  font-family: SimHei
+  font-size: 12
+  line-height-length: 17
+  line-height: $base-line-height-length / $base-font-size
+vertical-spacing: $base-line-height-length
+heading:
+  font-color: #262626
+  font-size: 17
+  font-style: bold
+  line-height: 1.2
+  margin-bottom: $vertical-spacing
+link:
+  font-color: #002FA7
+outline-list:
+  indent: $base-font-size * 1.5
+footer:
+  height: $base-line-height-length * 2.5
+  line-height: 1
+  recto:
+    right:
+      content: '{page-number}'
+  verso:
+    left:
+      content: $footer-recto-right-contentRADLE_HOME=$MY_HOME/develop_soft/gradle
+
+```
+* pdf-fontsdir 字体文件路径，多个路径逗号分割，pdf-fontsdir=path/to/fonts,path/to/more-fonts，如果路径整体使用双引号括起来，则使用;号分割，pdf-fontsdir="path/to/fonts;GEM_FONTS_DIR"
+
