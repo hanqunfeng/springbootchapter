@@ -93,8 +93,6 @@ class Swagger3DemoApplicationTests {
                 .build()
                 .toFile(Paths.get(outputDir + "/index"));
 
-
-
     }
 
     //这个Swagger2Markup的版本不能加载测试用例生成的文档

@@ -108,7 +108,7 @@ footer:
       content: '{page-number}'
   verso:
     left:
-      content: $footer-recto-right-contentRADLE_HOME=$MY_HOME/develop_soft/gradle
+      content: $footer-recto-right-content
 
 ```
 * pdf-fontsdir 字体文件路径，多个路径逗号分割，pdf-fontsdir=path/to/fonts,path/to/more-fonts，如果路径整体使用双引号括起来，则使用;号分割，pdf-fontsdir="path/to/fonts;GEM_FONTS_DIR"
