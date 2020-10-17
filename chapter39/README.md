@@ -105,3 +105,8 @@ base:
 ```
 
 
+### idea AsciiDoc插件
+Preferences | Languages & Frameworks | AsciiDoc
+在最下面的Attributes栏中配置相关属性
+
+
