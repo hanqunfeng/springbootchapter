@@ -61,6 +61,7 @@ $ asciidoctor -v
 ## 转html
 $ asciidoctor index.adoc #当前目录下生成index.html
 $ asciidoctor -D output index.adoc # 输出到指定路径
+$ asciidoctor -a toc=left -a toclevels=3 -a doctype=book -a numbered=true index.adoc # 带左侧目录导航
 
 ## 转pdf
 * 参考1：[http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc](http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc)
@@ -70,7 +71,7 @@ $ asciidoctor -D output index.adoc # 输出到指定路径
 
 ### 命令
 ```
-asciidoctor-pdf -a pdf-style=/Users/hanqf/asciidoctor-pdf/themes/zh_CN-theme.yml -a pdf-fontsdir=/Users/hanqf/asciidoctor-pdf/fonts index.adoc
+asciidoctor-pdf -a pdf-style=/Users/hanqf/asciidoctor-pdf/themes/zh_CN-theme.yml -a pdf-fontsdir=/Users/hanqf/asciidoctor-pdf/fonts -a toc=left -a toclevels=3 -a doctype=book -a numbered=true index.adoc
 ```
 
 * zh_CN-theme.yml
