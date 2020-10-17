@@ -63,53 +63,44 @@ $ asciidoctor index.adoc #当前目录下生成index.html
 $ asciidoctor -D output index.adoc # 输出到指定路径
 
 ## 转pdf
-$ asciidoctor-pdf -a pdf-style=basic-theme.yml -a pdf-fontsdir=/Library/Fonts/Microsoft index.adoc
+* 参考1：[http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc](http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc)
+* 参考2：[https://intellij-asciidoc-plugin.ahus1.de/docs/users-guide/features/advanced/pdf-non-latin-languages.html](https://intellij-asciidoc-plugin.ahus1.de/docs/users-guide/features/advanced/pdf-non-latin-languages.html) 
+* 字体下载：[https://github.com/chloerei/asciidoctor-pdf-cjk-kai_gen_gothic/releases](https://github.com/chloerei/asciidoctor-pdf-cjk-kai_gen_gothic/releases)
+* pdf-fontsdir 字体文件路径，多个路径逗号分割，pdf-fontsdir=path/to/fonts,path/to/more-fonts，如果路径整体使用双引号括起来，则使用;号分割，pdf-fontsdir="path/to/fonts;GEM_FONTS_DIR
 
-### 说明
-* basic-theme.yml，参考：[http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc](http://gist.asciidoctor.org/?github-asciidoctor%2Fasciidoctor-pdf%2F%2Fdocs%2Ftheming-guide.adoc)
-```yaml
-extends: base
-
-font:
-  catalog:
-    merge: false # set value to true to merge catalog with theme you're extending
-    SimHei: #这里设置字体名称，解决中文乱码，所以要设置一个中文字体
-      normal: SimHei.ttf
-      italic: SimHei.ttf
-      bold: SimHei.ttf
-      bold_italic: SimHei.ttf
-
-page:
-  layout: portrait
-  margin: [0.75in, 1in, 0.75in, 1in]
-  size: Letter
-base:
-  font-color: #333333
-  font-family: SimHei
-  font-size: 12
-  line-height-length: 17
-  line-height: $base-line-height-length / $base-font-size
-vertical-spacing: $base-line-height-length
-heading:
-  font-color: #262626
-  font-size: 17
-  font-style: bold
-  line-height: 1.2
-  margin-bottom: $vertical-spacing
-link:
-  font-color: #002FA7
-outline-list:
-  indent: $base-font-size * 1.5
-footer:
-  height: $base-line-height-length * 2.5
-  line-height: 1
-  recto:
-    right:
-      content: '{page-number}'
-  verso:
-    left:
-      content: $footer-recto-right-content
-
+### 命令
 ```
-* pdf-fontsdir 字体文件路径，多个路径逗号分割，pdf-fontsdir=path/to/fonts,path/to/more-fonts，如果路径整体使用双引号括起来，则使用;号分割，pdf-fontsdir="path/to/fonts;GEM_FONTS_DIR"
+asciidoctor-pdf -a pdf-style=/Users/hanqf/asciidoctor-pdf/themes/zh_CN-theme.yml -a pdf-fontsdir=/Users/hanqf/asciidoctor-pdf/fonts index.adoc
+```
+
+* zh_CN-theme.yml
+```
+# default theme at https://github.com/asciidoctor/asciidoctor-pdf/blob/master/data/themes/default-theme.yml
+extends: default
+font:
+  fallbacks:
+    - kaigen-gothic-cn
+  catalog:
+    # These are the KaiGen Gothic CN fonts, download them from
+    # https://github.com/minjiex/kaigen-gothic/tree/master/dist/CN
+    kaigen-gothic-cn:
+      normal: KaiGenGothicCN-Regular.ttf
+      bold: KaiGenGothicCN-Bold.ttf
+      italic: KaiGenGothicCN-Regular.ttf
+      bold_italic: KaiGenGothicCN-Bold.ttf
+    Noto Serif:
+      normal: GEM_FONTS_DIR/notoserif-regular-subset.ttf
+      bold: GEM_FONTS_DIR/notoserif-bold-subset.ttf
+      italic: GEM_FONTS_DIR/notoserif-italic-subset.ttf
+      bold_italic: GEM_FONTS_DIR/notoserif-bold_italic-subset.ttf
+    # M+ 1mn supports ASCII and the circled numbers used for conums
+    M+ 1mn:
+      normal: GEM_FONTS_DIR/mplus1mn-regular-subset.ttf
+      bold: GEM_FONTS_DIR/mplus1mn-bold-subset.ttf
+      italic: GEM_FONTS_DIR/mplus1mn-italic-subset.ttf
+      bold_italic: GEM_FONTS_DIR/mplus1mn-bold_italic-subset.ttf
+base:
+  font_family: kaigen-gothic-cn
+```
+
 
