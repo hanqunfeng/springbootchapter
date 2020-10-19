@@ -3,10 +3,7 @@ package com.example.service;/**
  */
 
 
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +22,11 @@ public class RedisService {
         return key + "aa";
     }
 
-    @Cacheable(key = "'RedisService.getValueByKey2_'+#key")
+    /**
+     * sync = true 表示多个线程同时访问该方法时，如果缓存里没有值，则只有一个线程可以访问，其它线程等待，也就是说其它线程会直接返回redis缓存的值
+     * 设置sync = true，可以防止"缓存击穿"
+    */
+    @Cacheable(key = "'RedisService.getValueByKey2_'+#key",sync = true)
     public String  getValueByKey2(String key){
         System.out.println("RedisService getValueByKey2_"+key);
         return key + "aa";
@@ -48,5 +49,16 @@ public class RedisService {
     @CacheEvict(allEntries = true, beforeInvocation = true)
     public void deleteAllkey() {
         System.out.println("RedisService deleteAllkey");
+    }
+
+    //一次可以配置多个类型
+    @Caching(evict = {
+            @CacheEvict(key="'RedisService.getValueByKey_'+#key"),
+            @CacheEvict(key="'RedisService.getValueByKey2_'+#key")
+    },put = {
+            @CachePut(key = "'RedisService.getValueByKey3_'+#key",condition = "#result != 'null' and #key.length() > 2")
+    })
+    public String deleteCache(String key){
+        return key + "aa";
     }
 }

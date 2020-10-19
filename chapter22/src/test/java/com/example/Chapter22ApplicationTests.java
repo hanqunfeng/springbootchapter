@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Chapter22ApplicationTests {
+class   Chapter22ApplicationTests {
 
     @Autowired
     private RedisService redisService;
@@ -24,6 +24,8 @@ class Chapter22ApplicationTests {
         System.out.println(redisService.getValueByKey("qqq"));
         System.out.println(redisService.getValueByKey2("ccc"));
         System.out.println(redisService.getValueByKey3("ddd"));
+
+        redisService.deleteCache("aaa");
 
     }
 
