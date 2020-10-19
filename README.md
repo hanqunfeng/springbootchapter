@@ -38,6 +38,6 @@
 ### chapter36----Springboot SpringSecurity，CAS-server,CAS-client
 ### chapter37----Springboot Junit5 断言
 ### chapter38----Springboot @Async 异步调用
-### chapter39----Springboot 集成API组件 Swagger3
+### chapter39----Springboot 集成API组件 Swagger3 导出html\pdf(git,maven)
 
 
