@@ -1,0 +1,52 @@
+buildscript {
+	ext {
+		springBootVersion = '2.3.4.RELEASE'
+		springBootManagementVersion = '1.0.10.RELEASE'
+		REPOSITORY_HOME = "https://maven.aliyun.com"
+		jedisVersion = '3.3.0'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springBootManagementVersion}"
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+repositories {
+	maven { url '${REPOSITORY_HOME}/repository/public/' }
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	// https://mvnrepository.com/artifact/redis.clients/jedis
+	implementation group: 'redis.clients', name: 'jedis', version: jedisVersion
+	//session共享
+	implementation 'org.springframework.session:spring-session-data-redis'
+
+}
+
+test {
+	useJUnitPlatform()
+}
