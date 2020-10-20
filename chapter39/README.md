@@ -124,7 +124,7 @@ Preferences | Languages & Frameworks | AsciiDoc
 
 #### 扩展，markdown转html
 `pandoc -f markdown -t html index.md -o index.html`
-* 这种方式转换后的html是不包含html元素的，需要自己补充上echo，将生成的内容粘贴到下面的###处即可
+* 这种方式转换后的html是不包含html元素的，需要自己补充上，将生成的内容粘贴到下面的###处即可
 ```
 <!DOCTYPE html>
 <html lang="en">
