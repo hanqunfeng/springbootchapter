@@ -122,6 +122,22 @@ Preferences | Languages & Frameworks | AsciiDoc
 * [再将docbook转换为markdown格式](https://asciidoctor.org/docs/convert-documents/#converting-a-document-to-docbook)：
 `pandoc -f docbook -t markdown_strict index.xml -o index.md`   
 
+#### 扩展，markdown转html
+`pandoc -f markdown -t html index.md -o index.html`
+* 这种方式转换后的html是不包含html元素的，需要自己补充上echo，将生成的内容粘贴到下面的###处即可
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  ###
+</body>
+</html>
+```
 #### 说明
 使用pandoc转markdown时，如果-t markdown 则转换后的table格式是不标准的，这里使用markdown_strict，则table会被转换为html的table格式
 
