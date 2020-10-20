@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Enumeration;
+import java.util.Random;
 
 /**
  * <h1>文章处理器</h1>
@@ -39,6 +40,7 @@ public class ArticalController {
 
         String authorization = request.getHeader("token");
         if ("security".equals(authorization)) {
+            artical.setId(new Random().nextLong());
             return CommonResponse.success("保存文章成功", artical);
         } else {
             return CommonResponse.fail("认证失败");

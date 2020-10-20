@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <h1>定时任务</h1>
@@ -28,7 +29,7 @@ public class ScheduledJobs {
     @Scheduled(fixedDelay = 5000, initialDelay = 2000)
     public void fixedDelayJob() throws InterruptedException {
         log.info("fixedDelayJob 开始：" + LocalDateTime.now().format(fmTime));
-        Thread.sleep(10 * 1000);
+        TimeUnit.SECONDS.sleep(10);
         log.info("fixedDelayJob 结束：" + LocalDateTime.now().format(fmTime));
     }
 
@@ -41,7 +42,7 @@ public class ScheduledJobs {
     @Scheduled(fixedRate = 3000)
     public void fixedRateJob() throws InterruptedException {
         log.info("fixedRateJob 开始：" + LocalDateTime.now().format(fmTime));
-        Thread.sleep(5 * 1000);
+        TimeUnit.SECONDS.sleep(5);
         log.info("fixedRateJob 结束：" + LocalDateTime.now().format(fmTime));
     }
 
