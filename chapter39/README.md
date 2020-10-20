@@ -54,6 +54,8 @@ snakeyaml-1.23-android.jar.sha1
 
 ## asciidoctor adoc格式转html或者pdf
 * [官网](https://github.com/asciidoctor/asciidoctor/blob/master/README-zh_CN.adoc)
+* [adoc语法](https://blog.csdn.net/qq_36135928/article/details/97931495?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~top_click~default-1-97931495.nonecase&utm_term=asciidoc&spm=1000.2123.3001.4430)
+
 ## mac安装
 $ brew install asciidoctor
 $ asciidoctor -v
@@ -108,5 +110,26 @@ base:
 ### idea AsciiDoc插件
 Preferences | Languages & Frameworks | AsciiDoc
 在最下面的Attributes栏中配置相关属性
+
+
+## asciidoc 转 markdown
+### 安装pandoc
+`brew install pandoc`
+
+### 执行转换
+* [先将asciidoc转成docbook格式](https://www.pandoc.org/getting-started.html)：
+`asciidoctor -b docbook index.adoc`
+* [再将docbook转换为markdown格式](https://asciidoctor.org/docs/convert-documents/#converting-a-document-to-docbook)：
+`pandoc -f docbook -t markdown_strict index.xml -o index.md`   
+
+#### 说明
+使用pandoc转markdown时，如果-t markdown 则转换后的table格式是不标准的，这里使用markdown_strict，则table会被转换为html的table格式
+
+
+
+## asciidoc 引入其它文件：
+`include::../generated-snippets/demoMap/curl-request.adoc[]`
+
+
 
 
