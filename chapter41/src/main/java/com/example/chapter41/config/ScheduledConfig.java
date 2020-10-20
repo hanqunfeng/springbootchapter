@@ -25,8 +25,8 @@ public class ScheduledConfig implements SchedulingConfigurer {
     public Executor scheduledExecutor() {
         RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
         ScheduledThreadPoolExecutor threadPoolExecutor = new ScheduledThreadPoolExecutor(10, handler);
-        threadPoolExecutor.setMaximumPoolSize(20);
-        threadPoolExecutor.setKeepAliveTime(60,TimeUnit.SECONDS);
+        //在调用线程池调用了 shutdown（）方法后，是否继续执行现有周期任务（通过 scheduleAtFixedRate、scheduleWithFixedDelay 提交的周期任务）的策略；默认值为false
+        threadPoolExecutor.setContinueExistingPeriodicTasksAfterShutdownPolicy(true);
 
         return threadPoolExecutor;
     }
