@@ -1,6 +1,7 @@
-package com.example.logbackdemo.controller;
+package com.example.log4j2demo.controller;
 
-import com.example.logbackdemo.response.CommonResponse;
+
+import com.example.log4j2demo.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/demo")
 public class DemoController {
+
 
     @GetMapping("/index")
     public CommonResponse index(){

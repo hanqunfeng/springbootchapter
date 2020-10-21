@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
+
+
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger{50}：类路径，最大显示50个字符 %M：方法名称 %L：行号 %msg：日志消息，%n是换行符-->
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger{50}：日志名称路径，最大显示50个字符 %C：类名称全路径 %M：方法名称 %L：行号 %msg：日志消息，%n是换行符-->
             <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %M - %L - %msg%n</pattern>-->
-            <pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) - %L - %cyan(%msg%n)</pattern>
+<!--            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %blue([%thread]) %highlight(%-5level) %boldMagenta(%C) - %L - %cyan(%msg%n) %red(%throwable)</pattern>-->
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %blue([%thread]) %highlight(%-5level) %boldMagenta(%C) - %L - %cyan(%msg%n)</pattern>
         </encoder>
     </appender>
 
@@ -14,6 +17,12 @@
 
     <!-- 滚动文件日志 RollingFileAppender -->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>INFO</level>-->
+<!--            <onMatch>ACCEPT</onMatch>-->
+<!--            <onMismatch>DENY</onMismatch>-->
+<!--        </filter>-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
             <FileNamePattern>${LOG_PATH}/web.log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
@@ -25,7 +34,7 @@
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %M - %L - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %C - %L - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -42,12 +51,13 @@
 
 
         <!-- root日志输出级别 -->
-        <root level="error">
+        <root level="info">
             <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
         </root>
 
-        <!-- 其它路径的日志输出配置 -->
-        <logger name="com.example" level="info">
+        <!-- 其它路径的日志输出配置 additivity="false" 表示不再root中打印，避免重复打印-->
+        <logger name="com.example" level="debug" additivity="false">
             <appender-ref ref="file"/>
         </logger>
 

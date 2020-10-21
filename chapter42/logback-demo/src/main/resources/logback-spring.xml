@@ -14,6 +14,12 @@
 
     <!-- 滚动文件日志 RollingFileAppender -->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>INFO</level>-->
+<!--            <onMatch>ACCEPT</onMatch>-->
+<!--            <onMismatch>DENY</onMismatch>-->
+<!--        </filter>-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
             <FileNamePattern>${LOG_PATH}/web.log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
@@ -53,20 +59,12 @@
         <!-- root日志输出级别 -->
         <root level="info">
             <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
         </root>
-        <logger name="com.example" level="info">
+        <!-- 其它路径的日志输出配置 additivity="false" 表示不再root中打印，避免重复打印-->
+        <logger name="com.example" level="info" additivity="false">
             <appender-ref ref="file"/>
         </logger>
     </springProfile>
-
-    <!--    &lt;!&ndash; root日志输出级别 &ndash;&gt;-->
-    <!--    <root level="info">-->
-    <!--        <appender-ref ref="console"/>-->
-    <!--    </root>-->
-
-    <!--    &lt;!&ndash; 其它路径的日志输出配置 &ndash;&gt;-->
-    <!--    <logger name="com.example" level="debug">-->
-    <!--        <appender-ref ref="file"/>-->
-    <!--    </logger>-->
 
 </configuration>

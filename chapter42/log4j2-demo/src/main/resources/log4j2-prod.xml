@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出-->
+<!--monitorInterval：Log4j能够自动检测修改配置，设置间隔秒数-->
+<!--参考：https://blog.csdn.net/hijie/article/details/103112600-->
+<configuration status="WARN" monitorInterval="30">
+
+    <properties>
+        <property name="LOG_PATH">${sys:user.home}/logs/log4j2-demo</property>
+    </properties>
+    <!--先定义所有的appender-->
+    <appenders>
+        <!--这个输出控制台的配置-->
+        <console name="Console" target="SYSTEM_OUT">
+<!--            输出日志的格式-->
+<!--            %d,%d{yyyy-MM-dd HH:mm:ss.SSS} 表示输出到毫秒的时间-->
+<!--            %t 输出当前线程名称-->
+<!--            %p 输出日志级别-->
+<!--            %-5level 输出日志级别，-5表示左对齐并且固定输出5个字符，如果不足在右边补0-->
+<!--            %logger 输出logger名称，因为Root Logger没有名称，所以没有输出-->
+<!--            %msg, %m 日志文本-->
+<!--            %n 换行-->
+<!--            %C 输出类全路径名称-->
+<!--            %F 输出所在的类文件名，如Log4j2Test.java-->
+<!--            %L 输出行号-->
+<!--            %M 输出所在方法名-->
+<!--            %l 输出语句所在的行数, 包括类名、方法名、文件名、行数-->
+            <PatternLayout pattern="[%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{green}] [%highlight{%-5level}] [%style{%t}{blue}] - %style{%C}{bright,magenta} - %L : %style{%m%n}{cyan}%style{%throwable}{red}"/>
+        </console>
+        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
+        <File name="logfile" fileName="${LOG_PATH}/test.log" append="false">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%-5level] [%t] - %C - %L - %m%n"/>
+        </File>
+        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileInfo" fileName="${LOG_PATH}/web.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/web-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss:SSS}] [%-5level] [%t] - %C - %L - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了30 -->
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </appenders>
+
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效,additivity="false"用于指定不打印到root-->
+    <loggers>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="logfile"/>
+            <appender-ref ref="RollingFileInfo"/>
+        </logger>
+        <root level="ERROR">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFileInfo"/>
+        </root>
+    </loggers>
+</configuration>
+

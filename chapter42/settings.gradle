@@ -1,2 +1,3 @@
 rootProject.name = 'chapter42'
 include 'logback-demo'
+include 'log4j2-demo'

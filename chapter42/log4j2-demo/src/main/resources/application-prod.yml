@@ -1,0 +1,10 @@
+
+
+#服务器配置
+server:
+  #设定http监听端口，默认8080
+  port: 8082
+
+# 日子配置
+logging:
+  config: classpath:log4j2-prod.xml
