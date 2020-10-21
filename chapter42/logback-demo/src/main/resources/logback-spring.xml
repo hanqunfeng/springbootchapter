@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!-- 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger{50}：类路径，最大显示50个字符 %M：方法名称 %L：行号 %msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %M - %L - %msg%n</pattern>-->
+            <pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) - %L - %cyan(%msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_PATH" value="/Users/hanqf/logs/logback-demo"/>
+
+    <!-- 滚动文件日志 RollingFileAppender -->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_PATH}/web.log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+            <!--每一份日志文件最大的大小，达到后会生成新的日期文件，%i从0开始-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %M - %L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步日志 -->
+    <appender name="asyncFile" class="ch.qos.logback.classic.AsyncAppender">
+        <!--达到队列容量阀值时不丢弃日志-->
+        <discardingThreshold>0</discardingThreshold>
+        <!--队列容量-->
+        <queueSize>500</queueSize>
+        <!--使用file的定义进行输出-->
+        <appender-ref ref="file"/>
+    </appender>
+
+
+    <!--随spring激活环境进行配置，只有logback-spring.xml中支持该配置-->
+    <springProfile name="prod">
+        <!-- root日志输出级别 -->
+        <root level="error">
+            <appender-ref ref="console"/>
+            <appender-ref ref="asyncFile"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <!-- root日志输出级别 -->
+        <root level="info">
+            <appender-ref ref="console"/>
+        </root>
+        <logger name="com.example" level="info">
+            <appender-ref ref="file"/>
+        </logger>
+    </springProfile>
+
+    <!--    &lt;!&ndash; root日志输出级别 &ndash;&gt;-->
+    <!--    <root level="info">-->
+    <!--        <appender-ref ref="console"/>-->
+    <!--    </root>-->
+
+    <!--    &lt;!&ndash; 其它路径的日志输出配置 &ndash;&gt;-->
+    <!--    <logger name="com.example" level="debug">-->
+    <!--        <appender-ref ref="file"/>-->
+    <!--    </logger>-->
+
+</configuration>

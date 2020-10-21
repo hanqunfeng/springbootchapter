@@ -41,5 +41,6 @@
 ### chapter39----Springboot 集成API组件 Swagger3 导出html\pdf(git,maven)
 ### chapter40----Springboot redis session共享
 ### chapter41----Springboot @Scheduled 计划任务
+### chapter42----Springboot 日志 logback log4j2
 
 

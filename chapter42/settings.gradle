@@ -1,0 +1,2 @@
+rootProject.name = 'chapter42'
+include 'logback-demo'

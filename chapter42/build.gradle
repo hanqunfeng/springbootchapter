@@ -1,0 +1,100 @@
+/**
+ * gradle 自身需要资源定义
+ * 构建脚本使用的依赖及查找仓库在此处声明，如插件或者task中需要使用的对象，等等
+ */
+buildscript {
+	ext {
+		springBootVersion = '2.3.4.RELEASE'
+		springBootManagementVersion = '1.0.10.RELEASE'
+		REPOSITORY_HOME = "https://maven.aliyun.com"
+	}
+	repositories {
+		maven { url '${REPOSITORY_HOME}/repository/public/' }
+		mavenLocal()
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+	}
+}
+
+
+/**
+ * 所有项目公共资源
+ */
+allprojects {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	group = 'com.example'
+	version = '0.0.1-SNAPSHOT'
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+/**
+ * 子项目通用配置
+ */
+subprojects {
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	// java编译的时候缺省状态下会因为中文字符而失败
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+	//仓库
+	repositories {
+		maven { url '${REPOSITORY_HOME}/repository/public/' }
+		mavenLocal()
+		mavenCentral()
+	}
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter'
+		compileOnly 'org.projectlombok:lombok'
+		developmentOnly 'org.springframework.boot:spring-boot-devtools'
+		annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+		annotationProcessor 'org.projectlombok:lombok'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+	}
+
+	dependencyManagement {
+		imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+	}
+
+
+	configurations {
+		[apiElements, runtimeElements].each {
+			it.outgoing.artifacts.removeIf {
+				it.buildDependencies.getDependencies(null).contains(jar)
+			}
+			it.outgoing.artifact(bootJar)
+		}
+	}
+
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	//javadoc，如果用jdk11，默认就支持中文
+	//查看可以配置的属性：https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+	tasks.withType(Javadoc) {
+		options.version = true
+		options.author = true
+		options.encoding = "UTF-8"
+		options.charSet = "UTF-8"  //解决中文乱码
+	}
+
+}
+
+
+
+
+
