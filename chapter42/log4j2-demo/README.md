@@ -3,7 +3,7 @@
 ```yaml
 # 日子配置
 logging:
-  config: classpath:log4j2-prod.xml
+  config: classpath:log4j2-dev.xml
 ```
 * 使用时，根据需要任意设置一种即可，个人推荐使用log4j2-dev.xml
 
