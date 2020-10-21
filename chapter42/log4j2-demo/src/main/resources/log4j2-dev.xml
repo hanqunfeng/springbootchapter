@@ -25,7 +25,7 @@
 <!--            %L 输出行号-->
 <!--            %M 输出所在方法名-->
 <!--            %l 输出语句所在的行数, 包括类名、方法名、文件名、行数-->
-            <PatternLayout pattern="[%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{green}] [%highlight{%-5level}] [%style{%t}{blue}] - %style{%C}{bright,magenta} - %L : %style{%m%n}{cyan}%style{%throwable}{red}"/>
+            <PatternLayout pattern="[%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{green}] [%highlight{%-5level}] [%style{%t}{blue}] - %style{%logger}{bright,magenta} - %L : %style{%m%n}{cyan}%style{%throwable}{red}"/>
         </console>
         <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
         <File name="logfile" fileName="${LOG_PATH}/test.log" append="false">
@@ -49,11 +49,12 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效,additivity="false"用于指定不打印到root-->
     <loggers>
         <logger name="org.springframework" level="INFO"/>
-        <logger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
+        <!--异步日志，异步日志不能打印类名称(%C)和行号(%L)，但是可以打印(%logger)-->
+        <AsyncLogger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
             <appender-ref ref="Console"/>
             <appender-ref ref="logfile"/>
             <appender-ref ref="RollingFileInfo"/>
-        </logger>
+        </AsyncLogger>
         <root level="INFO">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFileInfo"/>

@@ -27,4 +27,26 @@ logging:
 
 ```
 
+## 异步日志
+* 依赖
+```
+// 让log4j2支持异步日志
+	implementation group: 'com.lmax', name: 'disruptor', version: '3.4.2'
+```
+* 开启全局异步日志
+```java
+System.setProperty("Log4jContextSelector","org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+```
+
+* 同步异步混合模式
+```xml
+<!--异步日志，异步日志不能打印类名称(%C)和行号(%L)，但是可以打印(%logger)-->
+        <AsyncLogger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="logfile"/>
+            <appender-ref ref="RollingFileInfo"/>
+        </AsyncLogger>
+```
+  		
+
 

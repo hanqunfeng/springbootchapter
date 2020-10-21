@@ -51,15 +51,17 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效,additivity="false"用于指定不打印到root-->
     <loggers>
         <logger name="org.springframework" level="ERROR"/>
-        <logger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
+        <!--异步日志，异步日志不能打印类名称(%C)和行号(%L)，但是可以打印(%logger)-->
+        <AsyncLogger name="com.example.log4j2demo.controller" level="DEBUG" additivity="false">
             <appender-ref ref="Console"/>
             <appender-ref ref="logfile"/>
             <appender-ref ref="RollingFileInfo"/>
-        </logger>
+        </AsyncLogger>
         <root level="ERROR">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFileInfo"/>
         </root>
+
     </loggers>
 </configuration>
 

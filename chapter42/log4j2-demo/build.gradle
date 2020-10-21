@@ -2,7 +2,8 @@
 dependencies {
 	implementation ('org.springframework.boot:spring-boot-starter-web')
 	implementation ('org.springframework.boot:spring-boot-starter-log4j2')
-
+	// 让log4j2支持异步日志
+	implementation group: 'com.lmax', name: 'disruptor', version: '3.4.2'
 }
 
 configurations {
