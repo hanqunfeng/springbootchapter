@@ -1,0 +1,156 @@
+/**
+ * gradle 自身需要资源定义
+ * 构建脚本使用的依赖及查找仓库在此处声明，如插件或者task中需要使用的对象，等等
+ */
+buildscript {
+    ext {
+        springBootVersion = '2.3.4.RELEASE'
+        springBootManagementVersion = '1.0.10.RELEASE'
+        REPOSITORY_HOME = "https://maven.aliyun.com"
+    }
+    repositories {
+        maven { url '${REPOSITORY_HOME}/repository/public/' }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+group = 'com.example'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
+// java编译的时候缺省状态下会因为中文字符而失败
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+//仓库
+repositories {
+    maven { url '${REPOSITORY_HOME}/repository/public/' }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.4.8'
+    implementation 'org.springdoc:springdoc-openapi-data-rest:1.4.8'
+
+    //log4j2
+    implementation ('org.springframework.boot:spring-boot-starter-log4j2')
+    // 让log4j2支持异步日志
+    implementation group: 'com.lmax', name: 'disruptor', version: '3.4.2'
+
+    // druid-spring-boot-starter
+    implementation group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.2.1'
+
+    // hibernate-validator 开启@Valid
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.6.Final'
+
+
+
+
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+
+/**
+ * 所有项目公共资源
+ */
+allprojects {
+/**
+ * 发布插件
+ */
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = project.group
+                artifactId = project.name
+                version = project.version
+                //如果不定义，则会按照以上默认值执行
+
+                from components.java
+                versionMapping {
+                    usage('java-api') {
+                        fromResolutionOf('runtimeClasspath')
+                    }
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                // 发布仓库配置，这里基于version后缀是否为SNAPSHOT来区分发布到release库还是snapshots库
+                def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
+                def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                //认证用户和密码，在配置文件gradle.properties中配置
+                credentials {
+                    username nexusUser
+                    password nexusPassword
+                }
+            }
+        }
+    }
+}
+
+configurations {
+    //	由于springboot本身自带的logback，会导致冲突。所以这块需要排除默认日志。
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+
+    [apiElements, runtimeElements].each {
+        it.outgoing.artifacts.removeIf {
+            it.buildDependencies.getDependencies(null).contains(jar)
+        }
+        it.outgoing.artifact(bootJar)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//javadoc，如果用jdk11，默认就支持中文
+//查看可以配置的属性：https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+tasks.withType(Javadoc) {
+    options.version = true
+    options.author = true
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"  //解决中文乱码
+}
+
+
+

@@ -38,9 +38,10 @@
 ### chapter36----Springboot SpringSecurity，CAS-server,CAS-client
 ### chapter37----Springboot Junit5 断言
 ### chapter38----Springboot @Async 异步任务调用，线程池
-### chapter39----Springboot 集成API组件 Swagger3 导出html\pdf(git,maven)
+### chapter39----Springboot 集成API组件 Swagger3 OpenApi 导出html\pdf(git,maven) restful-api
 ### chapter40----Springboot redis session共享
 ### chapter41----Springboot @Scheduled 计划任务，线程池
 ### chapter42----Springboot 日志 logback log4j2
+### chapter43----Springboot 全局异常处理 全局返回值响应 @Valid 一个相对完整的web接口应用
 
 
