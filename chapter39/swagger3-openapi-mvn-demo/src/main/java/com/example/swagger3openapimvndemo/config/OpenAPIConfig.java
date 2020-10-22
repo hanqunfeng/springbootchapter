@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.springdoc.core.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * <h1>springdoc openapi 配置类</h1>
@@ -87,7 +90,16 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @SecurityScheme(name = "api", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 //token认证
 //@SecurityScheme(type = SecuritySchemeType.APIKEY, name = "apiKey", in = SecuritySchemeIn.HEADER, paramName = "token")
-
+@Configuration
 public class OpenAPIConfig {
+
+    //分组
+    @Bean
+    public GroupedOpenApi articalsApi() {
+        return GroupedOpenApi.builder()
+                .group("articals")
+                .pathsToMatch("/articals/**")
+                .build();
+    }
 }
 

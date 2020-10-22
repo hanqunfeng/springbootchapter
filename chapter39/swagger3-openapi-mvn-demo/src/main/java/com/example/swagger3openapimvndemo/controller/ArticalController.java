@@ -20,7 +20,7 @@ import java.util.Random;
 //需要安全认证，这里只是提示，并不会不让测试，需要代码里设置认证拦截，该注解也可以放在方法上，表示只对某个方法进行验证
 //@SecurityRequirement(name = "apiKey")
 @SecurityRequirement(name = "api")
-@RequestMapping("/artical")
+@RequestMapping("/articals")
 public class ArticalController {
 
 

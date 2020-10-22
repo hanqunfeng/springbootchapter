@@ -37,10 +37,10 @@
 ### chapter35----分布式锁 zookeeper redis db
 ### chapter36----Springboot SpringSecurity，CAS-server,CAS-client
 ### chapter37----Springboot Junit5 断言
-### chapter38----Springboot @Async 异步调用
+### chapter38----Springboot @Async 异步任务调用，线程池
 ### chapter39----Springboot 集成API组件 Swagger3 导出html\pdf(git,maven)
 ### chapter40----Springboot redis session共享
-### chapter41----Springboot @Scheduled 计划任务
+### chapter41----Springboot @Scheduled 计划任务，线程池
 ### chapter42----Springboot 日志 logback log4j2
 
 

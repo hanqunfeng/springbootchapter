@@ -1,0 +1,65 @@
+
+
+#服务器配置
+server:
+  #设定http监听端口，默认8080
+  port: 8080
+
+  #servlet全局配置
+  servlet:
+    #设定应用的context-path，默认: /
+    context-path: /
+    session:
+      #session超时时间，默认30分钟
+      timeout: 30m
+    #CharacterEncodingFilter
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  #针对tomcat的配置
+  tomcat:
+    uri-encoding: UTF-8
+    #接受的最大请求连接数，默认值8192
+    max-connections: 8192
+    #当所有的线程被占用，被放入请求队列等待的最大的请求连接数量，默认值100
+    accept-count: 100
+    threads:
+      #最大的工作线程数量，默认值200
+      max: 200
+      #最小的工作线程数量，默认值10
+      min-spare: 10
+
+#spring容器的配置
+spring:
+  mvc:
+    servlet:
+      #设定dispatcher servlet的监听路径，默认为: /
+      path: /
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    #MySQL5InnoDBDialect已过时，可以使用系统环境变量System.setProperty("hibernate.dialect.storage_engine","innodb");
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      use-new-id-generator-mappings: false
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+# 开启api-docs，默认开启
+# 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs
+# 分组api: http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+springdoc:
+  api-docs:
+    enabled: true
+
+
+
