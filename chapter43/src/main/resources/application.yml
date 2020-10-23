@@ -69,6 +69,10 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+  #默认true，支持hal+json格式，false和true没发现有什么区别，后续再研究吧
+  hateoas:
+    use-hal-as-default-json-media-type: true
+
 # 开启api-docs，默认开启
 # 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs
 # 分组api: http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
