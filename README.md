@@ -42,6 +42,6 @@
 ### chapter40----Springboot redis session共享
 ### chapter41----Springboot @Scheduled 计划任务，线程池
 ### chapter42----Springboot 日志 logback log4j2
-### chapter43----Springboot 全局异常处理 全局返回值响应 @Valid 一个相对完整的web接口应用
+### chapter43----Springboot 全局异常处理 全局返回值响应 @Valid jasypt属性值加密 一个相对完整的web接口应用
 
 

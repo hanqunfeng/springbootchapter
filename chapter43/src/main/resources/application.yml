@@ -37,11 +37,11 @@ spring:
     servlet:
       #设定dispatcher servlet的监听路径，默认为: /
       path: /
+
+  #数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
-    username: root
-    password: newpwd
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    #druid配置
+    type: com.alibaba.druid.pool.DruidDataSource
     druid:
       initial-size: 5
       max-active: 500
@@ -55,7 +55,8 @@ spring:
       test-while-idle: true
       time-between-eviction-runs-millis: 60000
       validation-query: SELECT 1 FROM DUAL
-    type: com.alibaba.druid.pool.DruidDataSource
+
+  #jpa配置
   jpa:
     #MySQL5InnoDBDialect已过时，可以使用系统环境变量System.setProperty("hibernate.dialect.storage_engine","innodb");
 #    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -63,8 +64,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
-      #mysql自增主键使用@GeneratedValue(strategy = GenerationType.AUTO)时，要设置为flase，@GeneratedValue(strategy = GenerationType.IDENTITY)则不需要
+      #mysql自增主键使用@GeneratedValue(strategy = GenerationType.AUTO)时，要设置为false，@GeneratedValue(strategy = GenerationType.IDENTITY)则不需要
       use-new-id-generator-mappings: false
+      # 参考：https://blog.csdn.net/WZH577/article/details/99698187，实际上可以不做配置，推荐使用@Table和@Column注解
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -73,12 +75,20 @@ spring:
   hateoas:
     use-hal-as-default-json-media-type: true
 
-# 开启api-docs，默认开启
+  #jackson缺省配置
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  #激活环境
+  profiles:
+    active: prod
+
+# 开启api-docs，默认开启，线上环境建议设置为false
 # 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs
 # 分组api: http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 springdoc:
   api-docs:
-    enabled: true
-
+    enabled: false
 
 

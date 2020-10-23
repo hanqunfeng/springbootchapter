@@ -1,0 +1,77 @@
+
+
+#服务器配置
+server:
+  #设定http监听端口，默认8080
+  port: 8080
+
+  #servlet全局配置
+  servlet:
+    #设定应用的context-path，默认: /
+    context-path: /
+    session:
+      #session超时时间，默认30分钟
+      timeout: 30m
+
+  #针对tomcat的配置
+  tomcat:
+    #接受的最大请求连接数，默认值8192
+    max-connections: 8192
+    #当所有的线程被占用，被放入请求队列等待的最大的请求连接数量，默认值100
+    accept-count: 100
+    threads:
+      #最大的工作线程数量，默认值200
+      max: 200
+      #最小的工作线程数量，默认值10
+      min-spare: 10
+
+#spring容器的配置
+spring:
+  mvc:
+    servlet:
+      #设定dispatcher servlet的监听路径，默认为: /
+      path: /
+
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: ENC(ORQgFAMO49GmhA3xljLe9dBMv00jXieT)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+# 开启api-docs，默认开启，线上环境建议设置为false
+# 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs
+# 分组api: http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+springdoc:
+  api-docs:
+    enabled: false
+
+#属性加密配置
+# 配置项参考：com.ulisesbocchio.jasyptspringboot.properties.JasyptEncryptorConfigurationProperties
+#  Key                                        Required	Default Value
+#  jasypt.encryptor.password	              True	    -
+#  jasypt.encryptor.algorithm	              False	    PBEWITHHMACSHA512ANDAES_256
+#  jasypt.encryptor.key-obtention-iterations  False	    1000
+#  jasypt.encryptor.pool-size	              False	    1
+#  jasypt.encryptor.provider-name	          False	    SunJCE
+#  jasypt.encryptor.provider-class-name	      False	    null
+#  jasypt.encryptor.salt-generator-classname  False	    org.jasypt.salt.RandomSaltGenerator
+#  jasypt.encryptor.iv-generator-classname	  False	    org.jasypt.iv.RandomIvGenerator
+#  jasypt.encryptor.string-output-type	      False	    base64
+#  jasypt.encryptor.proxy-property-sources	  False	    false
+#  jasypt.encryptor.skip-property-sources	  False	    empty list
+jasypt:
+  encryptor:
+    #默认加密算法:PBEWITHHMACSHA512ANDAES_256，sha512+AES算法，安全性更高，但是需要 Java JDK 1.9+
+    #本服务使用jdk1.8，所以使用 PBEWithMD5AndDES md5+des算法
+    #默认使用 com.ulisesbocchio.jasyptspringboot.encryptor.DefaultLazyEncryptor 进行加解密 ，PooledPBEStringEncryptor可以对其加密的内容进行解密
+    algorithm: PBEWithMD5AndDES
+    # 加密密钥，使用方式 spring.datasource.password=ENC(密文)，不要设置在配置文件中，建议使用环境变量或者启动参数: --jasypt.encryptor.password=123456
+    password: 123456
+    #设置密文前缀和后缀
+    property:
+      prefix: ENC(
+      suffix: )
+
+
