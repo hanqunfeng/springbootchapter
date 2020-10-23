@@ -2,6 +2,8 @@ package com.example.exception;
 
 import com.example.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,9 +32,33 @@ public class WebExceptionHandler {
     /**
      * 参数绑定异常
      */
+    @ExceptionHandler(BindException.class)
+    @ResponseBody
+    public CommonResponse bindException(BindException exception){
+        exception.printStackTrace();
+        log.error(exception.getMessage());
+        FieldError fieldError = exception.getBindingResult().getFieldError();
+        return CommonResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,fieldError.getDefaultMessage()));
+    }
+
+    /**
+     * 参数绑定异常
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public CommonResponse methodArgumentNotValidException(MethodArgumentNotValidException exception){
+        exception.printStackTrace();
+        log.error(exception.getMessage());
+        FieldError fieldError = exception.getBindingResult().getFieldError();
+        return CommonResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,fieldError.getDefaultMessage()));
+    }
+
+    /**
+     * 参数解析异常，如json数据格式不匹配
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public CommonResponse illegalArgumentException(IllegalArgumentException exception){
         exception.printStackTrace();
         log.error(exception.getMessage());
         return CommonResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,exception.getMessage()));

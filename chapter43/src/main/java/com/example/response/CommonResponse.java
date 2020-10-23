@@ -4,24 +4,20 @@ import com.example.exception.CustomException;
 import com.example.exception.CustomExceptionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * <h1>通用Response</h1>
  * Created by hanqf on 2020/10/15 16:19.
  */
 
-@Data
-@Builder
 //定义json字段的顺序
-@JsonPropertyOrder(value = {"ok","code","message","data"})
+@JsonPropertyOrder(value = {"isOk", "code", "message", "data"})
 public class CommonResponse {
     /**
-     * 是否成功,json显示字段名称为：ok
+     * 是否成功,json显示字段名称为：isOk
      */
-    private boolean isOk;
-    /**
+    private boolean isIsOk;
+    /*
      * 响应状态码，如200，400，500
      */
     private Integer code;
@@ -32,12 +28,15 @@ public class CommonResponse {
     /**
      * 数据
      */
-    //如果是null就不返回了
+    //如果是null就不在json中显示了
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
 
-
-
+    /**
+     * 进制自定义响应
+    */
+    private CommonResponse() {
+    }
 
     /**
      * <h2>成功响应信息</h2>
@@ -49,21 +48,25 @@ public class CommonResponse {
      * @author hanqf
      */
     public static CommonResponse success(String message, Object data) {
-        return CommonResponse.builder().isOk(true).code(200).message(message).data(data).build();
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setIsOk(true);
+        commonResponse.setCode(200);
+        commonResponse.setMessage(message);
+        commonResponse.setData(data);
+        return commonResponse;
     }
 
     public static CommonResponse success(String message) {
-        return CommonResponse.builder().isOk(true).code(200).message(message).build();
+        return success(message,null);
     }
 
     public static CommonResponse success(Object data) {
-        return CommonResponse.builder().isOk(true).code(200).message("请求响应成功").data(data).build();
+        return success("请求响应成功",data);
     }
 
     public static CommonResponse success() {
-        return CommonResponse.builder().isOk(true).code(200).message("请求响应成功").build();
+        return success("请求响应成功",null);
     }
-
 
     /**
      * <h2>异常响应信息</h2>
@@ -74,10 +77,50 @@ public class CommonResponse {
      * @author hanqf
      */
     public static CommonResponse error(CustomException exception) {
-        return CommonResponse.builder().isOk(false).code(exception.getCode()).message(exception.getMessage()).build();
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setIsOk(false);
+        commonResponse.setCode(exception.getCode());
+        commonResponse.setMessage(exception.getMessage());
+        return commonResponse;
     }
 
     public static CommonResponse error(CustomExceptionType exceptionType, String errorMessage) {
-        return CommonResponse.builder().isOk(false).code(exceptionType.getCode()).message(errorMessage).build();
+        CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setIsOk(false);
+        commonResponse.setCode(exceptionType.getCode());
+        commonResponse.setMessage(errorMessage);
+        return commonResponse;
+    }
+
+    public boolean isIsOk() {
+        return isIsOk;
+    }
+
+    private void setIsOk(boolean isOk) {
+        isIsOk = isOk;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    private void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    private void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    private void setData(Object data) {
+        this.data = data;
     }
 }

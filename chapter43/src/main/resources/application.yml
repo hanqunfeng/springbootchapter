@@ -63,6 +63,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+      #mysql自增主键使用@GeneratedValue(strategy = GenerationType.AUTO)时，要设置为flase，@GeneratedValue(strategy = GenerationType.IDENTITY)则不需要
       use-new-id-generator-mappings: false
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
