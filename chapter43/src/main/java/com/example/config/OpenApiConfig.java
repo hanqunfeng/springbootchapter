@@ -52,10 +52,18 @@ public class OpenApiConfig {
     }
 
     @Bean
-    public GroupedOpenApi demoApi() {
+    public GroupedOpenApi jsonApi() {
         return GroupedOpenApi.builder()
-                .group("demo")
-                .pathsToMatch("/demo/articals/**")
+                .group("json")
+                .pathsToMatch("/json/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi viewApi() {
+        return GroupedOpenApi.builder()
+                .group("view")
+                .pathsToMatch("/view/**")
                 .build();
     }
 

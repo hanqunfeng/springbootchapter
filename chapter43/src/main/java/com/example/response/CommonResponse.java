@@ -2,7 +2,6 @@ package com.example.response;
 
 import com.example.exception.CustomException;
 import com.example.exception.CustomExceptionType;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
@@ -29,7 +28,7 @@ public class CommonResponse {
      * 数据
      */
     //如果是null就不在json中显示了
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
 
     /**

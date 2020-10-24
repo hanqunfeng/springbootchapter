@@ -74,6 +74,9 @@ dependencies {
     // jasypt 配置加密 官方地址：https://github.com/ulisesbocchio/jasypt-spring-boot
     compile group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.3'
 
+    //支持thymeleaf模板页面
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 }
 
 dependencyManagement {

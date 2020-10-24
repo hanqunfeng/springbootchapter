@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/demo/articals")
+@RequestMapping("/json/articals")
 public class ArticalController {
 
     @Autowired
