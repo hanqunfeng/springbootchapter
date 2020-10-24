@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div>
+    <table>
+        <tr>
+            <th>标题</th>
+            <th>作者</th>
+            <th>页数</th>
+            <th>出版日期</th>
+        </tr>
+        <tbody>
+        <tr th:each="item:${articals}">
+            <td th:text="${item.title}"></td>
+            <td th:text="${item.author}"></td>
+            <td th:text="${item.pageNum}"></td>
+            <td th:text="${#temporals.format(item.publishDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

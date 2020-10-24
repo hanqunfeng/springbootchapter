@@ -8,6 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <h1>全局异常处理器</h1>
@@ -19,7 +22,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class WebExceptionHandler {
 
     /**
-     * 拦截自定义异常
+     * 拦截自定义ModelViewException异常
+     */
+    @ExceptionHandler(ModelViewException.class)
+    public ModelAndView modelViewException(HttpServletRequest request, ModelViewException exception){
+        exception.printStackTrace();
+        log.error(exception.getMessage());
+        ModelAndView modelAndView = new ModelAndView("common/error");
+        modelAndView.addObject("exception",exception);
+        modelAndView.addObject("url",request.getRequestURL());
+        return modelAndView;
+    }
+
+
+    /**
+     * 拦截自定义CustomException异常
     */
     @ExceptionHandler(CustomException.class)
     @ResponseBody

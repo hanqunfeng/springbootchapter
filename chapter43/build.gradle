@@ -77,6 +77,9 @@ dependencies {
     //支持thymeleaf模板页面
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    //aop 面向方面编程 
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 }
 
 dependencyManagement {
