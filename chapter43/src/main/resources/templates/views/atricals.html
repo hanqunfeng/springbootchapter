@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>文章列表</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
 </head>
 <body>
-<div>
-    <table>
+<div class="container">
+    <table class="table">
         <tr>
             <th>标题</th>
             <th>作者</th>
@@ -24,5 +26,7 @@
     </table>
 </div>
 
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </body>
 </html>

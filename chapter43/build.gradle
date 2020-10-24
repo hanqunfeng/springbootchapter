@@ -77,8 +77,16 @@ dependencies {
     //支持thymeleaf模板页面
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    //aop 面向方面编程 
+    //aop 面向方面编程 支持@Aspect
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    //webjars https://www.webjars.org
+    implementation 'org.webjars:bootstrap:4.5.3'
+    implementation 'org.webjars.bower:jquery:3.5.1'
+    // 可以在html中去掉webjars的版本号，这样升级的时候直接修改上面引入的webjars中的版本号即可，页面中不需要修改
+    implementation 'org.webjars:webjars-locator:0.40'
+
+
 
 }
 
