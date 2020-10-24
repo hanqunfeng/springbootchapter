@@ -49,7 +49,7 @@ public class LocaleConfig {
         CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
         //Locale.SIMPLIFIED_CHINESE  == zh_CN
         //Locale.US == en_US
-        cookieLocaleResolver.setDefaultLocale(Locale.US); //设置缺省的语言，可以不设置
+        cookieLocaleResolver.setDefaultLocale(Locale.SIMPLIFIED_CHINESE); //设置缺省的语言，可以不设置
         return cookieLocaleResolver;
     }
 }

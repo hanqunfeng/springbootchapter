@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <META http-equiv="Pragma" content="no-cache">
-    <META http-equiv="Cache-Control" content="no-cache">
-    <META http-equiv="Expire" content="0">
-    <title>错误页面</title>
-</head>
+<head th:replace="formtarget/base::header('错误页面')"></head>
 <body>
-<h1>exception.toString()</h1>
-<div th:text="${exception}"></div>
+<h1 class="alert alert-success">exception.toString()</h1>
+<div th:text="${exception}" class="alert alert-warning"></div>
 
-<h1>exception.message</h1>
-<div th:text="${exception.message}"></div>
+<h1 class="alert alert-success">exception.message</h1>
+<div th:text="${exception.message}" class="alert alert-danger"></div>
 
-<h1>url</h1>
-<div th:text="${url}"></div>
+<h1 class="alert alert-success">url</h1>
+<div th:text="${url}" class="alert alert-info"></div>
 </body>
+<footer th:replace="formtarget/base::fooder"></footer>
 </html>
