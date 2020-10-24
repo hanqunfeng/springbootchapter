@@ -1,4 +1,4 @@
-# Springboot 全局异常处理 全局返回值响应 @Valid jasypt属性值加密 一个相对完整的web接口应用
+# Springboot 全局异常处理(json，view) 全局返回值响应 @Valid jasypt属性值加密 一个相对完整的web接口应用
 
 ## jasypt
 * [官网](https://github.com/ulisesbocchio/jasypt-spring-boot)
@@ -27,4 +27,35 @@ java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI passw
 
 #解密
 java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=123456 algorithm=PBEWithMD5AndDES input=+Dgb76G78U6GIALlLDJUfw==
+```
+
+## Thymeleaf 如何支持java8的时间LocalDate和LocalDatetime
+* 参考：[https://www.cnblogs.com/asker009/p/9370603.html](https://www.cnblogs.com/asker009/p/9370603.html)
+* 注意，不需要引入jar
+```
+在java8的java.time中使用：
+
+${#temporals.day(date)}
+
+${#temporals.month(date)}
+
+${#temporals.monthName(date)}
+
+${#temporals.monthNameShort(date)}
+
+${#temporals.year(date)}
+
+${#temporals.dayOfWeek(date)}
+
+${#temporals.dayOfWeekName(date)}
+
+${#temporals.dayOfWeekNameShort(date)}
+
+${#temporals.hour(date)}
+
+${#temporals.minute(date)}
+
+${#temporals.second(date)}
+
+${#temporals.millisecond(date)}
 ```
