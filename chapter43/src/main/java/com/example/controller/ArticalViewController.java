@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.model.Artical;
-import com.example.service.ArticalServcie;
+import com.example.service.impl.ArticalServcieImpl;
 import com.example.views.ModelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ArticalViewController {
 
     @Autowired
-    private ArticalServcie articalServcie;
+    private ArticalServcieImpl articalServcie;
 
     @ModelView
     @GetMapping

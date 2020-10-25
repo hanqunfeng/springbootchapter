@@ -1,5 +1,4 @@
 
-
 #服务器配置
 server:
   #设定http监听端口，默认8080
@@ -110,7 +109,7 @@ spring:
 
   #激活环境
   profiles:
-    active: prod
+    active: dev
 
   #资源国际化
   messages:

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
  */
 @Configuration
 @AutoConfigureAfter({LocaleConfig.class})
+@EnableTransactionManagement
 public class MvcConfig implements WebMvcConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(MvcConfig.class);
