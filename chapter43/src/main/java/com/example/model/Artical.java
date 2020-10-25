@@ -8,7 +8,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * <h1>文章对象</h1>
@@ -62,11 +62,12 @@ public class Artical {
     /**
      * 发布日期
      *
-     * 如果是LocalDateTime类型，@CacheConfig redis存储为json时会报错
+     * 如果是LocalDateTime类型，@CacheConfig redis存储为json时会报错，需要特殊处理，具体看RedisConfig
+     * Date类型则不需要特殊处理
     */
     @Schema(required = true,pattern="yyyy-MM-dd HH:mm:ss",example = "2018-10-01 12:18:48")
     //日期字符串格式化转换
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "publishDate")
-    private Date publishDate;
+    private LocalDateTime publishDate;
 }
