@@ -61,6 +61,8 @@ public class Artical {
     
     /**
      * 发布日期
+     *
+     * 如果是LocalDateTime类型，@CacheConfig redis存储为json时会报错
     */
     @Schema(required = true,pattern="yyyy-MM-dd HH:mm:ss",example = "2018-10-01 12:18:48")
     //日期字符串格式化转换
