@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.dao.ArticalRepository;
 import com.example.model.Artical;
+import com.example.service.ArticalServcie;
 import com.example.views.ModelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +21,14 @@ import java.util.List;
 public class ArticalViewController {
 
     @Autowired
-    private ArticalRepository articalRepository;
+    private ArticalServcie articalServcie;
 
     @ModelView
     @GetMapping
     public String findArticals(Model model) {
         //异常测试
         //int i = 1 / 0;
-        List<Artical> articals = articalRepository.findAll();
+        List<Artical> articals = articalServcie.findAll();
         model.addAttribute("articals",articals);
         return "views/atricals";
     }
