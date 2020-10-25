@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="formtarget/base::header('文章列表')"></head>
+<head th:replace="formtarget/base::header(#{artical.list.title})"></head>
 <style>
     .odd{
         background-color: aliceblue;
@@ -24,7 +24,6 @@
         <tr th:each="item,stat:${articals}" th:class="${stat.even}?'even':'odd'">
             <td th:text="${stat.index}"></td>
             <td th:text="${stat.count}"></td>
-            <td th:text="${item.title}"></td>
             <td th:text="${item.title}"></td>
             <td th:text="${item.author}"></td>
             <td th:text="${item.pageNum}"></td>
