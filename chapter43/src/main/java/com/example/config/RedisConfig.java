@@ -79,6 +79,9 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
+    /**
+     * 参考：https://blog.csdn.net/m0_37589586/article/details/87782001
+    */
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<Object>(
