@@ -87,6 +87,12 @@ dependencies {
     implementation 'org.webjars:webjars-locator:0.40'
 
 
+    //redis @CacheConfig
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //redis lettuce连接池依赖
+    implementation 'org.apache.commons:commons-pool2'
+
+
 
 }
 

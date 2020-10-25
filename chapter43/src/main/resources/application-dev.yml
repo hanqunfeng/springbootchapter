@@ -47,6 +47,4 @@ springdoc:
   api-docs:
     enabled: true
 
-#开启debug
-debug: true
 

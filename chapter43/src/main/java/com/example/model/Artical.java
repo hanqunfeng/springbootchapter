@@ -8,7 +8,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <h1>文章对象</h1>
@@ -66,5 +66,5 @@ public class Artical {
     //日期字符串格式化转换
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "publishDate")
-    private LocalDateTime publishDate;
+    private Date publishDate;
 }
