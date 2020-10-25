@@ -40,9 +40,9 @@ public class ArticalServcieImpl  {
     //@Transactional(value = Transactional.TxType.SUPPORTS)
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     public List<Artical> findAll(){
-        List<Artical> articals = articalRepository.findAll();
-        return articals;
+        return articalRepository.findAll();
     }
+
 
 
     public Artical save(Artical artical){
