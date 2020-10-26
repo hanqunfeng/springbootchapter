@@ -95,6 +95,7 @@ public class ArticalServcieImpl  implements ArticalServcie {
     @Override
     public Page<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
         PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
-        return articalRepository.findAll(Example.of(artical),pageRequest);
+        //字符串类型模糊匹配，不走索引的，尽量不要使用
+        return articalRepository.findAll(Example.of(artical,ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)),pageRequest);
     }
 }

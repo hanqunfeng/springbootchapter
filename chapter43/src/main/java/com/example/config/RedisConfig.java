@@ -54,18 +54,6 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
-    /**
-     * 默认日期时间格式
-     */
-    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    /**
-     * 默认日期格式
-     */
-    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-    /**
-     * 默认时间格式
-     */
-    private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 
     /**
@@ -101,18 +89,18 @@ public class RedisConfig extends CachingConfigurerSupport {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         //序列化
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(
-                DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+                DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_DATE_TIME_FORMAT)));
         javaTimeModule.addSerializer(LocalDate.class,
-                new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+                new LocalDateSerializer(DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_DATE_FORMAT)));
         javaTimeModule.addSerializer(LocalTime.class,
-                new LocalTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+                new LocalTimeSerializer(DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_TIME_FORMAT)));
         //反序列化
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(
-                DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+                DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_DATE_TIME_FORMAT)));
         javaTimeModule.addDeserializer(LocalDate.class,
-                new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+                new LocalDateDeserializer(DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_DATE_FORMAT)));
         javaTimeModule.addDeserializer(LocalTime.class,
-                new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+                new LocalTimeDeserializer(DateTimeFormatter.ofPattern(ConverterConfig.DEFAULT_TIME_FORMAT)));
 
         //注册模块
         objectMapper.registerModule(javaTimeModule);

@@ -26,6 +26,7 @@
 
     <form id="queryForm" th:href="@{/view/articals/pages}">
         title:<input type="text" id="title" name="title" th:value="${_queryBean.title}">
+        publishDate:<input type="text" id="publishDate" name="publishDate" th:value="${#temporals.format(_queryBean.publishDate, 'yyyy-MM-dd HH:mm:ss')}">
 
         index：<input type="text" th:value="${_pageBean.index}" id="hidePage" name="hidePage" />
         size：<input type="text" th:value="${_pageBean.size}" id="hideSize" name="hideSize" />
