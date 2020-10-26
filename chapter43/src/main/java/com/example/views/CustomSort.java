@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
+
 
 /**
  * <h1></h1>
@@ -11,11 +13,14 @@ import org.springframework.util.StringUtils;
  */
 
 @Data
-public class CustomSort {
+public class CustomSort implements Serializable {
+
+    private static final long serialVersionUID = -7876428688410466396L;
 
     public static final String DESC = "desc";
 
     public static final String ASC = "asc";
+
 
     /**
      * @Fields sortName : TODO(排序的列名称)

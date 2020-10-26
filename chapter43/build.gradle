@@ -94,6 +94,9 @@ dependencies {
     //redis lettuce连接池依赖
     implementation 'org.apache.commons:commons-pool2'
 
+    //该功能依赖 p6spy 组件，完美的输出打印 SQL 及执行时长
+    implementation 'p6spy:p6spy:3.9.1'
+
 
 
 }

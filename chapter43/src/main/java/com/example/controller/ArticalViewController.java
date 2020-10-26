@@ -5,8 +5,8 @@ import com.example.service.ArticalServcie;
 import com.example.views.CustomPage;
 import com.example.views.CustomSort;
 import com.example.views.ModelView;
+import com.example.views.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +40,9 @@ public class ArticalViewController {
     @ModelView
     @RequestMapping("/pages")
     public String findArticalsByPages(Model model, @ModelAttribute("_queryBean")Artical artical,@ModelAttribute("_pageBean") CustomPage page, @ModelAttribute("_sorter") CustomSort sort){
-        Page<Artical> pages = articalServcie.findAll(artical,page,sort);
-        page.setTotal(pages.getTotalElements());
-        model.addAttribute("articals",pages.getContent());
+        PageList<Artical> pageList = articalServcie.findAll(artical, page, sort);
+        page.setTotal(pageList.getTotal());
+        model.addAttribute("articals",pageList.getData());
         return "views/atricals";
     }
 }

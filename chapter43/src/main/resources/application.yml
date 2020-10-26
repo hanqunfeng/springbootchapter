@@ -155,8 +155,8 @@ spring:
 #格式：caching.ttlmap.groupName=seconds
 caching:
   ttlmap:
-    commonCache: 100
-    otherCache: 200
+    articalCache: 100
+    articalCachePages: 100
 
 # 开启api-docs，默认开启，线上环境建议设置为false
 # 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs

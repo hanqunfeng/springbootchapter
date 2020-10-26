@@ -2,14 +2,17 @@ package com.example.views;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * <h1></h1>
  * Created by hanqf on 2020/10/26 13:58.
  */
 
 @Data
-public class CustomPage {
+public class CustomPage implements Serializable {
 
+    private static final long serialVersionUID = -2891149130816537488L;
     /**
      * 当前页码，从0开始
      */
@@ -24,6 +27,7 @@ public class CustomPage {
      * 总记录数
      */
     private long total;
+
 
 
     /**

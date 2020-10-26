@@ -7,6 +7,7 @@ import com.example.model.Artical;
 import com.example.service.ArticalServcie;
 import com.example.views.CustomPage;
 import com.example.views.CustomSort;
+import com.example.views.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.*;
@@ -27,7 +28,7 @@ import java.util.List;
 //该注解的作用是表明此类上所有方法上的事务都是CGLib方式代理的。实际上spring会自动判断其代理方式。
 //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 //缓存key的前缀
-@CacheConfig(cacheNames = "commonCache")
+@CacheConfig(cacheNames = "articalCache")
 public class ArticalServcieImpl  implements ArticalServcie {
     @Autowired
     private ArticalRepository articalRepository;
@@ -59,7 +60,10 @@ public class ArticalServcieImpl  implements ArticalServcie {
 
     //清除掉指定key的缓存
     @Override
-    @CacheEvict(key="'ArticalServcieImpl.findAll'")
+    @Caching(evict = {
+            @CacheEvict(key="'ArticalServcieImpl.findAll'"),
+            @CacheEvict(cacheNames = "articalCachePages",allEntries = true)
+    })
     public Artical save(Artical artical){
         if (artical.getId() != null) {
             throw new CustomException(CustomExceptionType.USER_INPUT_ERROR,"新增操作，文章Id不能赋值，修改操作请使用put method!");
@@ -71,7 +75,8 @@ public class ArticalServcieImpl  implements ArticalServcie {
     //一次可以配置多个类型
     @Override
     @Caching(evict = {
-            @CacheEvict(key="'ArticalServcieImpl.findAll'")
+            @CacheEvict(key="'ArticalServcieImpl.findAll'"),
+            @CacheEvict(cacheNames = "articalCachePages",allEntries = true)
     },put = {
             @CachePut(key = "'ArticalServcieImpl.findById_'+#artical.id")
     })
@@ -86,16 +91,26 @@ public class ArticalServcieImpl  implements ArticalServcie {
     @Override
     @Caching(evict = {
             @CacheEvict(key="'ArticalServcieImpl.findAll'"),
-            @CacheEvict(key = "'ArticalServcieImpl.findById_'+#id")
+            @CacheEvict(key = "'ArticalServcieImpl.findById_'+#id"),
+            @CacheEvict(cacheNames = "articalCachePages",allEntries = true)
     })
     public void deleteById(Long id){
         articalRepository.deleteById(id);
     }
 
     @Override
-    public Page<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
+    @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
+    @Cacheable(cacheNames = "articalCachePages",key="'ArticalServcieImpl.pages_' + #artical + #page + #sort")
+    public PageList<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
+        PageList<Artical> list = new PageList<>();
         PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
-        //字符串类型模糊匹配，不走索引的，尽量不要使用
-        return articalRepository.findAll(Example.of(artical,ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)),pageRequest);
+        //CONTAINING: 字符串类型模糊匹配，不走索引的，尽量不要使用
+        //STARTING: 以字符串开头
+        Page<Artical> articalPage = articalRepository.findAll(Example.of(artical, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.STARTING)), pageRequest);
+        if(articalPage.hasContent()){
+            list.setTotal(articalPage.getTotalElements());
+            list.setData(articalPage.getContent());
+        }
+        return list;
     }
 }

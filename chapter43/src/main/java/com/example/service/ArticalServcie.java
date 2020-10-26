@@ -3,7 +3,7 @@ package com.example.service;
 import com.example.model.Artical;
 import com.example.views.CustomPage;
 import com.example.views.CustomSort;
-import org.springframework.data.domain.Page;
+import com.example.views.PageList;
 
 import java.util.List;
 
@@ -34,5 +34,5 @@ public interface ArticalServcie {
      * @return org.springframework.data.domain.Page&lt;com.example.model.Artical&gt;
      * @author hanqf
      */
-    Page<Artical> findAll(Artical artical, CustomPage page, CustomSort sort);
+    PageList<Artical> findAll(Artical artical, CustomPage page, CustomSort sort);
 }
