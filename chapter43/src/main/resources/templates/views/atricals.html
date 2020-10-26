@@ -27,6 +27,7 @@
             <td th:text="${item.title}"></td>
             <td th:text="${item.author}"></td>
             <td th:text="${item.pageNum}"></td>
+<!--            <td th:text="${item.publishDate}"></td>-->
             <td th:text="${#temporals.format(item.publishDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
         </tr>
         </tbody>

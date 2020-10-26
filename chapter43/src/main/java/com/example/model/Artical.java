@@ -8,6 +8,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,7 +18,10 @@ import java.time.LocalDateTime;
 @Data
 @Table(name="tbl_artical")
 @Entity
-public class Artical {
+public class Artical implements Serializable {
+
+
+    private static final long serialVersionUID = 1519886147912594449L;
     /**
      * ID
      * 在该参数的get方法上用 @JsonIgnore 然后在set方法上面用@JsonProperty 即可解决返回json时没有该属性 但是能接收到值

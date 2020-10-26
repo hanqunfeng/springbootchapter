@@ -10,12 +10,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 
 //定义json字段的顺序
-@JsonPropertyOrder(value = {"isOk", "code", "message", "data"})
+@JsonPropertyOrder(value = {"ok","code", "message", "data"})
 public class CommonResponse {
     /**
-     * 是否成功,json显示字段名称为：isOk
+     * 是否成功,true成功，false失败
      */
-    private boolean isIsOk;
+    private boolean ok;
     /*
      * 响应状态码，如200，400，500
      */
@@ -48,7 +48,7 @@ public class CommonResponse {
      */
     public static CommonResponse success(String message, Object data) {
         CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setIsOk(true);
+        commonResponse.setOk(true);
         commonResponse.setCode(200);
         commonResponse.setMessage(message);
         commonResponse.setData(data);
@@ -77,7 +77,7 @@ public class CommonResponse {
      */
     public static CommonResponse error(CustomException exception) {
         CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setIsOk(false);
+        commonResponse.setOk(false);
         commonResponse.setCode(exception.getCode());
         commonResponse.setMessage(exception.getMessage());
         return commonResponse;
@@ -85,18 +85,18 @@ public class CommonResponse {
 
     public static CommonResponse error(CustomExceptionType exceptionType, String errorMessage) {
         CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setIsOk(false);
+        commonResponse.setOk(false);
         commonResponse.setCode(exceptionType.getCode());
         commonResponse.setMessage(errorMessage);
         return commonResponse;
     }
 
-    public boolean isIsOk() {
-        return isIsOk;
+    public boolean isOk() {
+        return ok;
     }
 
-    private void setIsOk(boolean isOk) {
-        isIsOk = isOk;
+    public void setOk(boolean ok) {
+        this.ok = ok;
     }
 
     public Integer getCode() {

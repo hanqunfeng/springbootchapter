@@ -47,4 +47,6 @@ springdoc:
   api-docs:
     enabled: true
 
+#开启debug，默认只对logback支持，使用log4j2后，debug要同时在log4j2的配置文件中设置debug级别
+debug: false
 

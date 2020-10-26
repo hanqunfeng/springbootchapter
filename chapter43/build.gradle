@@ -45,6 +45,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'
+    //spring-boot-devtools有bug，json转换时会抛异常，查询一个对象时，同类型json转换失败，反复重启几次就会报错
+    //出现问题参考：https://blog.csdn.net/jie873440996/article/details/70231260
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'

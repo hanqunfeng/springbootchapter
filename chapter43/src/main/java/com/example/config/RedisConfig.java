@@ -4,7 +4,6 @@ package com.example.config;/**
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -54,18 +53,26 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
     private static final Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
-    /** 默认日期时间格式 */
-    private static final String    DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    /** 默认日期格式 */
-    private static final String    DEFAULT_DATE_FORMAT      = "yyyy-MM-dd";
-    /** 默认时间格式 */
-    private static final String    DEFAULT_TIME_FORMAT      = "HH:mm:ss";
+    /**
+     * 默认日期时间格式
+     */
+    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    /**
+     * 默认日期格式
+     */
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+    /**
+     * 默认时间格式
+     */
+    private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 
     /**
      * 分组配置项
-    */
+     */
     private Map<String, Long> ttlmap;
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     public Map<String, Long> getTtlmap() {
         return ttlmap;
@@ -75,20 +82,19 @@ public class RedisConfig extends CachingConfigurerSupport {
         this.ttlmap = ttlmap;
     }
 
-
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    //@Autowired
+    //private RedisTemplate redisTemplate;
 
     /**
      * 参考：https://blog.csdn.net/m0_37589586/article/details/87782001
-    */
+     * Json序列化和反序列化转换器，用于转换Post请求体中的json以及将我们的对象序列化为返回响应的json
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<Object>(
-                Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(),ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        //objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
 
         //LocalDateTime系列序列化和反序列化模块，继承自jsr310，我们在这里修改了日期格式
         JavaTimeModule javaTimeModule = new JavaTimeModule();
@@ -106,8 +112,11 @@ public class RedisConfig extends CachingConfigurerSupport {
                 new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
         javaTimeModule.addDeserializer(LocalTime.class,
                 new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+
         //注册模块
         objectMapper.registerModule(javaTimeModule);
+
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         serializer.setObjectMapper(objectMapper);
 
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -123,26 +132,27 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 
     //如果注解式缓存要使用redis，则开启这个bean即可
+    @Override
     @Bean
-    public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate) {
+    public CacheManager cacheManager() {
         logger.info("RedisCacheManager");
         return RedisCacheManager
-                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisTemplate.getConnectionFactory()))
+                .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisTemplate().getConnectionFactory()))
                 //缺省配置
-                .cacheDefaults(redisCacheConfiguration(3600L,redisTemplate))
+                .cacheDefaults(redisCacheConfiguration(3600L))
                 //分组配置，不需要分组配置可以去掉，不同的组配置不同的缓存过期时间，可以防止"缓存雪崩"
-                .withInitialCacheConfigurations(initialRedisCacheConfiguration(redisTemplate))
+                .withInitialCacheConfigurations(initialRedisCacheConfiguration())
                 .build();
     }
 
-    private RedisCacheConfiguration redisCacheConfiguration(Long ttl,RedisTemplate<String, Object> redisTemplate) {
+    private RedisCacheConfiguration redisCacheConfiguration(Long ttl) {
 
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofSeconds(ttl)) //设置过期，单位秒
                 //.disableCachingNullValues() //不允许存储null值，默认可以存储null，缓存null可以防止"缓存穿透"
                 //.disableKeyPrefix()  //设置key前面不带前缀，最好不要去掉前缀，否则执行删除缓存时会清空全部缓存
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getStringSerializer()))//key字符串
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate.getValueSerializer()));//value字符串
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate().getStringSerializer()))//key字符串
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisTemplate().getValueSerializer()));//value字符串
     }
 
     /**
@@ -152,10 +162,10 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @return java.util.Map&lt;java.lang.String,org.springframework.data.redis.cache.RedisCacheConfiguration&gt;
      * @author hanqf
      */
-    private Map<String, RedisCacheConfiguration> initialRedisCacheConfiguration(RedisTemplate<String, Object> redisTemplate) {
+    private Map<String, RedisCacheConfiguration> initialRedisCacheConfiguration() {
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
         for (Map.Entry<String, Long> entry : ttlmap.entrySet()) {
-            redisCacheConfigurationMap.put(entry.getKey(), redisCacheConfiguration(entry.getValue(),redisTemplate));
+            redisCacheConfigurationMap.put(entry.getKey(), redisCacheConfiguration(entry.getValue()));
         }
         return redisCacheConfigurationMap;
     }
@@ -193,6 +203,10 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     protected void RedisErrorException(Exception exception, Object key) {
+
+        //这里可以通过配置项进行判断，是否需要抛出异常还是忽略错误，
+        // 因为是方法缓存，所以忽略错误并不会导致服务中断，但是会影响服务性能，这里抛出异常
         logger.error("redis异常：key=[{}]", key, exception);
+        //throw new CustomException(CustomExceptionType.SYSTEM_ERROR, exception.getMessage());
     }
 }
