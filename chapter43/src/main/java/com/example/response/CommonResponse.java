@@ -27,7 +27,7 @@ public class CommonResponse {
     /**
      * 数据
      */
-    //如果是null就不在json中显示了
+    //如果是null就不在json中显示了，现在使用全局配置
     //@JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
 
