@@ -8,8 +8,68 @@
     .even{
         background-color: antiquewhite;
     }
+
+    li {width:40px; text-align:center; height:22px; line-height:22px; letter-spacing:3px; overflow:hidden; clear:both;}
+
 </style>
 <body>
+
+<div id="page_div" class="container" th:if="${_pageBean != null and _pageBean.pageCount != 0}">
+
+    <h1>_queryBean:</h1>
+    <div th:text="${_queryBean}"></div>
+    <h1>_pageBean:</h1>
+    <div th:text="${_pageBean}"></div>
+    <h1>_sorter:</h1>
+    <div th:text="${_sorter}"></div>
+
+
+    <form id="queryForm" th:href="@{/view/articals/pages}">
+        title:<input type="text" id="title" name="title" th:value="${_queryBean.title}">
+
+        index：<input type="text" th:value="${_pageBean.index}" id="hidePage" name="hidePage" />
+        size：<input type="text" th:value="${_pageBean.size}" id="hideSize" name="hideSize" />
+        <input type="hidden" th:value="${_pageBean.pageCount}" id="totalPage" name="totalPage" />
+        <input type="submit" id="submitbtn" th:value="'submit'">
+    </form>
+
+
+
+    <div class="text-primary"><strong th:text="#{common.page.summary(${_pageBean.pageCount},${_pageBean.total})}"></strong></div>
+
+    <ul class="pagination" style="margin: 10px;">
+
+        <li class="CP_first" th:if="${_pageBean.hasPrev}"><a href="#">[[#{common.page.first}]]</a></li>
+        <li class="CP_previous" th:if="${_pageBean.hasPrev}"><a href="#">[[#{common.page.previous}]]</a></li>
+
+        <li class="disabled" th:if="${_pageBean.hasPrev == false}"><a href="#">[[#{common.page.first}]]</a></li>
+        <li class="disabled" th:if="${_pageBean.hasPrev == false}"><a href="#">[[#{common.page.previous}]]</a></li>
+
+
+        <li class="CP_normal"  th:if="${_pageBean.index - 5 + 1 >= 0}"><a href="#">[[${_pageBean.index - 5 + 1 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index - 5 + 2 >= 0}"><a href="#">[[${_pageBean.index - 5 + 2 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index - 5 + 3 >= 0}"><a href="#">[[${_pageBean.index - 5 + 3 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index - 5 + 4 >= 0}"><a href="#">[[${_pageBean.index - 5 + 4 + 1}]]</a></li>
+
+
+        <li class="active"><a href="#">[[${_pageBean.index + 1}]]</a></li>
+
+
+        <li class="CP_normal"  th:if="${_pageBean.index + 1 + 1 <= _pageBean.pageCount}"><a href="#">[[${_pageBean.index + 1 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index + 2 + 1 <= _pageBean.pageCount}"><a href="#">[[${_pageBean.index + 2 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index + 3 + 1 <= _pageBean.pageCount}"><a href="#">[[${_pageBean.index + 3 + 1}]]</a></li>
+        <li class="CP_normal"  th:if="${_pageBean.index + 4 + 1 <= _pageBean.pageCount}"><a href="#">[[${_pageBean.index + 4 + 1}]]</a></li>
+
+
+        <li class="CP_next" th:if="${_pageBean.hasNext}"><a href="#">[[#{common.page.next}]]</a></li>
+        <li class="CP_last" th:if="${_pageBean.hasNext}"><a href="#">[[#{common.page.last}]]</a></li>
+
+        <li><a href="#" th:if="${_pageBean.hasNext == false}">[[#{common.page.next}]]</a></li>
+        <li><a href="#" th:if="${_pageBean.hasNext == false}">[[#{common.page.last}]]</a></li>
+
+    </ul>
+</div>
+
 <div class="container">
     <table class="table">
         <tr class="even">
@@ -40,8 +100,36 @@
 
 <script type="text/javascript">
     $(function(){
-        var message = '[[#{common.menu}]]'
-        alert(message);
+        // var message = '[[#{common.menu}]]'
+        // alert(message);
+
+        var oldIndex = parseInt($("#page_div #hidePage").val());
+        var queryFrom = $("#queryForm");
+        $("#page_div li.CP_previous a").click(function(){
+            queryFrom.find("input:last").append($("<input type='hidden' name='index' value='"+(oldIndex -1)+"'>"))
+            queryFrom.find("input:last").append($("<input type='hidden' name='size' value='"+$("#hideSize").val()+"'>"));
+            queryFrom.find("#submitbtn").click();
+        });
+        $("#page_div li.CP_next a").click(function(){
+            queryFrom.find("input:last").append($("<input type='hidden' name='index' value='"+(oldIndex +1)+"'>"))
+            queryFrom.find("input:last").append($("<input type='hidden' name='size' value='"+$("#hideSize").val()+"'>"));
+            queryFrom.find("#submitbtn").click();
+        });
+        $("#page_div li.CP_normal a").click(function(){
+            queryFrom.find("input:last").append($("<input type='hidden' name='index' value='"+($(this).text() - 1)+"'>"))
+            queryFrom.find("input:last").append($("<input type='hidden' name='size' value='"+$("#hideSize").val()+"'>"));
+            queryFrom.find("#submitbtn").click();
+        });
+        $("#page_div li.CP_first a").click(function(){
+            queryFrom.find("input:last").append($("<input type='hidden' name='index' value='"+(0)+"'>"))
+            queryFrom.find("input:last").append($("<input type='hidden' name='size' value='"+$("#hideSize").val()+"'>"));
+            queryFrom.find("#submitbtn").click();
+        });
+        $("#page_div li.CP_last a").click(function(){
+            queryFrom.find("input:last").append($("<input type='hidden' name='index' value='"+($("#totalPage").val() - 1)+"'>"))
+            queryFrom.find("input:last").append($("<input type='hidden' name='size' value='"+$("#hideSize").val()+"'>"));
+            queryFrom.find("#submitbtn").click();
+        });
     });
 
 </script>

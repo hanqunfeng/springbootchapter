@@ -4,8 +4,12 @@ import com.example.dao.ArticalRepository;
 import com.example.exception.CustomException;
 import com.example.exception.CustomExceptionType;
 import com.example.model.Artical;
+import com.example.service.ArticalServcie;
+import com.example.views.CustomPage;
+import com.example.views.CustomSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +28,13 @@ import java.util.List;
 //@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 //缓存key的前缀
 @CacheConfig(cacheNames = "commonCache")
-public class ArticalServcieImpl  {
+public class ArticalServcieImpl  implements ArticalServcie {
     @Autowired
     private ArticalRepository articalRepository;
 
 
     //@Transactional(value = Transactional.TxType.SUPPORTS)
+    @Override
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     //先查询缓存，如果存在则返回缓存的值，不存在则执行方法，并将返回值存储到缓存
     @Cacheable(key = "'ArticalServcieImpl.findById_'+#id")
@@ -43,6 +48,7 @@ public class ArticalServcieImpl  {
 
 
     //@Transactional(value = Transactional.TxType.SUPPORTS)
+    @Override
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     @Cacheable(key = "'ArticalServcieImpl.findAll'")
     public List<Artical> findAll(){
@@ -52,6 +58,7 @@ public class ArticalServcieImpl  {
 
 
     //清除掉指定key的缓存
+    @Override
     @CacheEvict(key="'ArticalServcieImpl.findAll'")
     public Artical save(Artical artical){
         if (artical.getId() != null) {
@@ -62,6 +69,7 @@ public class ArticalServcieImpl  {
     }
 
     //一次可以配置多个类型
+    @Override
     @Caching(evict = {
             @CacheEvict(key="'ArticalServcieImpl.findAll'")
     },put = {
@@ -75,11 +83,18 @@ public class ArticalServcieImpl  {
     }
 
     //一次可以配置多个类型
+    @Override
     @Caching(evict = {
             @CacheEvict(key="'ArticalServcieImpl.findAll'"),
             @CacheEvict(key = "'ArticalServcieImpl.findById_'+#id")
     })
     public void deleteById(Long id){
         articalRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
+        PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
+        return articalRepository.findAll(Example.of(artical),pageRequest);
     }
 }

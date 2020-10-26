@@ -12,4 +12,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(path = "articals")
 public interface ArticalRepository extends JpaRepository<Artical,Long> {
+
+
 }

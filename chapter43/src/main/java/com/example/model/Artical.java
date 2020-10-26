@@ -67,7 +67,7 @@ public class Artical implements Serializable {
      * 发布日期
      *
      * 如果是LocalDateTime类型，@CacheConfig redis存储为json时会报错，需要特殊处理，具体看RedisConfig
-     * Date类型则不需要特殊处理
+     * Date类型则不需要特殊处理，统一使用jackson处理
     */
     @Schema(required = true,pattern="yyyy-MM-dd HH:mm:ss",example = "2018-10-01 12:18:48")
     //日期字符串格式化转换

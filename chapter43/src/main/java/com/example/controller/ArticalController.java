@@ -3,7 +3,7 @@ package com.example.controller;
 
 import com.example.model.Artical;
 import com.example.response.CommonResponse;
-import com.example.service.impl.ArticalServcieImpl;
+import com.example.service.ArticalServcie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class ArticalController {
 
     @Autowired
-    private ArticalServcieImpl articalServcie;
+    private ArticalServcie articalServcie;
 
 
     @GetMapping(value = "/{id}")
