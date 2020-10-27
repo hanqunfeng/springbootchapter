@@ -74,7 +74,7 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.6.Final'
 
     // jasypt 配置加密 官方地址：https://github.com/ulisesbocchio/jasypt-spring-boot
-    compile group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.3'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 
     //支持thymeleaf模板页面
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

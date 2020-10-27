@@ -101,4 +101,5 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
 

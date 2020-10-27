@@ -26,7 +26,7 @@ JASYPT_ENCRYPTOR_PASSWORD=password java -jar target/jasypt-spring-boot-demo-1.5-
 java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI password=123456 algorithm=PBEWithMD5AndDES ivGeneratorClassName=org.jasypt.iv.RandomIvGenerator input=newpwd
 
 #解密
-java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=123456 algorithm=PBEWithMD5AndDES ivGeneratorClassName=org.jasypt.iv.RandomIvGenerator input=+Dgb76G78U6GIALlLDJUfw==
+java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=123456 algorithm=PBEWithMD5AndDES ivGeneratorClassName=org.jasypt.iv.RandomIvGenerator input=BwNPdUi+syCTKFj/nlbI5fAtGUKuhN8r
 ```
 
 ## Thymeleaf 如何支持java8的时间LocalDate和LocalDatetime
