@@ -2,6 +2,7 @@ package com.example.utils;
 
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 
 /**
@@ -85,14 +86,14 @@ public class JasyptUtil {
         //String jasyptEncrypt1 = decrypt(password, "TyuRAwhVGvwlIROL0UYs0A==");
         //System.out.println(jasyptEncrypt1);
 
-        String jasyptEncrypt1 = decrypt(password, "WUm+qiPetGTlF/OFs5vW7JeqwS6BdUY3");
+        String jasyptEncrypt1 = decrypt(password, testStandardPBEStringEncryptor);
         System.out.println(jasyptEncrypt1);
     }
 
 
     public static String testStandardPBEStringEncryptor(String message, String password) {
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        EnvironmentStringPBEConfig config = new EnvironmentStringPBEConfig();
         config.setPassword(password);
         config.setAlgorithm("PBEWithMD5AndDES");
         //config.setStringOutputType("base64");
