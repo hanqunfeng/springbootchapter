@@ -8,6 +8,7 @@ import com.example.service.ArticalServcie;
 import com.example.views.CustomPage;
 import com.example.views.CustomSort;
 import com.example.views.PageList;
+import com.github.wenhao.jpa.Specifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.*;
@@ -121,7 +122,9 @@ public class ArticalServcieImpl implements ArticalServcie {
         PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
 
         //指定查询方法
-        Page<Artical> articalPage = specificationFindAll(artical, pageRequest);
+        //Page<Artical> articalPage = exampleFindAll(artical, pageRequest);
+        //Page<Artical> articalPage = specificationFindAll(artical, pageRequest);
+        Page<Artical> articalPage = jpaSpecFindAll(artical, pageRequest);
 
         if (articalPage.hasContent()) {
             list.setTotal(articalPage.getTotalElements());
@@ -179,5 +182,21 @@ public class ArticalServcieImpl implements ArticalServcie {
         };
 
         return articalRepository.findAll(specification, pageRequest);
+    }
+
+    /**
+     * Specification封装工具类
+     * 使用起来更简单，不过是非官方出品，可能会出现版本不兼容的问题
+     * https://github.com/wenhao/jpa-spec
+    */
+    private Page<Artical> jpaSpecFindAll(Artical artical, PageRequest pageRequest){
+        Specification<Artical> specification = Specifications.<Artical>and()
+                .like(StringUtils.hasText(artical.getTitle()),"title","%" + artical.getTitle() + "%")
+                .like(StringUtils.hasText(artical.getAuthor()),"author",artical.getAuthor() + "%")
+                .eq(!StringUtils.isEmpty(artical.getPublishDate()),"publishDate",artical.getPublishDate())
+                .build();
+
+        return articalRepository.findAll(specification, pageRequest);
+
     }
 }

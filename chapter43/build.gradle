@@ -39,6 +39,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 repositories {
     maven { url '${REPOSITORY_HOME}/repository/public/' }
     mavenLocal()
+    //com.github.wenhao:jpa-spec:3.2.5需要使用这个仓库下载，3.2.4可以从阿里的仓库下载
+    maven { url 'https://repo.spring.io/libs-release/' }
     mavenCentral()
 }
 
@@ -97,6 +99,10 @@ dependencies {
     //该功能依赖 p6spy 组件，完美的输出打印 SQL 及执行时长
     implementation 'p6spy:p6spy:3.9.1'
 
+    //    Specification封装工具类
+    //    使用起来更简单，不过是非官方出品，可能会出现版本不兼容的问题
+    //    https://github.com/wenhao/jpa-spec
+    implementation 'com.github.wenhao:jpa-spec:3.2.5'
 
 
 
