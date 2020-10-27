@@ -1,8 +1,11 @@
 package com.example.config;
 
+import com.example.exception.CustomException;
+import com.example.exception.CustomExceptionType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +45,10 @@ public class ConverterConfig {
         return new Converter<String, LocalDate>() {
             @Override
             public LocalDate convert(String source) {
-                return LocalDate.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT));
+                if (StringUtils.hasText(source)) {
+                    return LocalDate.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT));
+                }
+                return null;
             }
         };
     }
@@ -55,7 +61,10 @@ public class ConverterConfig {
         return new Converter<String, LocalTime>() {
             @Override
             public LocalTime convert(String source) {
-                return LocalTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT));
+                if (StringUtils.hasText(source)) {
+                    return LocalTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT));
+                }
+                return null;
             }
         };
     }
@@ -68,17 +77,18 @@ public class ConverterConfig {
         return new Converter<String, Date>() {
             @Override
             public Date convert(String source) {
-                SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
-                try {
-                    return format.parse(source);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                if (StringUtils.hasText(source)) {
+                    SimpleDateFormat format = new SimpleDateFormat(DEFAULT_DATE_TIME_FORMAT);
+                    try {
+                        return format.parse(source);
+                    } catch (ParseException e) {
+                        throw new CustomException(CustomExceptionType.USER_INPUT_ERROR,e.getMessage());
+                    }
                 }
+                return null;
             }
         };
     }
-
-
 
 
     /**
@@ -89,7 +99,10 @@ public class ConverterConfig {
         return new Converter<String, LocalDateTime>() {
             @Override
             public LocalDateTime convert(String source) {
-                return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT));
+                if (StringUtils.hasText(source)) {
+                    return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT));
+                }
+                return null;
             }
         };
     }

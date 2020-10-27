@@ -1,4 +1,4 @@
-# Springboot 全局异常处理(json，view) 全局返回值响应 @Valid jasypt属性值加密 一个相对完整的web接口应用
+# Springboot 全局异常处理 全局返回值响应 jpa @Valid jasypt属性值加密 redis缓存 一个相对完整的web应用(json接口和thymeleaf视图)
 
 ## jasypt
 * [官网](https://github.com/ulisesbocchio/jasypt-spring-boot)
@@ -23,10 +23,10 @@ JASYPT_ENCRYPTOR_PASSWORD=password java -jar target/jasypt-spring-boot-demo-1.5-
 # jar下载地址：https://repo1.maven.org/maven2/org/jasypt/jasypt/1.9.3/jasypt-1.9.3.jar
 # 实际上使用maven或者gradle配置jasypt-spring-boot-starter依赖后，这个jar就已经下载到本地仓库了，去本地仓库找找吧
 #加密
-java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI password=123456 algorithm=PBEWithMD5AndDES input=newpwd
+java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI password=123456 algorithm=PBEWithMD5AndDES ivGeneratorClassName=org.jasypt.iv.RandomIvGenerator input=newpwd
 
 #解密
-java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=123456 algorithm=PBEWithMD5AndDES input=+Dgb76G78U6GIALlLDJUfw==
+java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringDecryptionCLI password=123456 algorithm=PBEWithMD5AndDES ivGeneratorClassName=org.jasypt.iv.RandomIvGenerator input=+Dgb76G78U6GIALlLDJUfw==
 ```
 
 ## Thymeleaf 如何支持java8的时间LocalDate和LocalDatetime

@@ -35,7 +35,10 @@
 
 
 
-    <div class="text-primary"><strong th:text="#{common.page.summary(${_pageBean.pageCount},${_pageBean.total})}"></strong></div>
+    <div class="text-primary">
+        <strong th:text="#{common.page.summary(${_pageBean.pageCount},${_pageBean.total})}"></strong>
+        currentPage:<span th:text="${_pageBean.index + 1}"></span>
+    </div>
 
     <ul class="pagination" style="margin: 10px;">
 

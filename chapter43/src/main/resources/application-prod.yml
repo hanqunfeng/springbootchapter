@@ -36,8 +36,36 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
     username: root
-    password: ENC(ORQgFAMO49GmhA3xljLe9dBMv00jXieT)
+    password: ENC(BwNPdUi+syCTKFj/nlbI5fAtGUKuhN8r)
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: false
+
+  #配置redis连接
+  redis:
+    host: 127.0.0.1
+    #默认端口：6379
+    port: 6379
+    password: ENC(FE4cpSc+2u9NFEY+Q5n9kNSxW6BUiNXGNTUPuhoQbPA=)
+#    password: password
+    #默认的0号库
+    database: 1
+    #连接超时时间，单位毫秒
+    timeout: 1000
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 5
+        #获取连接池最大等待时间，单位毫秒
+        max-wait: 2000
+
+#自定义分组缓存配置，value过期时间，单位秒
+#格式：caching.ttlmap.groupName=seconds
+caching:
+  ttlmap:
+    articalCache: 3600
+    articalCachePages: 3600
 
 
 # 开启api-docs，默认开启，线上环境建议设置为false
@@ -73,5 +101,4 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
-
 

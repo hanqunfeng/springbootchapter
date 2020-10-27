@@ -1,6 +1,7 @@
 package com.example.utils;
 
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 
 /**
@@ -11,13 +12,14 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 
 public class JasyptUtil {
 
-    public static String encrypt(String secretKey, String message){
-        return stringEncryptor(secretKey,message,true);
+    public static String encrypt(String secretKey, String message) {
+        return stringEncryptor(secretKey, message, true);
     }
 
-    public static String decrypt(String secretKey, String message){
-        return stringEncryptor(secretKey,message,false);
+    public static String decrypt(String secretKey, String message) {
+        return stringEncryptor(secretKey, message, false);
     }
+
     /**
      * {@link StringEncryptor} 加解密。
      * 同一个密钥（secretKey）对同一个内容执行加密，生成的密文都是不一样的，但是根据根据这些密文解密成明文都是可以.
@@ -38,6 +40,7 @@ public class JasyptUtil {
         String result = isEncrypt ? pooledPBEStringEncryptor.encrypt(message) : pooledPBEStringEncryptor.decrypt(message);
         return result;
     }
+
     /**
      * 设置 {@link PBEConfig} 配置对象，SimpleStringPBEConfig 是它的实现类
      * 1、所有的配置项建议与全局配置文件中的配置项保持一致，特别是 password、algorithm 等等选项，如果不一致，则应用启动时解密失败而报错.
@@ -62,21 +65,49 @@ public class JasyptUtil {
         config.setKeyObtentionIterations("1000");
         config.setProviderName("SunJCE");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        //命令行执行时要指定这个参数
         config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator");
         config.setStringOutputType("base64");
         return config;
     }
 
     public static void main(String[] args) throws Exception {
+        //String message = "password";
         String message = "newpwd";
         String password = "123456";
 
         ////一个同样的密码和秘钥，每次执行加密，密文都是不一样的。但是解密是没问题的。
-        String jasyptEncrypt = encrypt(password, message);
-        System.out.println(jasyptEncrypt);
+        //String jasyptEncrypt = encrypt(password, message);
+        //System.out.println(jasyptEncrypt);
 
-        String jasyptEncrypt1 = decrypt(password, "POvqi+QXKob4mIW3h0ldKU32NW8WF/WJ");
+        String testStandardPBEStringEncryptor = testStandardPBEStringEncryptor(message, password);
+
+        //String jasyptEncrypt1 = decrypt(password, "TyuRAwhVGvwlIROL0UYs0A==");
+        //System.out.println(jasyptEncrypt1);
+
+        String jasyptEncrypt1 = decrypt(password, "WUm+qiPetGTlF/OFs5vW7JeqwS6BdUY3");
         System.out.println(jasyptEncrypt1);
+    }
+
+
+    public static String testStandardPBEStringEncryptor(String message, String password) {
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        config.setPassword(password);
+        config.setAlgorithm("PBEWithMD5AndDES");
+        //config.setStringOutputType("base64");
+        //config.setKeyObtentionIterations("1000");
+        //config.setProviderName("SunJCE");
+        //config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setIvGeneratorClassName("org.jasypt.iv.RandomIvGenerator");
+
+        encryptor.setConfig(config);
+
+        String encrypt = encryptor.encrypt(message);
+        System.out.println(encrypt);
+        return encrypt;
+
+
     }
 
 }

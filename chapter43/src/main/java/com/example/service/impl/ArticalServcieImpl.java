@@ -109,7 +109,9 @@ public class ArticalServcieImpl implements ArticalServcie {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    @Cacheable(cacheNames = "articalCachePages", key = "'ArticalServcieImpl.pages_' + #artical + #page + #sort")
+    //page缓存使用新的分组类型，因为查询参数不确定，所以key是不确定的，可以不指定key
+    //@Cacheable(cacheNames = "articalCachePages", key = "'ArticalServcieImpl.pages_' + #artical + #page + #sort")
+    @Cacheable(cacheNames = "articalCachePages")
     public PageList<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
         PageList<Artical> list = new PageList<>();
         PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
