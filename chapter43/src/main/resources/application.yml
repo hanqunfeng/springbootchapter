@@ -109,7 +109,7 @@ spring:
 
   #激活环境
   profiles:
-    active: prod
+    active: dev
 
   #资源国际化
   messages:

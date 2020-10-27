@@ -3,6 +3,7 @@ package com.example.dao;
 
 import com.example.model.Artical;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
@@ -11,7 +12,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  */
 
 @RepositoryRestResource(path = "articals")
-public interface ArticalRepository extends JpaRepository<Artical,Long> {
+public interface ArticalRepository extends JpaRepository<Artical, Long>, JpaSpecificationExecutor<Artical> {
 
 
 }

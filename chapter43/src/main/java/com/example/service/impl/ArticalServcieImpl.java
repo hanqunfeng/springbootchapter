@@ -11,10 +11,14 @@ import com.example.views.PageList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -115,13 +119,65 @@ public class ArticalServcieImpl implements ArticalServcie {
     public PageList<Artical> findAll(Artical artical, CustomPage page, CustomSort sort) {
         PageList<Artical> list = new PageList<>();
         PageRequest pageRequest = PageRequest.of(page.getIndex(), page.getSize(), Sort.by(sort.getOrder()));
-        //CONTAINING: 字符串类型模糊匹配，不走索引的，尽量不要使用
-        //STARTING: 以字符串开头
-        Page<Artical> articalPage = articalRepository.findAll(Example.of(artical, ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.STARTING)), pageRequest);
+
+        //指定查询方法
+        Page<Artical> articalPage = specificationFindAll(artical, pageRequest);
+
         if (articalPage.hasContent()) {
             list.setTotal(articalPage.getTotalElements());
             list.setData(articalPage.getContent());
         }
         return list;
+    }
+
+    /**
+     * 功能比较薄弱，不推荐使用
+    */
+    private Page<Artical> exampleFindAll(Artical artical, PageRequest pageRequest){
+        //劣势：参考：https://blog.csdn.net/wangchengming1/article/details/90639728
+        //1.不支持组合查询，比如：firstname = ?0 or (firstname = ?1 and lastname = ?2).
+        //2.只支持字符串的starts/contains/ends/regex匹配，对于非字符串的属性，只支持精确匹配。换句话说，并不支持大于、小于、between等匹配。
+        ExampleMatcher exampleMatcher;
+        //CONTAINING: 字符串类型模糊匹配，不走索引的，尽量不要使用
+        //STARTING: 以字符串开头
+        //exampleMatcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.STARTING);
+        exampleMatcher = ExampleMatcher.matching()
+                .withMatcher("title", m -> m.contains())
+                .withMatcher("author", m -> m.startsWith());
+        return articalRepository.findAll(Example.of(artical, exampleMatcher), pageRequest);
+    }
+
+    /**
+     * Repository需要实现JpaSpecificationExecutor接口
+    */
+    private Page<Artical> specificationFindAll(Artical artical, PageRequest pageRequest){
+        Specification<Artical> specification = (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            //标题模糊匹配
+            if (StringUtils.hasText(artical.getTitle())) {
+                predicates.add(builder.like(root.get("title"), "%" + artical.getTitle() + "%"));
+            }
+
+            //作者前缀匹配
+            if (StringUtils.hasText(artical.getAuthor())) {
+                predicates.add(builder.like(root.get("author"), artical.getAuthor() + "%"));
+            }
+
+            //发布日期精确匹配
+            if (!StringUtils.isEmpty(artical.getPublishDate())) {
+                predicates.add(builder.equal(root.get("publishDate"), artical.getPublishDate()));
+            }
+
+            if (predicates.size() > 1) {
+                return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+            } else if (predicates.size() == 1) {
+                return predicates.get(0);
+            } else {
+                return null;
+            }
+        };
+
+        return articalRepository.findAll(specification, pageRequest);
     }
 }
