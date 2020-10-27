@@ -59,3 +59,6 @@ ${#temporals.second(date)}
 
 ${#temporals.millisecond(date)}
 ```
+
+## SpringBootJPA使用及动态SQL Specification
+[https://blog.csdn.net/cn_hhaip/article/details/89527666](https://blog.csdn.net/cn_hhaip/article/details/89527666)
