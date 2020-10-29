@@ -1,0 +1,3 @@
+rootProject.name = 'chapter44'
+include('sse-demo')
+include('websocket-demo')

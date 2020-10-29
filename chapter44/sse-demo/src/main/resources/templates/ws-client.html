@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket-DEMO</title>
+    <style type="text/css">
+        h3,h4{
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+
+<h3>请输入要发送给服务器端的消息：</h3><br/>
+
+<label for="text">输入发送信息</label><input id="text" type="text" />
+<button onclick="sendToServer()">发送服务器消息</button>
+<button onclick="closeWebSocket()">关闭连接</button>
+<br>
+信息:
+<span id="message">
+
+</span>
+<script type="text/javascript">
+
+    // onopen事件监听，处理连接建立事件
+    // onmessage事件监听，处理对方发过来的消息数据
+    // onclose事件监听，处理连接关闭
+    // onerror事件监听，处理交互过程中的异常
+    var socket;
+    if (typeof (WebSocket) == "undefined") {
+        console.log("遗憾：您的浏览器不支持WebSocket");
+    } else {
+        //服务端如果是https协议，这里要使用wss协议
+        socket = new WebSocket("ws://localhost:8081/ws/asset");
+        //连接打开事件
+        socket.onopen = function() {
+            console.log("Socket已打开");
+        };
+        //收到消息事件
+        socket.onmessage = function(msg) {
+            document.getElementById('message').innerHTML += msg.data + '<br/>';
+        };
+        //连接关闭事件
+        socket.onclose = function() {
+            console.log("Socket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function() {
+            alert("Socket发生了错误");
+        };
+
+        //窗口关闭时，关闭连接
+        window.unload=function() {
+            socket.close();
+        };
+    }
+
+    //关闭连接
+    function closeWebSocket(){
+        socket.close();
+    }
+
+    //发送消息给服务器
+    function sendToServer(){
+        var message = document.getElementById('text').value;
+        socket.send(message);
+    }
+</script>
+
+</body>
+</html>

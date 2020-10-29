@@ -1,0 +1,57 @@
+
+#服务器配置
+server:
+  #设定http监听端口，默认8080
+  port: 8080
+
+  #servlet全局配置
+  servlet:
+    #设定应用的context-path，默认: /
+    context-path: /
+    session:
+      #session超时时间，默认30分钟
+      timeout: 30m
+    #CharacterEncodingFilter
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  #针对tomcat的配置
+  tomcat:
+    uri-encoding: UTF-8
+    #接受的最大请求连接数，默认值8192
+    max-connections: 8192
+    #当所有的线程被占用，被放入请求队列等待的最大的请求连接数量，默认值100
+    accept-count: 100
+    threads:
+      #最大的工作线程数量，默认值200
+      max: 200
+      #最小的工作线程数量，默认值10
+      min-spare: 10
+
+#spring容器的配置
+spring:
+  mvc:
+    servlet:
+      #设定dispatcher servlet的监听路径，默认为: /
+      path: /
+
+  #thymeleaf
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    servlet:
+      content-type: text/html
+    suffix: .html
+
+  servlet:
+    #附件上传配置
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+
