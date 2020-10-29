@@ -7,5 +7,11 @@ dependencies {
 	implementation 'org.webjars.bower:jquery:3.5.1'
 	// 可以在html中去掉webjars的版本号，这样升级的时候直接修改上面引入的webjars中的版本号即可，页面中不需要修改
 	implementation 'org.webjars:webjars-locator:0.40'
+
+	//OkHttp
+	implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+
+	implementation 'com.alibaba:fastjson:1.2.68'
 }
+
 

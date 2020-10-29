@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="no-cache">
+    <META http-equiv="Expire" content="0">
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
     <title>Websocket-DEMO</title>
     <style type="text/css">
-        h3,h4{
-            text-align:center;
+        h3, h4 {
+            text-align: center;
         }
     </style>
 </head>
@@ -13,9 +21,14 @@
 
 <h3>请输入要发送给服务器端的消息：</h3><br/>
 
-<label for="text">输入发送信息</label><input id="text" type="text" />
-<button onclick="sendToServer()">发送服务器消息</button>
-<button onclick="closeWebSocket()">关闭连接</button>
+<label for="text">UserId</label><input id="userId" type="text" value="kobe"/>
+<button id="openWebSocket">建立连接</button>
+
+<br>
+<br>
+<label for="text">输入发送信息</label><input id="text" type="text"/>
+<button id="sendToServer">发送服务器消息</button>
+<button id="closeWebSocket">关闭连接</button>
 <br>
 信息:
 <span id="message">
@@ -23,49 +36,75 @@
 </span>
 <script type="text/javascript">
 
-    // onopen事件监听，处理连接建立事件
-    // onmessage事件监听，处理对方发过来的消息数据
-    // onclose事件监听，处理连接关闭
-    // onerror事件监听，处理交互过程中的异常
-    var socket;
-    if (typeof (WebSocket) == "undefined") {
-        console.log("遗憾：您的浏览器不支持WebSocket");
-    } else {
-        //服务端如果是https协议，这里要使用wss协议
-        socket = new WebSocket("ws://localhost:8081/ws/asset");
-        //连接打开事件
-        socket.onopen = function() {
-            console.log("Socket已打开");
-        };
-        //收到消息事件
-        socket.onmessage = function(msg) {
-            document.getElementById('message').innerHTML += msg.data + '<br/>';
-        };
-        //连接关闭事件
-        socket.onclose = function() {
-            console.log("Socket已关闭");
-        };
-        //发生了错误事件
-        socket.onerror = function() {
-            alert("Socket发生了错误");
-        };
+    $(function () {
+        // onopen事件监听，处理连接建立事件
+        // onmessage事件监听，处理对方发过来的消息数据
+        // onclose事件监听，处理连接关闭
+        // onerror事件监听，处理交互过程中的异常
+        var socket;
 
-        //窗口关闭时，关闭连接
-        window.unload=function() {
+        $("#openWebSocket").click(function () {
+            if (typeof (WebSocket) == "undefined") {
+                console.log("遗憾：您的浏览器不支持WebSocket");
+            } else {
+                var userId = document.getElementById('userId').value;
+
+                if (socket != null) {
+                    socket.close();
+                    socket = null;
+                }
+
+                var token;
+                //获取token认证
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8081/token/" + userId,
+                    async: false,
+                    success: function (data) {
+                        token = data;
+                    }
+                });
+
+                // alert(token);
+
+                //服务端如果是https协议，这里要使用wss协议
+                socket = new WebSocket("ws://localhost:8081/ws/" + userId + "?token=" + token);
+                //连接打开事件
+                socket.onopen = function () {
+                    console.log("Socket已打开");
+                };
+                //收到消息事件
+                socket.onmessage = function (msg) {
+                    document.getElementById('message').innerHTML += msg.data + '<br/>';
+                };
+                //连接关闭事件
+                socket.onclose = function () {
+                    console.log("Socket已关闭");
+                };
+                //发生了错误事件
+                socket.onerror = function () {
+                    alert("Socket发生了错误");
+                };
+
+                //窗口关闭时，关闭连接
+                window.unload = function () {
+                    socket.close();
+                };
+            }
+        });
+
+        //关闭连接
+        $("#closeWebSocket").click(function () {
             socket.close();
-        };
-    }
+        });
 
-    //关闭连接
-    function closeWebSocket(){
-        socket.close();
-    }
-
-    //发送消息给服务器
-    function sendToServer(){
-        var message = document.getElementById('text').value;
-        socket.send(message);
-    }
+        //发送消息给服务器
+        $("#sendToServer").click(function () {
+            var userId = document.getElementById('userId').value;
+            var message = document.getElementById('text').value;
+            socket.send(message + "[" + userId + "]");
+        });
+    });
 </script>
 
 </body>
