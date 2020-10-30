@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 /**
  * <h1>文件和目录工具类</h1>
  * Created by hanqf on 2020/10/30 14:53.
+ *
+ * 核心工具类就是java.nio.file.Files
  */
 
 
