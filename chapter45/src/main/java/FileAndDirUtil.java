@@ -1,3 +1,5 @@
+import lambda.LambdaConsumer;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * <h1>文件和目录工具类</h1>
  * Created by hanqf on 2020/10/30 14:53.
- *
+ * <p>
  * 核心工具类就是java.nio.file.Files
  */
 
@@ -73,14 +75,10 @@ public class FileAndDirUtil {
     public static void deleteDirAndSub(String dirPath) throws IOException {
         try (Stream<Path> walk = Files.walk(Paths.get(dirPath))) {
             walk.sorted(Comparator.reverseOrder())
-                    .forEach(file -> {
-                        try {
-                            Files.delete(file);
-                            System.out.printf("删除文件成功：%s%n", file.toString());
-                        } catch (IOException e) {
-                            System.err.printf("无法删除的路径 %s%n%s", file, e);
-                        }
-                    });
+                    .forEach(LambdaConsumer.warp(file -> {
+                        Files.delete(file);
+                        System.out.printf("删除文件成功：%s%n", file.toString());
+                    }));
         }
     }
 
@@ -243,14 +241,10 @@ public class FileAndDirUtil {
         // 从JDK1.8开始提供的方法
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
             //并行写入，适合大文件
-            lines.parallel().forEachOrdered(line -> {
-                try {
-                    writer.write(line);
-                    writer.newLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            lines.parallel().forEachOrdered(LambdaConsumer.warp(line -> {
+                writer.write(line);
+                writer.newLine();
+            }));
 
             lines.close();
 
@@ -261,7 +255,7 @@ public class FileAndDirUtil {
 
     public static void main(String[] args) throws IOException {
         //try-with-resources语法,不用手动的编码关闭流
-        try(Stream<String> stringStream = FileAndDirUtil.readFileToStream("/Users/hanqf/Desktop/1.html")){
+        try (Stream<String> stringStream = FileAndDirUtil.readFileToStream("/Users/hanqf/Desktop/1.html")) {
             FileAndDirUtil.writerFileByStreamString("/Users/hanqf/Desktop/2.html", stringStream);
         }
 

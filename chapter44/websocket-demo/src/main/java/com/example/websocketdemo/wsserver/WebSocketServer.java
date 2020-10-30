@@ -56,12 +56,19 @@ public class WebSocketServer {
      */
     public static void broadCastInfo(String message) throws IOException {
 
-        for (String userId : sessionMap.keySet()) {
-            Session session = sessionMap.get(userId);
+        sessionMap.forEach(LambdaBiConsumer.warp((k, v) -> {
+            Session session = sessionMap.get(k);
             if (session.isOpen()) {
-                sendMessage(session, message, userId);
+                sendMessage(session, message, k);
             }
-        }
+        }));
+
+        //for (String userId : sessionMap.keySet()) {
+        //    Session session = sessionMap.get(userId);
+        //    if (session.isOpen()) {
+        //        sendMessage(session, message, userId);
+        //    }
+        //}
 
     }
 
