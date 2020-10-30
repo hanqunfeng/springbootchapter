@@ -10,7 +10,6 @@ dependencies {
 
 	//OkHttp
 	implementation 'com.squareup.okhttp3:okhttp:4.5.0'
-
 	implementation 'com.alibaba:fastjson:1.2.68'
 }
 
