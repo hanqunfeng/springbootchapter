@@ -56,7 +56,7 @@ public class FileAndDirUtil {
      * List<String> collect = lines.collect(Collectors.toList()); :转换成List<String>, 要注意OutOfMemoryError
      *
      * @param filePath 文件路径
-     * @return java.util.stream.Stream&lt;java.lang.String&gt;
+     * @return java.util.stream.Stream&lt;java.lang.String&gt; 调用后需要关闭流
      * @author hanqf
      */
     public static Stream<String> readFileToStream(String filePath) throws IOException {
@@ -252,14 +252,20 @@ public class FileAndDirUtil {
                 }
             });
 
+            lines.close();
+
         }
 
         return path;
     }
 
     public static void main(String[] args) throws IOException {
-        Stream<String> stringStream = FileAndDirUtil.readFileToStream("/Users/hanqf/Desktop/1.html");
-        FileAndDirUtil.writerFileByStreamString("/Users/hanqf/Desktop/2.html", stringStream);
+        //try-with-resources语法,不用手动的编码关闭流
+        try(Stream<String> stringStream = FileAndDirUtil.readFileToStream("/Users/hanqf/Desktop/1.html")){
+            FileAndDirUtil.writerFileByStreamString("/Users/hanqf/Desktop/2.html", stringStream);
+        }
+
+
     }
 
 }

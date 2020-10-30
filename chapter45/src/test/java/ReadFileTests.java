@@ -108,23 +108,27 @@ public class ReadFileTests {
         String fileName = "build/data/newFile.txt";
 
         // 读取文件内容到Stream流中，按行读取
-        Stream<String> lines = Files.lines(Paths.get(fileName));
-
-        // 随机行顺序进行数据处理
-        lines.forEach(ele -> {
-            System.out.println(ele);
-        });
-
-        // 按文件行顺序进行处理,但处理效率会下降
-        //lines.forEachOrdered(System.out::println);
-
-        //或者利用CPU多核的能力，进行数据的并行处理parallel()，适合比较大的文件。
-        // 按文件行顺序进行处理
-        //lines.parallel().forEachOrdered(System.out::println);
+        //try-with-resources语法,不用手动的编码关闭流
+        try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
+            // 随机行顺序进行数据处理
+            lines.forEach(ele -> {
+                System.out.println(ele);
+            });
 
 
-        // 转换成List<String>, 这意味着你要将所有的数据一次性加载到内存，要注意java.lang.OutOfMemoryError: Java heap space
-        //List<String> collect = lines.collect(Collectors.toList());
+            // 按文件行顺序进行处理,但处理效率会下降
+            //lines.forEachOrdered(System.out::println);
+
+            //或者利用CPU多核的能力，进行数据的并行处理parallel()，适合比较大的文件。
+            // 按文件行顺序进行处理
+            //lines.parallel().forEachOrdered(System.out::println);
+
+
+            // 转换成List<String>, 这意味着你要将所有的数据一次性加载到内存，要注意java.lang.OutOfMemoryError: Java heap space
+            //List<String> collect = lines.collect(Collectors.toList());
+        }
+
+
     }
 
     /**
