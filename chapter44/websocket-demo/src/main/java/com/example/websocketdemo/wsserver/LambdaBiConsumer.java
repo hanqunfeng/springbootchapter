@@ -17,7 +17,7 @@ public interface LambdaBiConsumer<T, U> {
      * @param consumer
      * @return
      */
-    static <T,U> BiConsumer<T,U> warp(LambdaBiConsumer<T,U> consumer) {
+    static <T,U> BiConsumer<T,U> wrapper(LambdaBiConsumer<T,U> consumer) {
         return (t,u) -> {
             try {
                 consumer.accept(t,u);

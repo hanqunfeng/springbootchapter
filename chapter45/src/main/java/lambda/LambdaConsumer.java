@@ -3,8 +3,6 @@ package lambda;
 import java.util.function.Consumer;
 
 /**
- * 参考：https://blog.csdn.net/lhx13636332274/article/details/100936575
- *
  * <h1>Lambda Funcction</h1>
  * Created by hanqf on 2020/10/30 22:58.
  * <p>
@@ -21,7 +19,7 @@ public interface LambdaConsumer<T> {
      * @param consumer
      * @return
      */
-    static <T> Consumer<T> warp(LambdaConsumer<T> consumer) {
+    static <T> Consumer<T> wrapper(LambdaConsumer<T> consumer) {
         return t -> {
             try {
                 consumer.accept(t);
@@ -30,6 +28,58 @@ public interface LambdaConsumer<T> {
             }
         };
     }
+
+    /**
+     * <h2>lambda Consumer抛出异常</h2>
+     * Created by hanqf on 2020/10/31 22:12. <br>
+     * <p>
+     * 发生异常时，如果异常类型与指定的异常类型匹配，则做自定义的处理
+     *
+     * @param consumer
+     * @param exceptionClass
+     * @param lambdaOnExceptionToDo
+     * @return java.util.function.Consumer&lt;T&gt;
+     * @author hanqf
+     */
+    static <T, E extends Exception> Consumer<T> wrapperWithExceptionToDo(LambdaConsumer<T> consumer, Class<E> exceptionClass, LambdaOnExceptionToDo<T, E> lambdaOnExceptionToDo) {
+        return i -> {
+            try {
+                consumer.accept(i);
+            } catch (Exception e) {
+                try {
+                    E exCast = exceptionClass.cast(e);
+                    lambdaOnExceptionToDo.toDo(i, exCast);
+                } catch (ClassCastException ccEx) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
+    static <T, E extends Exception> Consumer<T> wrapperWithExceptionToDo(LambdaConsumer<T> consumer, Class<? extends Exception>[] exceptionClass, LambdaOnExceptionToDo<T, E> lambdaOnExceptionToDo) {
+        return i -> {
+            try {
+                consumer.accept(i);
+            } catch (Exception e) {
+                boolean check = true;
+                for (Class clazz : exceptionClass) {
+                    try {
+                        E exCast = (E)clazz.cast(e);
+                        check = false;
+                        lambdaOnExceptionToDo.toDo(i, exCast);
+                        break;
+                    } catch (ClassCastException ccEx) {
+
+                    }
+                }
+
+                if(check) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+
 
     void accept(T t) throws Exception;
 

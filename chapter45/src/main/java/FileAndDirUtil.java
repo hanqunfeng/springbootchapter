@@ -75,7 +75,7 @@ public class FileAndDirUtil {
     public static void deleteDirAndSub(String dirPath) throws IOException {
         try (Stream<Path> walk = Files.walk(Paths.get(dirPath))) {
             walk.sorted(Comparator.reverseOrder())
-                    .forEach(LambdaConsumer.warp(file -> {
+                    .forEach(LambdaConsumer.wrapper(file -> {
                         Files.delete(file);
                         System.out.printf("删除文件成功：%s%n", file.toString());
                     }));
@@ -241,11 +241,20 @@ public class FileAndDirUtil {
         // 从JDK1.8开始提供的方法
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
             //并行写入，适合大文件
-            lines.parallel().forEachOrdered(LambdaConsumer.warp(line -> {
+            lines.parallel().forEachOrdered(LambdaConsumer.wrapper(line -> {
                 writer.write(line);
                 writer.newLine();
             }));
 
+
+            //lines.parallel().forEachOrdered(LambdaConsumer.wrapperWithExceptionToDo(line -> {
+            //    writer.write((String) line);
+            //    writer.newLine();
+            //}, new Class[]{IOException.class}, (line, e) -> {
+            //    System.err.println(e.getMessage());
+            //}));
+
+            //关闭流
             lines.close();
 
         }
