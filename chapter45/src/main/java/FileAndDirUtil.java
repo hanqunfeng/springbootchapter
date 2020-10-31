@@ -1,4 +1,4 @@
-import lambda.LambdaConsumer;
+import lambda.LambdaExceptionUtil;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class FileAndDirUtil {
     public static void deleteDirAndSub(String dirPath) throws IOException {
         try (Stream<Path> walk = Files.walk(Paths.get(dirPath))) {
             walk.sorted(Comparator.reverseOrder())
-                    .forEach(LambdaConsumer.wrapper(file -> {
+                    .forEach(LambdaExceptionUtil.wrapConsumer(file -> {
                         Files.delete(file);
                         System.out.printf("删除文件成功：%s%n", file.toString());
                     }));
@@ -241,7 +241,7 @@ public class FileAndDirUtil {
         // 从JDK1.8开始提供的方法
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, options)) {
             //并行写入，适合大文件
-            lines.parallel().forEachOrdered(LambdaConsumer.wrapper(line -> {
+            lines.parallel().forEachOrdered(LambdaExceptionUtil.wrapConsumer(line -> {
                 writer.write(line);
                 writer.newLine();
             }));
