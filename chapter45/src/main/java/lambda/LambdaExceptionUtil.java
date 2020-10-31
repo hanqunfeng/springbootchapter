@@ -4,10 +4,8 @@ import java.util.function.*;
 
 /**
  * <h1>Lambda异常处理工具类</h1>
- * Created by hanqf on 2020/10/31 23:09.
+ * 参考：https://gitee.com/Robot-L/LambdaUtil
  */
-
-
 public final class LambdaExceptionUtil {
 
     /**
