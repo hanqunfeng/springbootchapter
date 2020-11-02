@@ -6,17 +6,17 @@ import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -27,8 +27,18 @@ import java.util.zip.GZIPOutputStream;
 
 @Slf4j
 public class RestTemplateUtil {
-
-    private static final SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+    /**
+     * RestTemplate只是对其他的HTTP客户端的封装，其本身并没有实现HTTP相关的基础功能。
+     * RestTemplate 支持至少三种HTTP客户端库。
+     * SimpleClientHttpRequestFactory。对应的HTTP库是java JDK自带的HttpURLConnection，此为默认值。
+     * HttpComponentsAsyncClientHttpRequestFactory。对应的HTTP库是Apache HttpComponents。
+     * OkHttp3ClientHttpRequestFactory。对应的HTTP库是OkHttp。
+     * <p>
+     * 各种HTTP客户端性能以及易用程度评测来看，OkHttp 优于 Apache HttpComponents、Apache HttpComponents优于HttpURLConnection。
+     */
+    //private static final SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+    //private static final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    private static final OkHttp3ClientHttpRequestFactory factory = new OkHttp3ClientHttpRequestFactory();
     private static final RestTemplate restTemplate;
 
     static {
@@ -355,6 +365,41 @@ public class RestTemplateUtil {
         }
         return restTemplate.postForObject(url, map, String.class);
 
+    }
+
+    /**
+     * <h2>小文件下载</h2>
+     * Created by hanqf on 2020/11/2 16:56. <br>
+     *
+     * @param fileUrl  文件下载url
+     * @param savePath 文件保存路径
+     * @author hanqf
+     */
+    public static void downloadSmallFile(String fileUrl, String savePath) throws IOException {
+        ResponseEntity<byte[]> rsp = restTemplate.getForEntity(fileUrl, byte[].class);
+        System.out.println("文件下载请求结果状态码：" + rsp.getStatusCode());
+        // 将下载下来的文件内容保存到本地
+        Files.write(Paths.get(savePath), Objects.requireNonNull(rsp.getBody(),
+                "未获取到下载文件"));
+    }
+
+    /**
+     * <h2>大文件下载</h2>
+     * Created by hanqf on 2020/11/2 16:58. <br>
+     *
+     * @param fileUrl  文件下载url
+     * @param savePath 文件保存路径
+     * @author hanqf
+     */
+    public static void downloadBigFile(String fileUrl, String savePath) {
+        //设置了请求头APPLICATION_OCTET_STREAM，表示以流的形式进行数据加载
+        RequestCallback requestCallback = request -> request.getHeaders()
+                .setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+        //对响应进行流式处理而不是将其全部加载到内存中
+        restTemplate.execute(fileUrl, HttpMethod.GET, requestCallback, clientHttpResponse -> {
+            Files.copy(clientHttpResponse.getBody(), Paths.get(savePath));
+            return null;
+        });
     }
 
     /**
