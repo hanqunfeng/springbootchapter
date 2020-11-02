@@ -45,5 +45,6 @@
 ### chapter43----Springboot 全局异常处理 全局返回值响应 jpa @Valid jasypt属性值加密 redis缓存 一个相对完整的web应用(json接口和thymeleaf视图)
 ### chapter44----Springboot 服务器推送 SSE和WebSocket
 ### chapter45----Java IO 文件或目录创建和删除，文件内容读取、剪切和重命名
+### chapter46----Springboot Admin
 
 

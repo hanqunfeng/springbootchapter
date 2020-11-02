@@ -1,0 +1,50 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: admin-client
+
+  #springboot-admin
+  boot:
+    admin:
+      client:
+        url: http://localhost:8769
+        username: admin
+        password: admin
+        instance:
+          metadata:
+            user.name: ${spring.security.user.name} #\u5BA2\u6237\u7AEF\u5143\u6570\u636E\u8BBF\u95EE\u7528\u6237
+            user.password: ${spring.security.user.password} #\u5BA2\u6237\u7AEF\u5143\u6570\u636E\u8BBF\u95EE\u5BC6\u7801
+        #\u662F\u5426\u5F00\u542Fspringboot-admin\u529F\u80FD\uFF0C\u9ED8\u8BA4true
+        enabled: true
+  #spring-security
+  security:
+    user:
+      name: client #\u5BA2\u6237\u7AEF\u7528\u6237\u540D
+      password: 123456 # \u5BA2\u6237\u7AEF\u5BC6\u7801
+      roles: ACTUATOR_ADMIN #\u62E5\u6709\u89D2\u8272\uFF0C\u7528\u4E8E\u5141\u8BB8\u81EA\u8EAB\u8BBF\u95EE
+
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      #\u9ED8\u8BA4 /actuator
+      base-path: /actuator2
+      #\u4FEE\u6539\u67D0\u4E00\u7C7B\u578B\u8DEF\u5F84\u7684\u9ED8\u8BA4\u503C
+      path-mapping:
+        health: health2
+        mappings: mappings2
+  endpoint:
+    health:
+      show-details: always
+
+#health\u68C0\u67E5info\u4FE1\u606F
+info:
+  app-name: ${spring.application.name}
+  description: ${spring.application.name} indexs monitor
+  author: hanqf
+  create-date: 2020-11-02

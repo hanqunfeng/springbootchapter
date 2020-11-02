@@ -7,6 +7,7 @@ buildscript {
         springBootVersion = '2.3.4.RELEASE'
         springBootManagementVersion = '1.0.10.RELEASE'
         REPOSITORY_HOME = "https://maven.aliyun.com"
+        set('springBootAdminVersion', "2.3.0")
     }
     repositories {
         maven { url '${REPOSITORY_HOME}/repository/public/' }
@@ -105,11 +106,21 @@ dependencies {
     implementation 'com.github.wenhao:jpa-spec:3.2.5'
 
 
+    //spring-boot-admin-starter-client
+    implementation 'de.codecentric:spring-boot-admin-starter-client'
+    //spring-security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
 
 }
 
 dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+
+    }
 }
 
 

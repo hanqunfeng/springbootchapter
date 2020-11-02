@@ -1,0 +1,17 @@
+
+ext {
+	set('springBootAdminVersion', "2.3.0")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'de.codecentric:spring-boot-admin-starter-client'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+	}
+}
+

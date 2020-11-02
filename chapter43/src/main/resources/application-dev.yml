@@ -61,6 +61,7 @@ spring:
         #获取连接池最大等待时间，单位毫秒
         max-wait: 2000
 
+
 #自定义分组缓存配置，value过期时间，单位秒
 #格式：caching.ttlmap.groupName=seconds
 caching:
@@ -78,4 +79,6 @@ springdoc:
 
 #开启debug，默认只对logback支持，使用log4j2后，debug要同时在log4j2的配置文件中设置debug级别
 debug: false
+
+
 

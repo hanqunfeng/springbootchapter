@@ -133,6 +133,31 @@ spring:
       enabled: true
       max-file-size: 50MB
       max-request-size: 100MB
+  application:
+    name: admin-client
+
+
+  #springboot-admin
+  boot:
+    admin:
+      client:
+        url: http://localhost:8769
+        username: admin
+        password: admin
+        instance:
+          metadata:
+            user.name: ${spring.security.user.name} #客户端元数据访问用户
+            user.password: ${spring.security.user.password} #客户端元数据访问密码
+        #是否开启springboot-admin功能，默认true
+        enabled: false
+
+  #spring-security
+  security:
+    user:
+      name: client #客户端用户名
+      password: 123456 # 客户端密码
+      roles: ACTUATOR_ADMIN #拥有角色，用于允许自身访问
+
 
 # 开启api-docs，默认开启，线上环境建议设置为false
 # 全部api: http://localhost:8080/swagger-ui/index.html?url=/v3/api-docs
@@ -142,3 +167,25 @@ springdoc:
     enabled: false
 
 
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      #默认 /actuator
+      base-path: /actuator2
+      #修改某一类型路径的默认值
+      path-mapping:
+        health: health2
+        mappings: mappings2
+  endpoint:
+    health:
+      show-details: always
+
+#health检查info信息
+info:
+  app-name: spring-boot-actuator-demo
+  description: spring-boot-actuator-demo indexs monitor
+  author: hanqf
+  create-date: 2020-11-01

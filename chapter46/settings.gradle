@@ -1,0 +1,3 @@
+rootProject.name = 'chapter46'
+include('springboot-admin-server-demo')
+include('springboot-admin-client-demo')
