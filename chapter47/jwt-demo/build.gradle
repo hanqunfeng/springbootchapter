@@ -1,0 +1,5 @@
+dependencies {
+    //jwt工具类
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+}

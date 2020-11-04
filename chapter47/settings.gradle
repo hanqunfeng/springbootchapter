@@ -1,0 +1,2 @@
+rootProject.name = 'chapter47'
+include('jwt-demo')
