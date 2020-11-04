@@ -35,7 +35,9 @@
         response.setStatus(403);
         response.setContentType("application/json;charset=utf-8");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(ajaxResponse));
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(objectMapper.writeValueAsString(ajaxResponse));
+        }
     }
 ```
 ## 依赖
