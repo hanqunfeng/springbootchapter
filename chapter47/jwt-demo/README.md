@@ -8,6 +8,36 @@
 * token是有时间限制的，所以客户端需要定期请求服务器端进行token刷新;
 * 防止token被劫持，正式环境必须使用https协议。
 
+## 知识点
+* jwt认证时如果请求中没有携带token或者token无效时会提示访问被拒绝，返回客户端一个403状态的json信息，但是这个信息格式与系统的全局响应方式不一致，所以需要对其响应进行封装，
+实际上，这个json响应是由BasicErrorController的error方法进行处理的，也就是说，发生认证失败时，会将异常信息重定向到`/error`，交给BasicErrorController的errer方法进行处理，
+我们只需要自定义一个controller继承自BasicErrorController，并重写error方法即可。
+```java
+ public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+        Map<String, Object> body = getErrorAttributes(request, getErrorAttributeOptions(request, MediaType.ALL).including(ErrorAttributeOptions.Include.MESSAGE));
+        HttpStatus status = getStatus(request);
+        throw new CustomException(status, body.getOrDefault("message","抱歉，您的token无效或过期").toString(), body);
+    }
+```
+
+* jwt的token认证通过后，如果是因为没有权限而不能访问资源，可以自定义一个AccessDeniedHandler，重写其handle方法，如本例中的CustomAccessDeniedHandler，然后将其配置到`http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);`
+```java
+@Override
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp",new Date());
+        body.put("status",403);
+        body.put("error","Forbidden");
+        body.put("message",e.getMessage());
+        body.put("path",request.getRequestURI());
+
+        AjaxResponse ajaxResponse = AjaxResponse.error(new CustomException(HttpStatus.FORBIDDEN, "抱歉，您没有访问该接口的权限",body));
+        response.setStatus(403);
+        response.setContentType("application/json;charset=utf-8");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(ajaxResponse));
+    }
+```
 ## 依赖
 ```yaml
 dependencies {
