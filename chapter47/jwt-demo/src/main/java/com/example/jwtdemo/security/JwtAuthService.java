@@ -31,7 +31,7 @@ public class JwtAuthService {
             //使用用户名密码进行登录验证
             UsernamePasswordAuthenticationToken upToken =
                     new UsernamePasswordAuthenticationToken(username, password);
-            //返回认证主体
+            //验证用户名和密码是否正确，正确返回认证主体，错误抛出AuthenticationException
             Authentication authentication = authenticationManager.authenticate(upToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (AuthenticationException e) {

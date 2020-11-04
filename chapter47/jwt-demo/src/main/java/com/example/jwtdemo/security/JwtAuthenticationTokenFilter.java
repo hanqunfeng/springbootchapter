@@ -45,13 +45,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             //如果可以正确的从JWT中提取用户信息，并且该用户未被授权
             if (username != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
-
+                //token有效才会创建UsernamePasswordAuthenticationToken，否则就是匿名用户
                 if (jwtTokenUtil.validateToken(jwtToken, username)) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     //给使用该JWT令牌的用户进行授权
                     UsernamePasswordAuthenticationToken authenticationToken
                             = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    //交给spring security管理,在之后的过滤器中不会再被拦截进行二次授权了
+                    //此处不进行认证，直接交给spring security管理,在之后的过滤器中不会再被拦截进行二次授权了
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
