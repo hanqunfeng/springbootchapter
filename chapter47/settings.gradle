@@ -1,2 +1,4 @@
 rootProject.name = 'chapter47'
 include('jwt-demo')
+include('jwt-authserver-demo')
+include('jwt-resources-demo')

@@ -1,0 +1,25 @@
+server:
+  port: 8889
+  servlet:
+    session:
+      timeout: 10s
+      cookie:
+        http-only: true  # 如果为true，则浏览器脚本将无法访问cookie
+        secure: false # 如果为true，则仅通过HTTPS连接发送cookie，HTTP无法携带cookie。
+
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application:
+    name: jwt-auth-server
+
+#自定义jwt属性信息
+jwt:
+  #  SECRET 是签名密钥，只生成一次即可，生成方法：
+  #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # 使用 BASE64 编码
+  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
+  expiration: 3600000   # 过期时间 (毫秒)
+  header: JWTHeaderName # 请求头信息
