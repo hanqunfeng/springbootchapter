@@ -48,4 +48,3 @@
 ### chapter46----Springboot Admin Server Client
 ### chapter47----Springboot SpringSecurity JWT
 
-
