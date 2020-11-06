@@ -15,7 +15,7 @@ import java.security.Principal;
 @RestController
 public class UserController {
 
-    @PreAuthorize("#oauth2.hasScope('all')")
+    @PreAuthorize("#oauth2.hasScope('any')")
     @RequestMapping(value = "/user")
     public AjaxResponse user(Principal principal) {
         //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken
