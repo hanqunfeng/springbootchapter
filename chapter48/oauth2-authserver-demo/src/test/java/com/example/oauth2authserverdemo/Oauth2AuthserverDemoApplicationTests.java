@@ -12,8 +12,9 @@ class Oauth2AuthserverDemoApplicationTests {
 	protected PasswordEncoder passwordEncoder;
 
 	@Test
-	void encodePasswoord() {
-		System.out.println(passwordEncoder.encode("demo-client"));
+	void encodePassword() {
+		System.out.println("postman:" + passwordEncoder.encode("postman"));
+		System.out.println("demo-client:" + passwordEncoder.encode("demo-client"));
 	}
 
 }
