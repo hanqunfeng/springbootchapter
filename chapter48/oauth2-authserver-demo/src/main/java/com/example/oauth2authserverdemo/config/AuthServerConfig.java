@@ -73,8 +73,11 @@ public abstract class AuthServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
+                //获取公钥的请求全部允许
                 .tokenKeyAccess("permitAll()")
+                //验证token有效性的请求需要先登录认证
                 .checkTokenAccess("isAuthenticated()")
+                //允许客户端form表单认证，就是可以将client_id和client_secret放到form中提交，否则必须使用Basic认证
                 .allowFormAuthenticationForClients();
     }
 

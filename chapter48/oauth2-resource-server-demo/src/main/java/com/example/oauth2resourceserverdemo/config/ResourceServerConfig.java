@@ -1,5 +1,6 @@
 package com.example.oauth2resourceserverdemo.config;
 
+import com.example.oauth2resourceserverdemo.security.CustomAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,6 +21,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
     private TokenStore jwtTokenStore;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
 
     @Override
@@ -45,5 +49,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/swagger-ui/**","/v3/api-docs**").permitAll()
                 //其它路径只要登录就可以访问
                 .anyRequest().authenticated();
+        //没有访问权限时的处理方式
+        http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
     }
 }

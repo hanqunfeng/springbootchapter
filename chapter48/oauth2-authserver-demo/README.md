@@ -227,3 +227,10 @@
 
 ## refresh_token模式，见验证码模式第3部分
 通过已有的refresh_token获取新的access_token和refresh_token
+
+
+## 验证token有效性--Basic Auth
+```
+POST http://postman:postman@localhost:8080/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsImp3dC1leHQiOiJKV1Qg5omp5bGV5L-h5oGvIiwic2NvcGUiOlsiYW55IiwiYWxsIl0sImV4cCI6MTYwNDcxNjMyMCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9hZG1pbiJdLCJqdGkiOiIxNjc4ZTNhYy0yYmNjLTQ4NGUtOTBkMy02ZWFjYTVkNzkyM2IiLCJjbGllbnRfaWQiOiJwb3N0bWFuIn0.8piTJdoAf-4lB0Tn-yeSFWoV3WpkJkqBs7AsoNPoohw
+```
+或者加上Header参数`Authorization` 值为 `Basic cG9zdG1hbjpwb3N0bWFu`

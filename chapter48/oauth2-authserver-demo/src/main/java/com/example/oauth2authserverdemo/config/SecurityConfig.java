@@ -79,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().permitAll(); //登记界面，默认是permit All
+        http.formLogin().permitAll(); //登记界面，默认是permitAll
 
         http.authorizeRequests()
                 .antMatchers(customSecurityProperties.getPermitAll()).permitAll() //不用身份认证可以访问

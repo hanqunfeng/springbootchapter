@@ -16,8 +16,8 @@ CREATE TABLE `oauth_client_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 # 密码要经过加密
-INSERT INTO `oauth_client_details` VALUES ('postman', NULL, '$2a$10$Owubqs9VaN.vmskZ2B0UTe0GmOMwgTmhGtlIFBjrfCz2glBqISHSu', 'any,all', 'authorization_code,refresh_token,implicit,password,client_credentials', 'http://localhost:8080/redirect', NULL, 3600, 36000, NULL, 'any');
-INSERT INTO `oauth_client_details` VALUES ('demo-client', NULL, '$2a$10$v/B9.6c9NUXFbJDHqc28he6VWeyJNOBOD1UI7bwBDfBZTwY4zzcda', 'any', 'authorization_code,refresh_token,password', 'http://localhost:8080/redirect', NULL, 3600, 36000, NULL, '');
+INSERT INTO `oauth_client_details` VALUES ('postman', NULL, '$2a$10$Owubqs9VaN.vmskZ2B0UTe0GmOMwgTmhGtlIFBjrfCz2glBqISHSu', 'any,all', 'authorization_code,refresh_token,implicit,password,client_credentials', 'http://localhost:8080/redirect', NULL, 42300, 2592000, NULL, 'any');
+INSERT INTO `oauth_client_details` VALUES ('demo-client', NULL, '$2a$10$v/B9.6c9NUXFbJDHqc28he6VWeyJNOBOD1UI7bwBDfBZTwY4zzcda', 'any', 'authorization_code,refresh_token,password', 'http://localhost:8080/redirect', NULL, 42300, 2592000, NULL, '');
 
 
 # oauth_client_details表每个列的作用
