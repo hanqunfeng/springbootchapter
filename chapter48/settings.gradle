@@ -1,2 +1,3 @@
 rootProject.name = 'chapter48'
 include('oauth2-authserver-demo')
+include('oauth2-resource-server-demo')

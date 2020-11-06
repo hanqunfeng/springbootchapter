@@ -1,0 +1,22 @@
+dependencies {
+
+	//引入spring-security-oauth2-autoconfigure则不需要单独配置该依赖
+	//	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//最后一个支持AuthorizationServerConfigurerAdapter的版本，新版本已经提示不推荐使用，
+	//SpringSecurity OAuth2项目目前已被弃用，SpringSecurity团队已决定不再为授权服务器提供支持
+	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.10.RELEASE'
+
+
+
+	//以下依赖非本必要依赖，就是为了测试方便
+
+
+	//swaggerV3-OpenAPI
+	implementation 'org.springdoc:springdoc-openapi-ui:1.4.8'
+	//支持rest api
+	implementation 'org.springdoc:springdoc-openapi-data-rest:1.4.8'
+
+}
+
+
