@@ -21,6 +21,8 @@ import java.util.Map;
 /**
  * <h1>AuthExceptionEntryPoint</h1>
  * Created by hanqf on 2020/11/6 23:27.
+ *
+ * token无效或过期
  */
 
 @Component

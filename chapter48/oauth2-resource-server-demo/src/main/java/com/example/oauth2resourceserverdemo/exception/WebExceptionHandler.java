@@ -1,5 +1,6 @@
 package com.example.oauth2resourceserverdemo.exception;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +32,13 @@ public class WebExceptionHandler {
         return AjaxResponse.error(e);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public AjaxResponse accessDeniedException(AccessDeniedException e) {
+        //TODO 将异常信息持久化处理，方便运维人员处理
+
+        //没有被程序员发现，并转换为CustomException的异常，都是其他异常或者未知异常.
+        return AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,e.getMessage(),e.getClass().getName()));
+    }
 
     @ExceptionHandler(Exception.class)
     public AjaxResponse exception(Exception e) {

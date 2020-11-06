@@ -1,6 +1,7 @@
 package com.example.oauth2resourceserverdemo.controller;
 
 import com.example.oauth2resourceserverdemo.exception.AjaxResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import java.security.Principal;
 @RestController
 public class UserController {
 
+    @PreAuthorize("#oauth2.hasScope('all')")
     @RequestMapping(value = "/user")
     public AjaxResponse user(Principal principal) {
         //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken

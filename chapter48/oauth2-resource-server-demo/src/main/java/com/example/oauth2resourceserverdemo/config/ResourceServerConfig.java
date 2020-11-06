@@ -5,7 +5,7 @@ import com.example.oauth2resourceserverdemo.security.CustomAuthExceptionEntryPoi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  */
 @Configuration
 @EnableResourceServer
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Import(OAuth2MethodSecurityConfiguration.class)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
@@ -62,6 +62,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 //其它路径只要登录就可以访问
                 .anyRequest().authenticated();
     }
+
+
 
     /**
      * 认证事件监听器，打印日志
