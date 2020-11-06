@@ -1,0 +1,52 @@
+#认证服务器端口号
+server:
+  port: 8080
+spring:
+  application:
+    name: oauth2-auth-server
+
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  #数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000 #毫秒，默认30秒
+      idle-timeout: 600000      #毫秒，默认10分钟
+      max-lifetime: 1800000     #毫秒，默认30分钟
+      maximum-pool-size: 10     #默认10
+
+#springsecurity 自定义属性
+security:
+  #不需要验证的路径
+  permitAll:
+    - /redirect/**
+#    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
+  ignoring:
+    - '*.js'
+    - '*.css'
+    - '/static/*'
+#    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
+
+#自定义jwt属性信息
+jwt:
+  #  SECRET 是签名密钥，只生成一次即可，生成方法：
+  #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # 使用 BASE64 编码
+  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
+  accessTokenValiditySeconds: 43200   # access_token过期时间 (秒) ,默认值12小时
+  refreshTokenValiditySeconds: 2592000 # refresh_token过期时间 (秒) ,默认值30天
+
+#oauth2的client信息是基于内存还是基于数据库，如果不配置，默认为基于内存
+oauth2:
+  clients:
+    config:
+      jdbc: true
+
+
