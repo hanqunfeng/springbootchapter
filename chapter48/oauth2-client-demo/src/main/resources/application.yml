@@ -1,0 +1,34 @@
+
+#资源服务器端口号
+server:
+  port: 8089
+  servlet:
+    #不能配置为/，否则不能认证通过后不能重定向回客户端的访问地址
+    context-path: /postman
+spring:
+  application:
+    name: oauth2-client-postman
+
+oauth2:
+  server:
+    url: http://localhost:8080
+    #可以实现单点登录，不能实现单点登出
+    logout: ${oauth2.server.url}/logout
+
+security:
+  oauth2:
+    client:
+      client-id: postman
+      client-secret: postman
+      access-token-uri: ${oauth2.server.url}/oauth/token
+      user-authorization-uri: ${oauth2.server.url}/oauth/authorize
+      #认证服务端配置的回调地址要加上这个地址，此处必须是login
+      registered-redirect-uri: http://localhost:${server.port}${server.servlet.context-path}/postman/login
+      #请求范围
+      scope: any
+      #不需要用户确认授权直接通过的范围
+      auto-approve-scopes: any
+    resource:
+      jwt:
+        #获取jwt密钥的地址
+        key-uri: ${oauth2.server.url}/oauth/token_key
