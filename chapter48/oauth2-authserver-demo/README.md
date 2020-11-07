@@ -234,3 +234,35 @@
 POST http://postman:postman@localhost:8080/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJhZG1pbiIsImp3dC1leHQiOiJKV1Qg5omp5bGV5L-h5oGvIiwic2NvcGUiOlsiYW55IiwiYWxsIl0sImV4cCI6MTYwNDcxNjMyMCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9hZG1pbiJdLCJqdGkiOiIxNjc4ZTNhYy0yYmNjLTQ4NGUtOTBkMy02ZWFjYTVkNzkyM2IiLCJjbGllbnRfaWQiOiJwb3N0bWFuIn0.8piTJdoAf-4lB0Tn-yeSFWoV3WpkJkqBs7AsoNPoohw
 ```
 或者加上Header参数`Authorization` 值为 `Basic cG9zdG1hbjpwb3N0bWFu`
+
+返回值
+```json
+{
+    "user_name": "admin",
+    "jwt-ext": "JWT 扩展信息",
+    "scope": [
+        "any"
+    ],
+    "active": true,
+    "exp": 1604767911,
+    "authorities": [
+        "ROLE_admin"
+    ],
+    "jti": "5597b675-a617-4e02-959f-86d62024a237",
+    "client_id": "postman"
+}
+```
+
+## 获取公钥，比如JWT的密钥
+```
+GET http://postman:postman@localhost:8080/oauth/token_key
+```
+或者加上Header参数`Authorization` 值为 `Basic cG9zdG1hbjpwb3N0bWFu`
+
+返回值
+```json
+{
+    "alg": "HMACSHA256",
+    "value": "Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ=="
+}
+```
