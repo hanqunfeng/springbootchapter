@@ -1,5 +1,42 @@
 # Springboot SpringSecurity JWT
 
+## 示例请求过程
+* 获取token GET http://localhost:8888/authentication
+    json数据：
+    ```json
+    {
+        "username":"admin",
+        "password":"123456"
+    }
+    ```
+
+    返回值：
+    ```json
+    {
+        "isok": true,
+        "code": 200,
+        "message": "success",
+        "data": {
+            "token": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2MDQ3NjgzMzU5MTIsImV4cCI6MTYwNDc3MTkzNX0.BeMIPD3Z8HaUEBD3G_Uga8g2bLYh8ERZk4YUHlkUlXZvCArsE5VogG5UkDToF4pg3NPkEKonBJc8C__VnxVQ_RDDmsQxPCHwPx3_pA1v-7_E1mE-IAJgjwL--v8FViu6K6cJvGSy1HrvFHXQf_tpvmdA1Sv4-sl0o6CTc-TK5w0jGPhU1hdbwFFbyGp4QnGtKx51xrDDZtyKu8XS6HKKLxyGH9aBSvUSBx-UKGuaBsbSQ9iZJEePVV_bCJo8VBKaZvW5Vlta-Mk2eSCxROejE0L8SA4MG8qCCAy5sQnU8thzuDKXIN9JnwkmhDO9rQNjpgciYtvsN59ZGEyvGIwv5w",
+            "expiration": "2020-11-08 01:58:55"
+        }
+    }
+    ```
+* 请求资源 GET http://localhost:8888/demo/hello
+header: JWTHeaderName eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2MDQ3NjgzMzU5MTIsImV4cCI6MTYwNDc3MTkzNX0.BeMIPD3Z8HaUEBD3G_Uga8g2bLYh8ERZk4YUHlkUlXZvCArsE5VogG5UkDToF4pg3NPkEKonBJc8C__VnxVQ_RDDmsQxPCHwPx3_pA1v-7_E1mE-IAJgjwL--v8FViu6K6cJvGSy1HrvFHXQf_tpvmdA1Sv4-sl0o6CTc-TK5w0jGPhU1hdbwFFbyGp4QnGtKx51xrDDZtyKu8XS6HKKLxyGH9aBSvUSBx-UKGuaBsbSQ9iZJEePVV_bCJo8VBKaZvW5Vlta-Mk2eSCxROejE0L8SA4MG8qCCAy5sQnU8thzuDKXIN9JnwkmhDO9rQNjpgciYtvsN59ZGEyvGIwv5w
+    返回值
+    ```json
+    {
+        "isok": true,
+        "code": 200,
+        "message": "success",
+        "data": "hello"
+    }
+    ```
+* 刷新token GET http://localhost:8888/refreshtoken
+header: JWTHeaderName eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2MDQ3NjgzMzU5MTIsImV4cCI6MTYwNDc3MTkzNX0.BeMIPD3Z8HaUEBD3G_Uga8g2bLYh8ERZk4YUHlkUlXZvCArsE5VogG5UkDToF4pg3NPkEKonBJc8C__VnxVQ_RDDmsQxPCHwPx3_pA1v-7_E1mE-IAJgjwL--v8FViu6K6cJvGSy1HrvFHXQf_tpvmdA1Sv4-sl0o6CTc-TK5w0jGPhU1hdbwFFbyGp4QnGtKx51xrDDZtyKu8XS6HKKLxyGH9aBSvUSBx-UKGuaBsbSQ9iZJEePVV_bCJo8VBKaZvW5Vlta-Mk2eSCxROejE0L8SA4MG8qCCAy5sQnU8thzuDKXIN9JnwkmhDO9rQNjpgciYtvsN59ZGEyvGIwv5w
+
+
 ## 说明
 * Json web token (JWT)，Jwt信息分三部分，第一部分我们称它为头部(header),第二部分我们称其为载荷(payload, 有效数据，如用户名称)，第三部分是签证(signature防篡改，base64加密后的header+base64加密后的payload+密钥);
 * Jwt认证是STATELESS无状态的，所以很适合集群部署，因为服务器端不存储任何用户状态，客户端每次请求资源都需要携带token，服务器端负责校验token的有效性;

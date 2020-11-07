@@ -1,5 +1,6 @@
 package com.example.jwtdemo.security;
 
+import com.example.jwtdemo.utils.RsaUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,8 +11,11 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +40,32 @@ public class JwtTokenUtil {
      * 请求头参数名称
      */
     private String header;
+
+    /**
+     * 公钥文件路径
+    */
+    private String pubKeyFile;
+
+    /**
+     * 公钥key
+    */
+    private PublicKey publicKey;
+
+    /**
+     * 私钥文件路径
+     */
+    private String priKeyFile;
+
+    /**
+     * 私钥key
+     */
+    private PrivateKey privateKey;
+
+    @PostConstruct
+    public void createRsaKey() throws Exception {
+        publicKey = RsaUtils.getPublicKey(pubKeyFile);
+        privateKey = RsaUtils.getPrivateKey(priKeyFile);
+    }
 
     /**
      * SECRET 是签名密钥，只生成一次即可，生成方法：
@@ -156,7 +186,9 @@ public class JwtTokenUtil {
         Date expirationDate = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder().setClaims(claims)
                 .setExpiration(expirationDate)
-                .signWith(getSecretKey())
+                //.signWith(getSecretKey())
+                //使用私钥加密
+                .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
 
@@ -174,7 +206,11 @@ public class JwtTokenUtil {
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
-            claims = Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();
+            claims = Jwts.parserBuilder()
+                    //.setSigningKey(getSecretKey())
+                    //使用公钥解密
+                    .setSigningKey(publicKey)
+                    .build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
             claims = null;
         }
