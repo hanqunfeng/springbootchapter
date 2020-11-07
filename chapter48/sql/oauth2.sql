@@ -4,19 +4,19 @@ CREATE TABLE `oauth_client_details` (
     `client_id` varchar(256) NOT NULL COMMENT '客户端的id',
     `resource_ids` varchar(256) DEFAULT NULL COMMENT '资源服务器的id，多个用，(逗号)隔开',
     `client_secret` varchar(256) DEFAULT NULL COMMENT '客户端的秘钥，需要PasswordEncoder加密',
-    `scope` varchar(256) DEFAULT NULL,
+    `scope` varchar(256) DEFAULT NULL COMMENT '客户端的访问范围，多个逗号分隔',
     `authorized_grant_types` varchar(256) DEFAULT NULL COMMENT '认证的方式，可选值 授权码模式:authorization_code,密码模式:password,刷新token: refresh_token, 隐式模式: implicit: 客户端模式: client_credentials。支持多个用逗号分隔',
-    `web_server_redirect_uri` varchar(256) DEFAULT NULL COMMENT '授权码模式认证成功跳转的地址。authorization_code和implicit需要该值进行校验，注册时填写',
+    `web_server_redirect_uri` varchar(256) DEFAULT NULL COMMENT '授权码模式认证成功跳转的地址。authorization_code和implicit需要该值进行校验，注册时填写，多个逗号分隔',
     `authorities` varchar(256) DEFAULT NULL,
     `access_token_validity` int(11) DEFAULT NULL COMMENT 'access_token的有效时间(秒),默认(60 * 60 * 12,12小时)',
     `refresh_token_validity` int(11) DEFAULT NULL COMMENT 'refresh_token有效期(秒)，默认(60 *60 * 24 * 30, 30天)',
-    `additional_information` varchar(4096) DEFAULT NULL COMMENT '值必须是json格式',
+    `additional_information` varchar(4096) DEFAULT NULL COMMENT '附加信息，值必须是json格式',
     `autoapprove` varchar(256) DEFAULT NULL COMMENT '默认false,适用于authorization_code模式,设置用户是否自动approval操作,设置true跳过用户确认授权操作页面，直接跳到redirect_uri',
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 # 密码要经过加密
-INSERT INTO `oauth_client_details` VALUES ('postman', NULL, '$2a$10$Owubqs9VaN.vmskZ2B0UTe0GmOMwgTmhGtlIFBjrfCz2glBqISHSu', 'any,all', 'authorization_code,refresh_token,implicit,password,client_credentials', 'http://localhost:8080/redirect', NULL, 42300, 2592000, NULL, 'any');
+INSERT INTO `oauth_client_details` VALUES ('postman', NULL, '$2a$10$Owubqs9VaN.vmskZ2B0UTe0GmOMwgTmhGtlIFBjrfCz2glBqISHSu', 'any,all', 'authorization_code,refresh_token,implicit,password,client_credentials', 'http://localhost:8080/redirect,http://localhost:8088/postman/login', NULL, 42300, 2592000, NULL, 'any');
 INSERT INTO `oauth_client_details` VALUES ('demo-client', NULL, '$2a$10$v/B9.6c9NUXFbJDHqc28he6VWeyJNOBOD1UI7bwBDfBZTwY4zzcda', 'any', 'authorization_code,refresh_token,password', 'http://localhost:8080/redirect', NULL, 42300, 2592000, NULL, '');
 
 
