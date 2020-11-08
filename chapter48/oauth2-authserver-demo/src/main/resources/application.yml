@@ -44,6 +44,10 @@ jwt:
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
   accessTokenValiditySeconds: 43200   # access_token过期时间 (秒) ,默认值12小时
   refreshTokenValiditySeconds: 2592000 # refresh_token过期时间 (秒) ,默认值30天
+  jksKeyFile: oauth2_key.jks
+  jksKeyPassword: 123456
+  jksKeyAlias: oauth2
+
 
 #oauth2的client信息是基于内存还是基于数据库，如果不配置，默认为基于内存
 oauth2:

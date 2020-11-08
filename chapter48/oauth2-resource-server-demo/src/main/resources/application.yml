@@ -13,3 +13,4 @@ jwt:
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
   #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # \u4F7F\u7528 BASE64 \u7F16\u7801
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # \u79D8\u94A5
+  publicKeyFile: oauth2_key.pub

@@ -26,6 +26,19 @@ public class JwtTokenProperties {
      */
     private Integer refreshTokenValiditySeconds;
 
+    /**
+     * jks证书文件路径
+     */
+    private String jksKeyFile;
+    /**
+     * jks证书密码
+     */
+    private String jksKeyPassword;
+    /**
+     * jks证书别名
+     */
+    private String jksKeyAlias;
+
 
 
 }

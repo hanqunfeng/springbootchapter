@@ -5,10 +5,12 @@ import com.example.oauth2authserverdemo.security.jwt.JwtTokenProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 /**
  * JwtTokenConfig配置类
@@ -35,8 +37,15 @@ public class JwtTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
-        accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+        //对称加密
+        //accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
+        //accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+
+        //非对称加密
+        KeyStoreKeyFactory keyStoreKeyFactory =
+                new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksKeyPassword().toCharArray());
+        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias()));
+
         return accessTokenConverter;
     }
 

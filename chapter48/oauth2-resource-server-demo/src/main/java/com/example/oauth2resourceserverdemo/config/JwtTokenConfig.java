@@ -39,8 +39,13 @@ public class JwtTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
-        accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+        //设置加密token的密码
+        //accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
+        //实际上资源服务器只需要设置验证token的密码
+        //accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+
+        //公钥解析jwt
+        accessTokenConverter.setVerifierKey(jwtTokenProperties.getPublicKeyStr());
         return accessTokenConverter;
     }
 
