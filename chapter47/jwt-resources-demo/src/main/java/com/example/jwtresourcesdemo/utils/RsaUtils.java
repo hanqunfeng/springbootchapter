@@ -1,4 +1,4 @@
-package com.example.jwtdemo.utils;
+package com.example.jwtresourcesdemo.utils;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

@@ -23,3 +23,6 @@ jwt:
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
   expiration: 3600000   # 过期时间 (毫秒)
   header: JWTHeaderName # 请求头信息
+  # 公钥私钥加解密
+  pubKeyFile: classpath:id_key_rsa.pub
+  priKeyFile: classpath:id_key_rsa
