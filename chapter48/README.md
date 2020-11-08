@@ -60,3 +60,15 @@ ps3Y1u9/nrBl1yK4+KEFAguUikbp
 Warning:
 JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore oauth2_key.jks -destkeystore oauth2_key.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
 ```
+这段就是公钥
+```shell script
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmVdbw3XtFamdasjItlko
+m8SyJiH0DnSUm1tqJDHY9orHA+0oa+VAlvxiHHBegKMX6FmCX3HAoVzHuAlWAZp0
+FyV0SUR4/tuOKOw/N7HbKGa/JZJSfaNdJAEobRxzd8woaLNlCRLelzDPhMy9kGtp
+x+Kc60smeo6XpC7RT25Mf5DRvKRJo4RGbPQNj18hWKZtY/TFZYySpa57eI9VOM5u
+fvWJkh3Jm5cOXHiHScmF4mdNATR3XQTHXD+TDu0rLgn7H4ap9uYDRTNVGVJ/JfYu
+aCrzszMFt4b+JNxz1UL42tTgbtKj8TxUrTRGTI/7KiwD5wjtpISSxlqoK1c0qgCh
+KQIDAQAB
+-----END PUBLIC KEY-----
+```
