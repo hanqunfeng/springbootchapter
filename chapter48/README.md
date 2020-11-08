@@ -60,7 +60,7 @@ ps3Y1u9/nrBl1yK4+KEFAguUikbp
 Warning:
 JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore oauth2_key.jks -destkeystore oauth2_key.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
 ```
-这段就是公钥
+这段就是公钥，保存到文件即可
 ```shell script
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmVdbw3XtFamdasjItlko
