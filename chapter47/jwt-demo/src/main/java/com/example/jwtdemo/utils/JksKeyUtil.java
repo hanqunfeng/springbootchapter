@@ -108,17 +108,17 @@ public class JksKeyUtil {
      * <h2>根据公钥文件获取PublicKey</h2>
      * Created by hanqf on 2020/11/9 16:07. <br>
      *
-     * @param publicKeyFilePaht
+     * @param publicKeyFilePath
      * @return java.security.PublicKey
      * @author hanqf
      */
-    public static PublicKey getPublicKey(String publicKeyFilePaht) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PublicKey getPublicKey(String publicKeyFilePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Resource resource;
-        if (publicKeyFilePaht.startsWith("classpath:")) {
-            publicKeyFilePaht = publicKeyFilePaht.replace("classpath:", "");
-            resource = new ClassPathResource(publicKeyFilePaht);
+        if (publicKeyFilePath.startsWith("classpath:")) {
+            publicKeyFilePath = publicKeyFilePath.replace("classpath:", "");
+            resource = new ClassPathResource(publicKeyFilePath);
         } else {
-            resource = new PathResource(Paths.get(publicKeyFilePaht));
+            resource = new PathResource(Paths.get(publicKeyFilePath));
         }
 
         try (InputStream inputStream = resource.getInputStream()) {
