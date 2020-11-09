@@ -116,7 +116,7 @@ function gencert() {
   # 创建证书
 	keytool -genkeypair -alias cas -keyalg RSA -keysize 2048 -validity 36500 -keypass changeit -storepass changeit -keystore ./etc/cas/cas.keystore -dname ${DNAME} -ext SAN=${CERT_SUBJ_ALT_NAMES}
 
-	# 导入证书
+	# 导出证书
 	keytool -exportcert -alias cas -storepass changeit -keystore ./etc/cas/cas.keystore -file ./etc/cas/cas.cer
 
   # 导入证书到jre

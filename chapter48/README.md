@@ -1,7 +1,10 @@
 
 ## 生成jks证书
 ```shell script
-$ keytool -genkeypair -alias oauth2 -keyalg RSA -keypass 123456 -keystore oauth2_key.jks -storepass 123456
+# 默认证书有效期3个月
+$ keytool -genkeypair -alias oauth2 -keyalg RSA -keysize 2048 -keypass 123456 -keystore oauth2_key.jks -storepass 123456
+# 指定证书有效期，这里设置有效期大约10年
+$ keytool -genkeypair -alias oauth2 -keyalg RSA -keysize 2048 -validity 36500 -keypass 123456 -keystore oauth2_key.jks -storepass 123456
 
 您的名字与姓氏是什么?
   [Unknown]:  han
@@ -80,4 +83,47 @@ fvWJkh3Jm5cOXHiHScmF4mdNATR3XQTHXD+TDu0rLgn7H4ap9uYDRTNVGVJ/JfYu
 aCrzszMFt4b+JNxz1UL42tTgbtKj8TxUrTRGTI/7KiwD5wjtpISSxlqoK1c0qgCh
 KQIDAQAB
 -----END PUBLIC KEY-----
+```
+
+## 查看密钥信息
+```shell script
+$ keytool -list -v -keystore oauth2_key.jks
+输入密钥库口令:  
+密钥库类型: PKCS12
+密钥库提供方: SUN
+
+您的密钥库包含 1 个条目
+
+别名: oauth2
+创建日期: 2020-11-9
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=han, OU=han, O=han, L=bj, ST=bj, C=zh
+发布者: CN=han, OU=han, O=han, L=bj, ST=bj, C=zh
+序列号: 67404efa
+有效期为 Sun Nov 08 20:42:43 CST 2020 至 Sat Feb 06 20:42:43 CST 2021
+证书指纹:
+         MD5:  3E:15:19:80:91:10:00:A8:63:A6:5E:19:5A:0E:A9:E5
+         SHA1: E8:BB:68:99:7E:33:6D:51:40:EF:C0:AC:91:A6:93:15:ED:FE:F8:3A
+         SHA256: CE:C7:C3:BF:BB:94:28:64:1B:EC:1C:F3:A9:DC:40:C5:53:AD:F2:27:01:83:8D:37:90:E0:EB:DB:C9:73:A5:5C
+签名算法名称: SHA256withRSA
+主体公共密钥算法: 2048 位 RSA 密钥
+版本: 3
+
+扩展: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: A3 3E C5 6F 29 4F 81 07   73 EE 7F B2 F1 31 90 42  .>.o)O..s....1.B
+0010: B0 F1 CD C2                                        ....
+]
+]
+
+
+
+*******************************************
+*******************************************
+
 ```
