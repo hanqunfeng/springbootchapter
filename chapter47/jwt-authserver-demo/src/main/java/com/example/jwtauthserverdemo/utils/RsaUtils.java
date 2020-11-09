@@ -85,10 +85,14 @@ public class RsaUtils {
         keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         // 获取公钥并写出
+        System.out.println(keyPair.getPublic().getAlgorithm()); //算法：RSA
+        System.out.println(keyPair.getPublic().getFormat());    //格式：X.509
         byte[] publicKeyBytes = keyPair.getPublic().getEncoded();
         publicKeyBytes = Base64.getEncoder().encode(publicKeyBytes);
         writeFile(publicKeyFilename, publicKeyBytes);
         // 获取私钥并写出
+        System.out.println(keyPair.getPrivate().getAlgorithm()); //算法：RSA
+        System.out.println(keyPair.getPrivate().getFormat());    //格式：PKCS#8
         byte[] privateKeyBytes = keyPair.getPrivate().getEncoded();
         privateKeyBytes = Base64.getEncoder().encode(privateKeyBytes);
         writeFile(privateKeyFilename, privateKeyBytes);
