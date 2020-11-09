@@ -30,6 +30,11 @@ public class JwtTokenProperties {
      * jks证书文件路径
      */
     private String jksKeyFile;
+    
+    /**
+     * jks证书密钥库密码
+    */
+    private String jksStorePassword;
     /**
      * jks证书密码
      */

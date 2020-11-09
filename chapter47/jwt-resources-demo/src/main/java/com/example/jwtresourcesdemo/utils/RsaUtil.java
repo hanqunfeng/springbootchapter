@@ -1,4 +1,4 @@
-package com.example.jwtdemo.utils;
+package com.example.jwtresourcesdemo.utils;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -19,7 +19,7 @@ import java.util.Base64;
  *
  * @author
  */
-public class RsaUtils {
+public class RsaUtil {
 
     private static final int DEFAULT_KEY_SIZE = 2048;
 

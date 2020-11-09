@@ -41,10 +41,10 @@ public class JwtTokenConfig {
         //accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
         //accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
 
-        //非对称加密
+        //非对称加密,jks证书
         KeyStoreKeyFactory keyStoreKeyFactory =
-                new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksKeyPassword().toCharArray());
-        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias()));
+                new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksStorePassword().toCharArray());
+        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias(),jwtTokenProperties.getJksKeyPassword().toCharArray()));
 
         return accessTokenConverter;
     }

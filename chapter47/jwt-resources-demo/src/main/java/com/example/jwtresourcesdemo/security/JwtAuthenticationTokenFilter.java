@@ -27,6 +27,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     JwtTokenUtil jwtTokenUtil;
 
     @Autowired
+    private JwtProperties jwtProperties;
+
+    @Autowired
     UserDetailsService userDetailsService;
 
 
@@ -36,7 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException, CustomException {
 
-        String jwtToken = request.getHeader(jwtTokenUtil.getHeader());
+        String jwtToken = request.getHeader(jwtProperties.getHeader());
         if (!StringUtils.isEmpty(jwtToken)) {
             String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 

@@ -1,22 +1,15 @@
 package com.example.jwtauthserverdemo.security;
 
 
-import com.example.jwtauthserverdemo.utils.RsaUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.crypto.SecretKey;
 import java.security.Key;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,49 +17,12 @@ import java.util.Map;
 /**
  * Jwt工具类
 */
-@Data
-@ConfigurationProperties(prefix = "jwt")
 @Component
 public class JwtTokenUtil {
 
-    /**
-     * 密钥
-     */
-    private String secret;
-    /**
-     * 过期时间，单位毫秒
-     */
-    private Long expiration;
-    /**
-     * 请求头参数名称
-     */
-    private String header;
 
-    /**
-     * 公钥文件路径
-    */
-    private String pubKeyFile;
-
-    /**
-     * 公钥key
-    */
-    private PublicKey publicKey;
-
-    /**
-     * 私钥文件路径
-     */
-    private String priKeyFile;
-
-    /**
-     * 私钥key
-     */
-    private PrivateKey privateKey;
-
-    @PostConstruct
-    public void createRsaKey() throws Exception {
-        publicKey = RsaUtils.getPublicKey(pubKeyFile);
-        privateKey = RsaUtils.getPrivateKey(priKeyFile);
-    }
+    @Autowired
+    private JwtProperties jwtProperties;
 
     /**
      * SECRET 是签名密钥，只生成一次即可，生成方法：
@@ -184,19 +140,18 @@ public class JwtTokenUtil {
      * @return 令牌
      */
     private String generateToken(Map<String, Object> claims) {
-        Date expirationDate = new Date(System.currentTimeMillis() + expiration);
+        Date expirationDate = new Date(System.currentTimeMillis() + jwtProperties.getExpiration());
         return Jwts.builder().setClaims(claims)
                 .setExpiration(expirationDate)
-                //.signWith(getSecretKey())
-                //使用私钥加密
-                .signWith(privateKey, SignatureAlgorithm.RS256)
+                //对称加密
+                //.signWith(jwtProperties.getSecretKey())
+                //使用RSA私钥加密
+                //.signWith(jwtProperties.rsaPrivateKey(), SignatureAlgorithm.RS256)
+                //使用JKS私钥加密
+                .signWith(jwtProperties.jksPrivateKey(), SignatureAlgorithm.RS256)
                 .compact();
     }
 
-    private SecretKey getSecretKey() {
-        byte[] encodeKey = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(encodeKey);
-    }
 
     /**
      * 从令牌中获取数据声明
@@ -208,9 +163,11 @@ public class JwtTokenUtil {
         Claims claims;
         try {
             claims = Jwts.parserBuilder()
-                    //.setSigningKey(getSecretKey())
-                    //使用公钥解密
-                    .setSigningKey(publicKey)
+                    //.setSigningKey(jwtProperties.getSecretKey())
+                    //使用RSA公钥解密
+                    //.setSigningKey(jwtProperties.rsaPublicKey())
+                    //使用JKS公钥解密
+                    .setSigningKey(jwtProperties.jksPublicKey())
                     .build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
             claims = null;
