@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //需要具备相应的角色才能访问
                 .antMatchers("/user/**").access("hasRole('admin') or hasRole('user')")
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
-        ;
+
         http.csrf().disable();
 
         http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);

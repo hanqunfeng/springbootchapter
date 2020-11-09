@@ -28,5 +28,10 @@ public class ResController {
         return OAuth2ResourceRestTemplateUtil.getRestTemplate().postForObject("http://localhost:8081/user",null, AjaxResponse.class);
     }
 
+    @RequestMapping("/rbac")
+    public AjaxResponse getRbac(){
+        return OAuth2ResourceRestTemplateUtil.getRestTemplate().getForObject("http://localhost:8081/rbac", AjaxResponse.class);
+    }
+
 
 }

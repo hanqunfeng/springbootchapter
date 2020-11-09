@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * <h1>RbasService</h1>
  * Created by hanqf on 2020/11/7 01:22.
- *
+ * <p>
  * 基于权限管理模型的认证
  */
 
@@ -33,7 +33,7 @@ public class CustomRbacService {
 
         boolean hasPerssion = false;
 
-        if (StringUtils.hasText(username)) {
+        if (StringUtils.hasText(username) && !"anonymousUser".equals(username)) {
             //根据用户名查询用户资源权限，这里应该访问数据库查询
             Set<String> uris = new HashSet<>();
             for (String uri : uris) {

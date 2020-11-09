@@ -23,6 +23,18 @@ Warning:
 JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore oauth2_key.jks -destkeystore oauth2_key.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
 ```
 
+### 按照警告执行如下命令
+```shell script
+$ keytool -importkeystore -srckeystore oauth2_key.jks -destkeystore oauth2_key.jks -deststoretype pkcs12
+输入源密钥库口令:  
+已成功导入别名 oauth2 的条目。
+已完成导入命令: 1 个条目成功导入, 0 个条目失败或取消
+
+Warning:
+已将 "oauth2_key.jks" 迁移到 Non JKS/JCEKS。将 JKS 密钥库作为 "oauth2_key.jks.old" 进行了备份。
+
+```
+
 ## 导出公钥
 ```shell script
 $ keytool -list -rfc --keystore oauth2_key.jks | openssl x509 -inform pem -pubkey
@@ -56,9 +68,6 @@ h7xCeqZXRg2z+wFHH4B1LMcfOHwpGWVJ46xgNqt3cx4IovVTcuXbcQGKgd2+/UuQ
 vugI0kWUCOH+CME9wbncIEJlDT1510GJIyt4EWyU3nio+vsLnlKz2jRP7QSE5dxY
 ps3Y1u9/nrBl1yK4+KEFAguUikbp
 -----END CERTIFICATE-----
-
-Warning:
-JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore oauth2_key.jks -destkeystore oauth2_key.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
 ```
 这段就是公钥，保存到文件即可
 ```shell script
