@@ -17,6 +17,8 @@ spring:
 
 #自定义jwt属性信息
 jwt:
+  # 密钥类型，可选值为jks,rsa,secret，默认secret
+  type: jks
   #  SECRET 是签名密钥，只生成一次即可，生成方法：
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
   #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # 使用 BASE64 编码

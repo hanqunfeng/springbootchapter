@@ -17,6 +17,8 @@ spring:
 
 #\u81EA\u5B9A\u4E49jwt\u5C5E\u6027\u4FE1\u606F
 jwt:
+  # \u5BC6\u94A5\u7C7B\u578B\uFF0C\u53EF\u9009\u503C\u4E3Ajks,rsa,secret\uFF0C\u9ED8\u8BA4secret
+  type: jks
   #  SECRET \u662F\u7B7E\u540D\u5BC6\u94A5\uFF0C\u53EA\u751F\u6210\u4E00\u6B21\u5373\u53EF\uFF0C\u751F\u6210\u65B9\u6CD5\uFF1A
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
   #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # \u4F7F\u7528 BASE64 \u7F16\u7801

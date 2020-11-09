@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * Jwt工具类
-*/
+ */
 @Component
 public class JwtTokenUtil {
 
@@ -141,15 +141,29 @@ public class JwtTokenUtil {
      */
     private String generateToken(Map<String, Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + jwtProperties.getExpiration());
-        return Jwts.builder().setClaims(claims)
-                .setExpiration(expirationDate)
-                //对称加密
-                //.signWith(jwtProperties.getSecretKey())
-                //使用RSA私钥加密
-                //.signWith(jwtProperties.rsaPrivateKey(), SignatureAlgorithm.RS256)
-                //使用JKS私钥加密
-                .signWith(jwtProperties.jksPrivateKey(), SignatureAlgorithm.RS256)
-                .compact();
+        String type = jwtProperties.getType();
+        switch (type) {
+            case "secret":
+                return Jwts.builder().setClaims(claims)
+                        .setExpiration(expirationDate)
+                        //对称加密
+                        .signWith(jwtProperties.getSecretKey())
+                        .compact();
+            case "rsa":
+                return Jwts.builder().setClaims(claims)
+                        .setExpiration(expirationDate)
+                        //使用RSA私钥加密
+                        .signWith(jwtProperties.rsaPrivateKey(), SignatureAlgorithm.RS256)
+                        .compact();
+            case "jks":
+                return Jwts.builder().setClaims(claims)
+                        .setExpiration(expirationDate)
+                        //使用JKS私钥加密
+                        .signWith(jwtProperties.jksPrivateKey(), SignatureAlgorithm.RS256)
+                        .compact();
+            default:
+                return null;
+        }
     }
 
 
@@ -162,13 +176,28 @@ public class JwtTokenUtil {
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
-            claims = Jwts.parserBuilder()
-                    //.setSigningKey(jwtProperties.getSecretKey())
-                    //使用RSA公钥解密
-                    //.setSigningKey(jwtProperties.rsaPublicKey())
-                    //使用JKS公钥解密
-                    .setSigningKey(jwtProperties.jksPublicKey())
-                    .build().parseClaimsJws(token).getBody();
+            String type = jwtProperties.getType();
+            switch (type) {
+                case "secret":
+                    claims = Jwts.parserBuilder()
+                            .setSigningKey(jwtProperties.getSecretKey())
+                            .build().parseClaimsJws(token).getBody();
+                    break;
+                case "rsa":
+                    claims = Jwts.parserBuilder()
+                            //使用RSA公钥解密
+                            .setSigningKey(jwtProperties.rsaPublicKey())
+                            .build().parseClaimsJws(token).getBody();
+                    break;
+                case "jks":
+                    claims = Jwts.parserBuilder()
+                            //使用JKS公钥解密
+                            .setSigningKey(jwtProperties.jksPublicKey())
+                            .build().parseClaimsJws(token).getBody();
+                    break;
+                default:
+                    claims = null;
+            }
         } catch (Exception e) {
             claims = null;
         }

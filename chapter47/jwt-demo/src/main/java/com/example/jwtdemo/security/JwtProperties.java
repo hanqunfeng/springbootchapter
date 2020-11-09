@@ -27,6 +27,11 @@ import java.security.PublicKey;
 public class JwtProperties {
 
     /**
+     * 密钥类型，可选值为jks,rsa,secret，默认secret
+    */
+    private String type = "secret";
+
+    /**
      * 密钥
      */
     private String secret;
