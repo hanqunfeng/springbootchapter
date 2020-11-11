@@ -1,13 +1,15 @@
-package com.example.oauth2resourceserverdemo.controller;
+package com.example.oauth2clientdemo2.controller;
 
-import com.example.oauth2resourceserverdemo.exception.AjaxResponse;
+
+import com.example.oauth2clientdemo2.exception.AjaxResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <h1>res</h1>
@@ -25,11 +27,9 @@ public class UserController {
         return AjaxResponse.success(principal);
     }
 
-    @RequestMapping("/userInfo")
-    public Map<String, String> userInfo(Principal principal){
-        Map<String,String> map = new HashMap<>();
-        map.put("username", principal.getName());
-        return map;
-    }
 
+    @GetMapping("/token")
+    public AjaxResponse token(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+        return AjaxResponse.success(authorizedClient.getAccessToken().getTokenValue());
+    }
 }

@@ -68,7 +68,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 //登录成功就可以访问
-                .antMatchers("/res/**").authenticated()
+                .antMatchers("/res/**","/userInfo/**").authenticated()
                 //需要具备相应的角色才能访问
                 .antMatchers("/user/**").access("hasRole('admin') or hasRole('user')")
                 //不需要登录就可以访问

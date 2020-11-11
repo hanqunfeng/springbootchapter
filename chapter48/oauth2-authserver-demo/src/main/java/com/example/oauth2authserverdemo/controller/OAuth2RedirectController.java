@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,5 +31,16 @@ public class OAuth2RedirectController {
     @RequestMapping("/redirect")
     public ResponseEntity<Map<String,Object>> redirect(@RequestParam Map<String, Object> data, HttpServletResponse response){
         return new ResponseEntity(data, HttpStatus.valueOf(response.getStatus()));
+    }
+
+    /**
+     * 直接登录成功后显示的内容
+    */
+    @RequestMapping("/")
+    public ResponseEntity<Map<String,Object>> index(Principal principal){
+        Map<String,Object> map = new HashMap<>();
+        map.put("message","This is a auth server");
+        map.put("principal",principal);
+        return new ResponseEntity(map, HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 
 #资源服务器端口号
 server:
-  port: 8088
+  port: 8089
   servlet:
     #不能配置为/，否则不能认证通过后不能重定向回客户端的访问地址
     #本机回调地址为http://localhost:8088/postman/login，需要配置到认证服务器客户端对应的redirectUris中
