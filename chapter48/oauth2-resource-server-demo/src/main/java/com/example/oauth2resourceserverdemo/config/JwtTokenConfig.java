@@ -1,6 +1,8 @@
 package com.example.oauth2resourceserverdemo.config;
 
 
+import com.example.oauth2resourceserverdemo.exception.CustomException;
+import com.example.oauth2resourceserverdemo.exception.CustomExceptionType;
 import com.example.oauth2resourceserverdemo.security.jwt.JwtTokenProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,13 +41,24 @@ public class JwtTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        //设置加密token的密码
-        //accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
-        //实际上资源服务器只需要设置验证token的密码
-        //accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
 
-        //公钥解析jwt
-        accessTokenConverter.setVerifierKey(jwtTokenProperties.getPublicKeyStr());
+        String type = jwtTokenProperties.getType();
+
+        switch (type){
+            case "secret":
+                //设置加密token的密码
+                accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
+                //实际上资源服务器只需要设置验证token的密码
+                accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+                break;
+            case "jks":
+                //公钥解析jwt
+                accessTokenConverter.setVerifierKey(jwtTokenProperties.getPublicKeyStr());
+                break;
+            default:
+                throw new CustomException(CustomExceptionType.SYSTEM_ERROR,"请正确配置密钥类型:secret,jks");
+        }
+
         return accessTokenConverter;
     }
 

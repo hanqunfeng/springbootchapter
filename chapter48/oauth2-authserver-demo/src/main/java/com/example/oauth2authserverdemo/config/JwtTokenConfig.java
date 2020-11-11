@@ -37,14 +37,26 @@ public class JwtTokenConfig {
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        //对称加密
-        //accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
-        //accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
 
-        //非对称加密,jks证书
-        KeyStoreKeyFactory keyStoreKeyFactory =
-                new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksStorePassword().toCharArray());
-        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias(),jwtTokenProperties.getJksKeyPassword().toCharArray()));
+        String type = jwtTokenProperties.getType();
+
+        switch (type){
+            case "secret":
+                //设置加密token的密码
+                accessTokenConverter.setSigningKey(jwtTokenProperties.getSecret());
+                //实际上资源服务器只需要设置验证token的密码
+                accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
+                break;
+            case "jks":
+                //公钥解析jwt
+                //非对称加密,jks证书
+                KeyStoreKeyFactory keyStoreKeyFactory =
+                        new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksStorePassword().toCharArray());
+                accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias(),jwtTokenProperties.getJksKeyPassword().toCharArray()));
+                break;
+            default:
+                throw new RuntimeException("请正确配置密钥类型:secret,jks");
+        }
 
         return accessTokenConverter;
     }

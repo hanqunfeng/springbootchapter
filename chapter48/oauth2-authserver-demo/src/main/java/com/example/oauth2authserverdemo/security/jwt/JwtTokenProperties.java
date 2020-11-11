@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProperties {
 
     /**
+     * 密钥类型:secret，jks
+     */
+    private String type;
+
+    /**
      * 密钥
      */
     private String secret;
