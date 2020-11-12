@@ -11,6 +11,10 @@ dependencies {
 	//为了使用datasource
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
+	//oauth2资源服务依赖
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+
 	//本项目使用了自定义授权页面，所以引入视图模板依赖和基于webjar的bootstrap，jquery
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	//webjars https://www.webjars.org
@@ -21,7 +25,8 @@ dependencies {
 
 
 	//JWK Set 依赖，资源服务器通过jwk-set-uri的方式验证token时使用
-	implementation 'com.nimbusds:nimbus-jose-jwt:9.1.2'
+	//引入spring-boot-starter-oauth2-resource-server依赖会自动加载该依赖的，本例认证服务器同时作为资源服务器
+//	implementation 'com.nimbusds:nimbus-jose-jwt:8.19'
 
 	//以下依赖非必要依赖，就是为了测试方便
 

@@ -12,14 +12,19 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * Spring-Security配置类,继承WebSecurityConfigurerAdapter
@@ -94,6 +99,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // session管理
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+
+
+        //认证服务器同时作为资源服务器，其目的是可以对外提供访问的资源，比如"客户端认证获取用户信息"
+        //鉴权时只支持Bearer Token的形式，不支持url后加参数access_token
+        http.oauth2ResourceServer().jwt() //开启oauth2资源认证
+                //默认情况下，权限是scope，而我们希望使用的是用户的角色，所以这里需要通过转换器进行处理
+                .jwtAuthenticationConverter(jwt -> { //通过自定义Converter来指定权限，Converter是函数接口，当前上下问参数为JWT对象
+                    Collection<SimpleGrantedAuthority> authorities =
+                            ((Collection<String>) jwt.getClaims()
+                                    .get("authorities")).stream() //获取JWT中的authorities
+                                    .map(SimpleGrantedAuthority::new)
+                                    .collect(Collectors.toSet());
+
+                    //如果希望保留scope的权限，可以取出scope数据然后合并到一起，这样因为不是以ROLE_开头，所以需要使用hasAuthority('SCOPE_any')的形式
+                    Collection<SimpleGrantedAuthority> scopes = ((Collection<String>) jwt.getClaims()
+                            .get("scope")).stream().map(scope -> new SimpleGrantedAuthority("SCOPE_" + scope))
+                            .collect(Collectors.toSet());
+                    //合并权限
+                    authorities.addAll(scopes);
+                    return new JwtAuthenticationToken(jwt, authorities);
+                });
     }
 
 

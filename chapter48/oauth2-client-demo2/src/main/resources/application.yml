@@ -34,7 +34,7 @@ spring:
           my-client: # 6 注册客户端名称
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
-            user-info-uri: http://localhost:8082/userInfo # 9 获取用户信息地址，必须配置，切该地址可用
+            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置，切该地址可用
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
 
 

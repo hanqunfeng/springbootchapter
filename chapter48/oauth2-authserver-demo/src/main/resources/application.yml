@@ -40,6 +40,14 @@ spring:
       content-type: text/html
     suffix: .html
 
+  #oauth2 配置
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:oauth2_key.pub
+
+
 #springsecurity 自定义属性
 security:
   #不需要验证的路径
