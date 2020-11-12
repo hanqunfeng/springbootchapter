@@ -83,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers(customSecurityProperties.getPermitAll()).permitAll() //不用身份认证可以访问
+                .mvcMatchers("/.well-known/jwks.json").permitAll() //开放JWK SET端点，提供给资源服务器访问获取公钥信息
                 .anyRequest().authenticated(); //其它的请求要求必须有身份认证
 
         http.csrf().disable();

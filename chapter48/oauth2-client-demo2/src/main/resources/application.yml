@@ -16,7 +16,7 @@ oauth2:
 
 spring:
   application:
-    name: oauth2-client-postman
+    name: oauth2-client-postman2
 
   #oauth2\u5BA2\u6237\u7AEF\u914D\u7F6E
   security:

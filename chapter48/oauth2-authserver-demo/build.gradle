@@ -12,7 +12,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
 
-	//以下依赖非本必要依赖，就是为了测试方便
+	//JWK Set 依赖，资源服务器通过jwk-set-uri的方式验证token时使用
+	implementation 'com.nimbusds:nimbus-jose-jwt:9.1.2'
+
+	//以下依赖非必要依赖，就是为了测试方便
 
 	//p6spy 输出打印 SQL
 	implementation 'p6spy:p6spy:3.9.1'
@@ -21,6 +24,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-ui:1.4.8'
 	//支持rest api
 	implementation 'org.springdoc:springdoc-openapi-data-rest:1.4.8'
+
+
 
 }
 
