@@ -69,7 +69,7 @@ jwt:
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
   accessTokenValiditySeconds: 43200   # access_token过期时间 (秒) ,默认值12小时
   refreshTokenValiditySeconds: 2592000 # refresh_token过期时间 (秒) ,默认值30天
-  jksKeyFile: oauth2_key.jks
+  jksKeyFile: classpath:oauth2_key.jks
   jksStorePassword: 123456
   jksKeyAlias: oauth2
   jksKeyPassword: 123456

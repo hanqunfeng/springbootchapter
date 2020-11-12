@@ -15,4 +15,4 @@ jwt:
   #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # 使用 BASE64 编码
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
   #jks公钥文件
-  publicKeyFile: oauth2_key.pub
+  publicKeyFile: classpath:oauth2_key.pub

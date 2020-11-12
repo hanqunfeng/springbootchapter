@@ -5,7 +5,6 @@ import com.example.oauth2authserverdemo.security.jwt.JwtTokenProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -51,7 +50,7 @@ public class JwtTokenConfig {
                 //公钥解析jwt
                 //非对称加密,jks证书
                 KeyStoreKeyFactory keyStoreKeyFactory =
-                        new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksStorePassword().toCharArray());
+                        new KeyStoreKeyFactory(jwtTokenProperties.getJksKeyFileResource(), jwtTokenProperties.getJksStorePassword().toCharArray());
                 accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias(),jwtTokenProperties.getJksKeyPassword().toCharArray()));
                 break;
             default:
