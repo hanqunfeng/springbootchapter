@@ -2,6 +2,8 @@ package com.example.oauth2resourceserverdemo2.controller;
 
 import com.example.oauth2resourceserverdemo2.exception.AjaxResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +30,13 @@ public class UserController {
     }
 
     @RequestMapping("/userInfo")
-    public Map<String, String> userInfo(Principal principal){
+    public Map<String, String> userInfo(Authentication authentication){
         Map<String,String> map = new HashMap<>();
-        map.put("username", principal.getName());
+        Object principal = authentication.getPrincipal();
+        if(principal instanceof Jwt){
+            map.put("username", ((Jwt) principal).getClaim("user_name"));
+        }
+
         return map;
     }
 

@@ -34,7 +34,7 @@ spring:
           my-client: # 6 \u6CE8\u518C\u5BA2\u6237\u7AEF\u540D\u79F0
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 \u8BA4\u8BC1\u5730\u5740
             token-uri: ${oauth2.server.url}/oauth/token # 8 \u83B7\u53D6token\u5730\u5740
-            user-info-uri: http://localhost:8081/userInfo # 9 \u83B7\u53D6\u7528\u6237\u4FE1\u606F\u5730\u5740\uFF0C\u5FC5\u987B\u914D\u7F6E\uFF0C\u5207\u8BE5\u5730\u5740\u53EF\u7528
+            user-info-uri: http://localhost:8082/userInfo # 9 \u83B7\u53D6\u7528\u6237\u4FE1\u606F\u5730\u5740\uFF0C\u5FC5\u987B\u914D\u7F6E\uFF0C\u5207\u8BE5\u5730\u5740\u53EF\u7528
             userNameAttribute: username # 10 \u6307\u5B9A\u7528\u6237\u4FE1\u606F\u4E2D\u54EA\u4E2A\u5C5E\u6027\u662F\u7528\u6237\u540D\u79F0
 
 

@@ -26,17 +26,17 @@ public class ResController {
     */
     @RequestMapping("/res1")
     public AjaxResponse getRes(){
-        return restTemplate.getForObject("http://localhost:8081/res/res1", AjaxResponse.class);
+        return restTemplate.getForObject("http://localhost:8082/res/res1", AjaxResponse.class);
     }
 
     @RequestMapping("/user")
     public AjaxResponse getUser(){
-        return restTemplate.postForObject("http://localhost:8081/user",null, AjaxResponse.class);
+        return restTemplate.postForObject("http://localhost:8082/user",null, AjaxResponse.class);
     }
 
     @RequestMapping("/rbac")
     public AjaxResponse getRbac(){
-        return restTemplate.getForObject("http://localhost:8081/rbac", AjaxResponse.class);
+        return restTemplate.getForObject("http://localhost:8082/rbac", AjaxResponse.class);
     }
 
 

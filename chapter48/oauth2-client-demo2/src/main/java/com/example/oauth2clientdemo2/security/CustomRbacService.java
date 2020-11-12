@@ -2,6 +2,7 @@ package com.example.oauth2clientdemo2.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -27,6 +28,8 @@ public class CustomRbacService {
         String username;
         if (principal instanceof UserDetails) {
             username = ((UserDetails) principal).getUsername();
+        }else if (principal instanceof DefaultOAuth2User) {
+            username = ((DefaultOAuth2User) principal).getName();
         } else {
             username = principal.toString();
         }

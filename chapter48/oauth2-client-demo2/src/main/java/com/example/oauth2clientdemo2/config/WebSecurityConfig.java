@@ -41,7 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //配置认证规则
         http.authorizeRequests()
-                .anyRequest().authenticated();
+                ////所有路径都需要登录
+                .antMatchers("/").authenticated()
+                ////需要具备相应的角色才能访问，这里返回的权限是scope，所以还是使用rbac验证吧
+                .antMatchers("/user/**","/user2/**").hasAuthority("SCOPE_any")
+                .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
 
         //开启oauth2登录认证
         http.oauth2Login()

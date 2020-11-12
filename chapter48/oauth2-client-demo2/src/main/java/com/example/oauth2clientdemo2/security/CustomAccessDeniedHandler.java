@@ -33,6 +33,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
+        e.printStackTrace();
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", new Date());
         body.put("status", 403);
