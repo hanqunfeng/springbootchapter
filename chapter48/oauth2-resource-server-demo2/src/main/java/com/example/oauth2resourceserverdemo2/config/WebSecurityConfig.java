@@ -62,6 +62,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                     .get("authorities")).stream() //获取JWT中的authorities
                                     .map(SimpleGrantedAuthority::new)
                                     .collect(Collectors.toSet());
+
+                    //如果希望保留scope的权限，可以取出scope数据然后合并到一起，这样因为不是以ROLE_开头，所以需要使用hasAuthority('SCOPE_any')的形式
+                    Collection<SimpleGrantedAuthority> scopes = ((Collection<String>) jwt.getClaims()
+                            .get("scope")).stream().map(scope -> new SimpleGrantedAuthority("SCOPE_" + scope))
+                            .collect(Collectors.toSet());
+                    //合并权限
+                    authorities.addAll(scopes);
                     return new JwtAuthenticationToken(jwt, authorities);
                 });
 

@@ -1,19 +1,19 @@
 
-#\u8D44\u6E90\u670D\u52A1\u5668\u7AEF\u53E3\u53F7
+#资源服务器端口号
 server:
   port: 8082
 spring:
   application:
     name: oauth2-resource-server2
 
-  #oauth2 \u914D\u7F6E
+  #oauth2 配置
   security:
     oauth2:
       resourceserver:
         jwt:
-          # \u516C\u94A5\u6587\u4EF6\u8DEF\u5F84
+          # 公钥文件路径
           # public-key-location: classpath:oauth2_key.pub
 
-          # \u8BA4\u8BC1\u670D\u52A1\u5668\u63D0\u4F9B\u7684\u5BC6\u94A5\u9A8C\u8BC1\u8DEF\u5F84
+          # 认证服务器提供的密钥验证路径
           jwk-set-uri: http://localhost:8080/.well-known/jwks.json
 

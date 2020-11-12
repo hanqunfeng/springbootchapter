@@ -20,10 +20,19 @@ import java.util.Map;
 public class UserController {
 
     //注意权限区分大小写
-    @PreAuthorize("hasRole('ROLE_admin') or hasRole('ROLE_user')")
+    @PreAuthorize("hasRole('admin') or hasRole('user')")
     //@PreAuthorize("#oauth2.hasScope('any')") //不支持oauth2表达式
     @RequestMapping(value = "/user")
     public AjaxResponse user(Principal principal) {
+        //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+        //在经OAuth2拦截后，是OAuth2Authentication
+        return AjaxResponse.success(principal);
+    }
+
+    //注意权限区分大小写
+    @PreAuthorize("hasAuthority('SCOPE_any')")
+    @RequestMapping(value = "/user2")
+    public AjaxResponse user2(Principal principal) {
         //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken
         //在经OAuth2拦截后，是OAuth2Authentication
         return AjaxResponse.success(principal);

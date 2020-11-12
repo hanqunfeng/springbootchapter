@@ -1,5 +1,5 @@
 
-#\u8D44\u6E90\u670D\u52A1\u5668\u7AEF\u53E3\u53F7
+#资源服务器端口号
 server:
   port: 8081
 spring:
@@ -7,12 +7,12 @@ spring:
     name: oauth2-resource-server
 
 
-#\u81EA\u5B9A\u4E49jwt\u5C5E\u6027\u4FE1\u606F
+#自定义jwt属性信息
 jwt:
-  type: jks # \u5BC6\u94A5\u7C7B\u578B:secret\uFF0Cjks
-  #  SECRET \u662F\u7B7E\u540D\u5BC6\u94A5\uFF0C\u53EA\u751F\u6210\u4E00\u6B21\u5373\u53EF\uFF0C\u751F\u6210\u65B9\u6CD5\uFF1A
+  type: jks # 密钥类型:secret，jks
+  #  SECRET 是签名密钥，只生成一次即可，生成方法：
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-  #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # \u4F7F\u7528 BASE64 \u7F16\u7801
-  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # \u79D8\u94A5
-  #jks\u516C\u94A5\u6587\u4EF6
+  #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # 使用 BASE64 编码
+  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
+  #jks公钥文件
   publicKeyFile: oauth2_key.pub
