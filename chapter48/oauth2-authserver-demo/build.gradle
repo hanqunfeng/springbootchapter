@@ -11,6 +11,14 @@ dependencies {
 	//为了使用datasource
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
+	//本项目使用了自定义授权页面，所以引入视图模板依赖和基于webjar的bootstrap，jquery
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//webjars https://www.webjars.org
+	implementation 'org.webjars:bootstrap:4.5.3'
+	implementation 'org.webjars.bower:jquery:3.5.1'
+	// 可以在html中去掉webjars的版本号，这样升级的时候直接修改上面引入的webjars中的版本号即可，页面中不需要修改
+	implementation 'org.webjars:webjars-locator:0.40'
+
 
 	//JWK Set 依赖，资源服务器通过jwk-set-uri的方式验证token时使用
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.1.2'

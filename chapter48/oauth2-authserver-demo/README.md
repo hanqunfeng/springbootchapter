@@ -9,12 +9,12 @@
 
 ## Oauth2提供的默认端点（endpoints）
 ```
-   /oauth/authorize：授权端点
-   /oauth/token：令牌端点
+   /oauth/authorize：授权端点 AuthorizationEndpoint 按照OAuth 2.0规范的授权实现
+   /oauth/token：令牌端点 TokenEndpoint 按照OAuth 2.0规范请求Token
    /oauth/confirm_access：用户确认授权提交端点
    /oauth/error：授权服务错误信息端点
-   /oauth/check_token：用于资源服务访问的令牌解析端点
-   /oauth/token_key：提供公有密匙的端点，如果使用JWT令牌的话
+   /oauth/check_token：用于资源服务访问的令牌解析端点 CheckTokenEndpoint 解码Client的Access Token用来检查和确认生成的Token
+   /oauth/token_key：提供公有密匙的端点，如果使用JWT令牌的话 TokenKeyEndpoint 提供JWT编码的Token
 ```
   
 

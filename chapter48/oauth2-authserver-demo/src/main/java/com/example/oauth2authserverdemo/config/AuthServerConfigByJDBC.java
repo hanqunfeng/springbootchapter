@@ -30,6 +30,12 @@ public class AuthServerConfigByJDBC extends AuthServerConfig {
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        //方式1 也可以自定义ClientDetailsService的实现类
+        //JdbcClientDetailsService detailsService = new JdbcClientDetailsService(dataSource);
+        //detailsService.setPasswordEncoder(passwordEncoder);
+        //clients.withClientDetails(detailsService);
+
+        //方式2 等价于方式1
         clients.jdbc(dataSource)
                 //指定密码的加密算法
                 .passwordEncoder(passwordEncoder);

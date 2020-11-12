@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>确认授权页面</title>
+    <META http-equiv="Pragma" content="no-cache">
+    <META http-equiv="Cache-Control" content="no-cache">
+    <META http-equiv="Expire" content="0">
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+<div class="container">
+    <section class="alert alert-warning">
+        <p>是否授权[ <span th:text="${session.authorizationRequest.clientId}">clientId</span> ]的访问您的资源：</p>
+        <div class="alert alert-info">
+
+            <form id='confirmationForm' name='confirmationForm' action="/oauth/authorize" method='post'>
+                <input id="user_oauth_approval" name='user_oauth_approval' value='true' type='hidden'/>
+                <!--授权访问领域-->
+                <span th:text="${'['+s+']'}"  th:each="s : ${scopeList}"/>
+                <input class="btn-success" id="authorize" name='authorize' value='授权' type='submit'/>
+                <input class="btn-primary" id="refuse" name='refuse' value='拒绝' type='button'/>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+
+<script type="text/javascript">
+    $(function(){
+        $("#refuse").click(function(){
+            $("#user_oauth_approval").val('false');
+            $("#confirmationForm").submit();
+        });
+    });
+
+</script>
+</html>
+

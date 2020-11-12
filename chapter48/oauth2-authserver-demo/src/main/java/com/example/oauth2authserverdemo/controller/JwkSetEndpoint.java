@@ -26,6 +26,7 @@ public class JwkSetEndpoint {
     @Autowired
     private JwtTokenProperties jwtTokenProperties;
 
+
     @GetMapping("/.well-known/jwks.json")
     @ResponseBody
     public Map<String, Object> getKey() {
@@ -36,6 +37,7 @@ public class JwkSetEndpoint {
         RSAKey key = new RSAKey.Builder(publicKey).build();
         return new JWKSet(key).toJSONObject();
     }
+
 }
 
 

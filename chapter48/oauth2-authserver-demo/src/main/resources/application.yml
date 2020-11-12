@@ -24,6 +24,22 @@ spring:
       max-lifetime: 1800000     #毫秒，默认30分钟
       maximum-pool-size: 10     #默认10
 
+  #资源国际化
+  messages:
+    basename: static/i18n/messages
+    encoding: utf-8
+
+  #thymeleaf
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    servlet:
+      content-type: text/html
+    suffix: .html
+
 #springsecurity 自定义属性
 security:
   #不需要验证的路径
