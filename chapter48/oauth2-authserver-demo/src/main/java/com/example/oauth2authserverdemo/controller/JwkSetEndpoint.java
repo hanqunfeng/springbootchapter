@@ -4,7 +4,6 @@ import com.example.oauth2authserverdemo.security.jwt.JwtTokenProperties;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +30,7 @@ public class JwkSetEndpoint {
     @ResponseBody
     public Map<String, Object> getKey() {
         KeyStoreKeyFactory keyStoreKeyFactory =
-                new KeyStoreKeyFactory(new ClassPathResource(jwtTokenProperties.getJksKeyFile()), jwtTokenProperties.getJksStorePassword().toCharArray());
+                new KeyStoreKeyFactory(jwtTokenProperties.getJksKeyFileResource(), jwtTokenProperties.getJksStorePassword().toCharArray());
         KeyPair keyPair = keyStoreKeyFactory.getKeyPair(jwtTokenProperties.getJksKeyAlias(), jwtTokenProperties.getJksKeyPassword().toCharArray());
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAKey key = new RSAKey.Builder(publicKey).build();
