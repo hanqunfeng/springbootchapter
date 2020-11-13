@@ -53,13 +53,11 @@ security:
   #不需要验证的路径
   permitAll:
     - /redirect/**
-#    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
   ignoring:
     - /webjars/**
     - '**/*.js'
     - '**/*.css'
-    - '/static/*'
-#    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
+    - /static/**
 
 #自定义jwt属性信息
 jwt:

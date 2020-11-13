@@ -4,38 +4,37 @@ server:
     session:
       timeout: 10s
       cookie:
-        http-only: true  # \u5982\u679C\u4E3Atrue\uFF0C\u5219\u6D4F\u89C8\u5668\u811A\u672C\u5C06\u65E0\u6CD5\u8BBF\u95EEcookie
-        secure: false # \u5982\u679C\u4E3Atrue\uFF0C\u5219\u4EC5\u901A\u8FC7HTTPS\u8FDE\u63A5\u53D1\u9001cookie\uFF0CHTTP\u65E0\u6CD5\u643A\u5E26cookie\u3002
-
+        http-only: true  # 如果为true，则浏览器脚本将无法访问cookie
+        secure: false # 如果为true，则仅通过HTTPS连接发送cookie，HTTP无法携带cookie。
 
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
   application:
-    name: jwt-resources-server
+    name: jwt-resources-server  #自定义jwt属性信息
 
-#\u81EA\u5B9A\u4E49jwt\u5C5E\u6027\u4FE1\u606F
 jwt:
-  # \u5BC6\u94A5\u7C7B\u578B\uFF0C\u53EF\u9009\u503C\u4E3Ajks,rsa,secret\uFF0C\u9ED8\u8BA4secret
+  # 密钥类型，可选值为jks,rsa,secret，默认secret
   type: jks
-  #  SECRET \u662F\u7B7E\u540D\u5BC6\u94A5\uFF0C\u53EA\u751F\u6210\u4E00\u6B21\u5373\u53EF\uFF0C\u751F\u6210\u65B9\u6CD5\uFF1A
+  #  SECRET 是签名密钥，只生成一次即可，生成方法：
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-  #  String secretString = Encoders.BASE64.encode(key.getEncoded()); # \u4F7F\u7528 BASE64 \u7F16\u7801
-  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # \u79D8\u94A5
-  expiration: 3600000   # \u8FC7\u671F\u65F6\u95F4 (\u6BEB\u79D2)
-  header: JWTHeaderName # \u8BF7\u6C42\u5934\u4FE1\u606F
-  # rsa\u516C\u94A5\u6587\u4EF6\u8DEF\u5F84
+  #  String secretString = Encoders.BASE64.encode(key.getEncoded());
+  # 使用 BASE64 编码
+  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # 秘钥
+  expiration: 3600000   # 过期时间 (毫秒)
+  header: JWTHeaderName # 请求头信息
+  # rsa公钥文件路径
   rsaPubKeyFile: classpath:id_key_rsa.pub
-  # jks\u516C\u94A5\u6587\u4EF6\u8DEF\u5F84
+  # jks公钥文件路径
   jksPubKeyFile: classpath:oauth2_key.pub
 
-#springsecurity \u81EA\u5B9A\u4E49\u5C5E\u6027
+#springsecurity 自定义属性
 security:
-  #\u4E0D\u9700\u8981\u9A8C\u8BC1\u7684\u8DEF\u5F84
+  #不需要验证的路径
   permitAll:
     - /login*
   ignoring:
-    - '*.js'
-    - '*.css'
-    - '/static/*'
+    - '**/*.js'
+    - - '**/*.css'
+    - - /static/**
