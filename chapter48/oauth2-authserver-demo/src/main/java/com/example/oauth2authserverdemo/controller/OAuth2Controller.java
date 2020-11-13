@@ -1,7 +1,9 @@
 package com.example.oauth2authserverdemo.controller;
 
+import com.sun.istack.internal.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
@@ -44,4 +46,21 @@ public class OAuth2Controller {
         model.put("scopeList", scopeList);
         return "oauth2/confirm_access";
     }
+
+    /**
+     * <h2>自定义登录</h2>
+     * Created by hanqf on 2020/11/13 10:13. <br>
+     *
+     * @return java.lang.String
+     * @author hanqf
+     */
+    @RequestMapping("/oauth/login")
+    public String login(Model model,@Nullable Boolean error) {
+
+        if(error!=null){
+            model.addAttribute("error",error);
+        }
+        return "oauth2/login";
+    }
+
 }

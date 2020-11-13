@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>登录</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+
+
+<div class="container" style="width: 320px;margin-top: 100px;">
+    <h3 align="center">OAuth2登录</h3>
+    <p class="alert-danger" style="text-align: center" th:if="${error}">用户名或密码错误!</p>
+    <p id="notice_null" class="alert-danger" style="text-align: center;">用户名或密码不能为空!</p>
+    <form th:action="@{/login}" method="post" onsubmit="return onsubmitCheck()">
+        <table class="table">
+            <tr>
+                <td>用户名:</td>
+                <td>
+                    <label><input type="text" id="username" name="username"/></label>
+                </td>
+            </tr>
+            <tr>
+                <td>密码:</td>
+                <td>
+                    <label><input type="password" id="password" name="password"/></label>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td>
+                    <button class="btn-success" type="submit">登录</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        //默认不显示错误提醒
+        $("#notice_null").hide();
+    });
+
+    function onsubmitCheck(){
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        if(username == "" || password == ""){
+            $("#notice_null").show();
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+</body>
+</html>
+

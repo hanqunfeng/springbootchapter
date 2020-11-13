@@ -43,8 +43,7 @@ public class JwtTokenProperties {
     public String getPublicKeyStr() {
         Resource resource;
         if (publicKeyFile.startsWith("classpath:")) {
-            publicKeyFile = publicKeyFile.replace("classpath:", "");
-            resource = new ClassPathResource(publicKeyFile);
+            resource = new ClassPathResource(publicKeyFile.replace("classpath:", ""));
         } else {
             resource = new PathResource(Paths.get(publicKeyFile));
         }

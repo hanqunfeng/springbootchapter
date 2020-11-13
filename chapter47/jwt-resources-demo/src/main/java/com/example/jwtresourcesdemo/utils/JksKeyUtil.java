@@ -71,8 +71,7 @@ public class JksKeyUtil {
         KeyStore store = null;
         Resource resource;
         if (filePath.startsWith("classpath:")) {
-            filePath = filePath.replace("classpath:", "");
-            resource = new ClassPathResource(filePath);
+            resource = new ClassPathResource(filePath.replace("classpath:", ""));
         } else {
             resource = new PathResource(Paths.get(filePath));
         }
@@ -115,8 +114,7 @@ public class JksKeyUtil {
     public static PublicKey getPublicKey(String publicKeyFilePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Resource resource;
         if (publicKeyFilePath.startsWith("classpath:")) {
-            publicKeyFilePath = publicKeyFilePath.replace("classpath:", "");
-            resource = new ClassPathResource(publicKeyFilePath);
+            resource = new ClassPathResource(publicKeyFilePath.replace("classpath:", ""));
         } else {
             resource = new PathResource(Paths.get(publicKeyFilePath));
         }

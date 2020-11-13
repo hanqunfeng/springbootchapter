@@ -61,8 +61,7 @@ public class JwtTokenProperties {
     public Resource getJksKeyFileResource(){
         Resource resource;
         if (jksKeyFile.startsWith("classpath:")) {
-            jksKeyFile = jksKeyFile.replace("classpath:", "");
-            resource = new ClassPathResource(jksKeyFile);
+            resource = new ClassPathResource(jksKeyFile.replace("classpath:", ""));
         } else {
             resource = new PathResource(Paths.get(jksKeyFile));
         }

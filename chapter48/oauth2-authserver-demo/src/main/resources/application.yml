@@ -55,8 +55,9 @@ security:
     - /redirect/**
 #    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
   ignoring:
-    - '*.js'
-    - '*.css'
+    - /webjars/**
+    - '**/*.js'
+    - '**/*.css'
     - '/static/*'
 #    - /oauth/** #没用，authorization_code和implicit一定会被拦截到登录页面
 
