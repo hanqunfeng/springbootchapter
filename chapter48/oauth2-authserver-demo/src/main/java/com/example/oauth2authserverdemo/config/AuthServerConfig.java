@@ -1,6 +1,7 @@
 package com.example.oauth2authserverdemo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,13 +63,22 @@ public abstract class AuthServerConfig extends AuthorizationServerConfigurerAdap
         enhancerList.add(jwtAccessTokenConverter);
         enhancerChain.setTokenEnhancers(enhancerList); //将自定义Enhancer加入EnhancerChain的delegates数组中
 
-        endpoints.tokenStore(jwtTokenStore)
+        endpoints
+                //设置tokenStore
+                .tokenStore(jwtTokenStore)
                 //支持 refresh_token 模式
                 .userDetailsService(userDetailsService)
                 //支持 password 模式
                 .authenticationManager(authenticationManager)
+                //token扩展属性
                 .tokenEnhancer(enhancerChain)
-                .accessTokenConverter(jwtAccessTokenConverter);
+                //设置token转换器
+                .accessTokenConverter(jwtAccessTokenConverter)
+                //设置每次通过refresh_token获取新的access_token时，是否重新生成一个新的refresh_token。
+                //默认true，不重新生成
+                //.reuseRefreshTokens(true)
+                //设置允许处理的请求类型
+                .allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
     }
 
 

@@ -47,7 +47,6 @@ public class JwtTokenConfig {
                 accessTokenConverter.setVerifierKey(jwtTokenProperties.getSecret());
                 break;
             case "jks":
-                //公钥解析jwt
                 //非对称加密,jks证书
                 KeyStoreKeyFactory keyStoreKeyFactory =
                         new KeyStoreKeyFactory(jwtTokenProperties.getJksKeyFileResource(), jwtTokenProperties.getJksStorePassword().toCharArray());
