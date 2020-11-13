@@ -3,8 +3,7 @@
 server:
   port: 8088
   servlet:
-    #不能配置为/，否则不能认证通过后不能重定向回客户端的访问地址
-    #本机回调地址为http://localhost:8088/postman/login，需要配置到认证服务器客户端对应的redirectUris中
+    #不能配置为/，否则认证通过后不能重定向回客户端的访问地址
     context-path: /postman
 
 
@@ -36,16 +35,56 @@ spring:
   security:
     oauth2:
       client:
-        registration:
+        registration: #支持多租户
+          # /postman/oauth2/authorization/my-client
           my-client: # 1 注册客户端名称，随意指定，但是要与provider的配置相一致
             client-id: postman # 2 客户端ID
             client-secret: postman # 3 客户端密码
             authorization-grant-type: authorization_code # 4 认证类型
-            redirect-uri: http://localhost:8088/postman/login/oauth2/code/my-client  # 5 回调地址，需要配置到数据表中，注意最后的路径是注册客户端名称
+            #默认重定向URI模板是{baseUrl}/login/oauth2/code/{registrationId}。
+            #registrationId是ClientRegistration的唯一标识符。
+            redirect-uri: http://localhost:8088/postman/login/oauth2/code/my-client  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
             scope: any #请求范围
+            client-name: 客户端1
+          # /postman/oauth2/authorization/my-client2
+          my-client2: # 1 注册客户端名称，随意指定，但是要与provider的配置相一致
+            client-id: postman # 2 客户端ID
+            client-secret: postman # 3 客户端密码
+            authorization-grant-type: authorization_code # 4 认证类型
+            redirect-uri: http://localhost:8088/postman/login/oauth2/code/my-client2  # 5 回调地址，需要配置到数据表中，默认写法，注意最后的路径是注册客户端名称
+            scope: any #请求范围
+            client-name: 客户端2
+
+          # CommonOAuth2Provider 中定义了google,facebook,github,okta的默认provider信息，所以这里不需要为其配置provider信息
+          # /postman/oauth2/authorization/google
+          # 重定向后：https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=xxxxxxxxx&scope=openid%20profile%20email&state=jO3PpuX2IzwOFemdd7FHBIHeeSPcxDwiP-mqDBTjdfw%3D&redirect_uri=http://localhost:8088/postman/login/oauth2/code/google&nonce=-sxhj2hjgrc7krSHSjL3qz_W90xPEX9nlP6SYzAfktY
+          google: # google帐号认证，跳转到google登录页面
+            client-id: xxxxxxxxx #  客户端ID
+            client-secret: xxxxxxx #  客户端密码
+            client-name: Google认证
+
+          # /postman/oauth2/authorization/facebook
+          # https://www.facebook.com/v2.8/dialog/oauth?response_type=code&client_id=xxxxxxxxx&scope=public_profile%20email&state=BVZM3OW2EUS82pbjJdpQfXvtXbFbMwaUe_lRMOt4BW4%3D&redirect_uri=http://localhost:8088/postman/login/oauth2/code/facebook
+          facebook: # facebook帐号登录，跳转到facebook登录页面
+            client-id: xxxxxxxxx #  客户端ID
+            client-secret: xxxxxxx #  客户端密码
+            client-name: Facebook认证
+
+          # /postman/oauth2/authorization/github
+          # 重定向后：https://github.com/login?client_id=xxxxxxxxx&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3Dxxxxxxxxx%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A8088%252Fpostman%252Flogin%252Foauth2%252Fcode%252Fgithub%26response_type%3Dcode%26scope%3Dread%253Auser%26state%3DmXtRWMQy8NaqVsFiie-NyYuy2z8OErrdq_VsuejDOPE%253D
+          # api文档：https://docs.github.com/cn/free-pro-team@latest/rest
+          github: # github帐号登录，跳转到github登录页面
+            client-id: xxxxxxxxx #  客户端ID
+            client-secret: xxxxxxx #  客户端密码
+            client-name: Github认证
 
         provider:
           my-client: # 6 注册客户端名称
+            authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
+            token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
+            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置，切该地址可用
+            userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
+          my-client2: # 6 注册客户端名称
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
             user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置，切该地址可用

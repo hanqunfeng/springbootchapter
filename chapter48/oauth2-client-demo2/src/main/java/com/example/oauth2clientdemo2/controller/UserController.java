@@ -71,6 +71,13 @@ public class UserController {
         return AjaxResponse.success(authorities);
     }
 
+    @RequestMapping(value = "/user5")
+    public AjaxResponse user5(Principal principal) {
+        //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+        //在经OAuth2拦截后，是OAuth2Authentication
+        return AjaxResponse.success(principal);
+    }
+
 
     @GetMapping("/token")
     public AjaxResponse token(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
