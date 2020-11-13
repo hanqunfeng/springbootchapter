@@ -11,6 +11,15 @@ dependencies {
 	//p6spy 输出打印 SQL
 	implementation 'p6spy:p6spy:3.9.1'
 
+
+	//本项目使用了自定义login页面，所以引入视图模板依赖和基于webjar的bootstrap，jquery
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//webjars https://www.webjars.org
+	implementation 'org.webjars:bootstrap:4.5.3'
+	implementation 'org.webjars.bower:jquery:3.5.1'
+	// 可以在html中去掉webjars的版本号，这样升级的时候直接修改上面引入的webjars中的版本号即可，页面中不需要修改
+	implementation 'org.webjars:webjars-locator:0.40'
+
 }
 
 

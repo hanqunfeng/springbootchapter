@@ -13,6 +13,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,6 +49,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
+    /**
+     * 指定不拦截的路径规则
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //设置不需要拦截的路径，也就是不需要认证的路径
+        web.ignoring().antMatchers("/webjars/**");
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //logout跳转到认证服务器的logout
@@ -55,15 +65,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //配置认证规则
         http.authorizeRequests()
+                .mvcMatchers("/oauth/login").permitAll()
                 ////所有路径都需要登录
                 .antMatchers("/").authenticated()
                 ////需要具备相应的角色才能访问，这里返回的权限是scope，所以还是使用rbac验证吧
-                .antMatchers("/user/**","/user2/**").hasAuthority("SCOPE_any")
+                .antMatchers("/user/**", "/user2/**").hasAuthority("SCOPE_any")
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
 
         //开启oauth2登录认证
         http.oauth2Login()
-                .and().oauth2Client()
+                //自定义登录页面
+                .loginPage("/oauth/login");
+
+        //开启基于oauth2的客户端信息
+        http.oauth2Client()
                 //客户端信息基于数据库，基于内存去掉下面配置即可
                 .authorizedClientService(oAuth2AuthorizedClientService);
 
@@ -75,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 因为使用了配置文件进行客户端配置，所以这里就不需要创建基于内存的ClientRegistrationRepository了
-    */
+     */
     //@Bean
     //public ClientRegistrationRepository clientRegistrationRepository() {
     //    ClientRegistration registration = ClientRegistration.withRegistrationId("my-client")
@@ -96,7 +111,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 基于数据库的客户端信息配置，认证数据会自动创建到数据表中
-    */
+     */
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService(JdbcOperations jdbcOperations, ClientRegistrationRepository clientRegistrationRepository) {
         JdbcOAuth2AuthorizedClientService authorizedClientService =
@@ -122,10 +137,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 String principalName = auth.getName();
                 OAuth2AuthorizedClient client =
                         clientService.loadAuthorizedClient(clientRegistrationId, principalName); //3 OAuth2AuthorizedClientService可获得用户的OAuth2AuthorizedClient
-                if(client==null){
+                if (client == null) {
                     //如果客户端信息使用的是基于内存的InMemoryOAuth2AuthorizedClientService，则重启服务器就会失效，需要重新登录才能恢复，
                     // 建议使用基于数据库的JdbcOAuth2AuthorizedClientService，本例使用的就是JdbcOAuth2AuthorizedClientService
-                    throw new CustomException(HttpStatus.NOT_ACCEPTABLE,"用户状态异常，请重新登录");
+                    throw new CustomException(HttpStatus.NOT_ACCEPTABLE, "用户状态异常，请重新登录");
                 }
                 String accessToken = client.getAccessToken().getTokenValue(); //4 OAuth2AuthorizedClient可获得用户Access Token
                 request.getHeaders().add("Authorization", "Bearer " + accessToken); //5 将Access Token通过头部的Bearer Token中访问Resource Server
