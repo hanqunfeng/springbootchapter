@@ -95,7 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
-     * 基于数据库的客户端信息配置
+     * 基于数据库的客户端信息配置，认证数据会自动创建到数据表中
     */
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService(JdbcOperations jdbcOperations, ClientRegistrationRepository clientRegistrationRepository) {
