@@ -36,5 +36,5 @@ security:
     - /login*
   ignoring:
     - '**/*.js'
-    - - '**/*.css'
-    - - /static/**
+    - '**/*.css'
+    - /static/**
