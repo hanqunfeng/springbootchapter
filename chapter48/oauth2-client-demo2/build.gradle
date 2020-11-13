@@ -2,6 +2,15 @@
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+
+	//mysql
+	runtimeOnly 'mysql:mysql-connector-java'
+	//为了使用datasource
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+	//p6spy 输出打印 SQL
+	implementation 'p6spy:p6spy:3.9.1'
+
 }
 
 

@@ -1,5 +1,5 @@
 -- oauth2中规定的数据表,需要手动创建,一般项目中提供服务接口插入,参数由用户定义,在请求时会自动查询服务器中对应的参数数据匹配认证
-
+# 客户端注册信息表
 CREATE TABLE `oauth_client_details` (
     `client_id` varchar(256) NOT NULL COMMENT '客户端的id',
     `resource_ids` varchar(256) DEFAULT NULL COMMENT '资源服务器的id，多个用，(逗号)隔开',
@@ -47,3 +47,19 @@ INSERT INTO `oauth_client_details` VALUES ('demo-client', NULL, '$2a$10$v/B9.6c9
 #
 # additional_information：值必须是json格式
 # autoapprove：默认false,适用于authorization_code模式,设置用户是否自动approval操作,设置true跳过用户确认授权操作页面，直接跳到redirect_uri
+
+# 客户端认证信息表
+CREATE TABLE `oauth2_authorized_client` (
+    `client_registration_id` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT '客户端注册Id',
+    `principal_name` varchar(200) COLLATE utf8mb4_bin NOT NULL COMMENT '登录用户名称',
+    `access_token_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '验证类型，这里是bear',
+    `access_token_value` blob DEFAULT NULL COMMENT 'access_token的值',
+    `access_token_issued_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'access_token的创建时间',
+    `access_token_expires_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'access_token的过期时间',
+    `access_token_scopes` varchar(1000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '授权范围',
+    `refresh_token_value` blob DEFAULT NULL COMMENT 'refresh_token的值',
+    `refresh_token_issued_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'refresh_token创建时间',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '数据创建时间',
+    `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '数据最后更新时间',
+    PRIMARY KEY (`client_registration_id`,`principal_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

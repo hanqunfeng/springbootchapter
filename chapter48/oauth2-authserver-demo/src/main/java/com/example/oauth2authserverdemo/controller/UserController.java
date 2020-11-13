@@ -17,11 +17,14 @@ import java.util.Map;
 public class UserController {
 
     @RequestMapping("/userInfo")
-    public Map<String, String> userInfo(Authentication authentication){
-        Map<String,String> map = new HashMap<>();
+    public Map<String, Object> userInfo(Authentication authentication){
+        Map<String,Object> map = new HashMap<>();
         Object principal = authentication.getPrincipal();
         if(principal instanceof Jwt){
             map.put("username", ((Jwt) principal).getClaim("user_name"));
+
+            //客户端获取用户信息时，将附加信息一块返回给客户端
+            map.putAll(((Jwt) principal).getClaims());
         }
 
         return map;

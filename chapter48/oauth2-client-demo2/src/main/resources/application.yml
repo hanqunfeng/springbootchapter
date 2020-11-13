@@ -18,7 +18,21 @@ spring:
   application:
     name: oauth2-client-postman2
 
-  #oauth2客户端配置
+  #数据源配置
+  datasource:
+    #    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    url: jdbc:p6spy:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    hikari:
+      connection-timeout: 30000 #毫秒，默认30秒
+      idle-timeout: 600000      #毫秒，默认10分钟
+      max-lifetime: 1800000     #毫秒，默认30分钟
+      maximum-pool-size: 10     #默认10
+
+  #oauth2客户端配置，默认基于内存，如果基于数据库，需要在config配置类中加入
   security:
     oauth2:
       client:

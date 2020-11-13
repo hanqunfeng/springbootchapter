@@ -38,12 +38,16 @@ public class UserController {
         return AjaxResponse.success(principal);
     }
 
+    /**
+     * 获取用户的claim信息
+    */
     @RequestMapping("/userInfo")
-    public Map<String, String> userInfo(Authentication authentication){
-        Map<String,String> map = new HashMap<>();
+    public Map<String, Object> userInfo(Authentication authentication){
+        Map<String,Object> map = new HashMap<>();
         Object principal = authentication.getPrincipal();
         if(principal instanceof Jwt){
             map.put("username", ((Jwt) principal).getClaim("user_name"));
+            map.putAll(((Jwt) principal).getClaims());
         }
 
         return map;

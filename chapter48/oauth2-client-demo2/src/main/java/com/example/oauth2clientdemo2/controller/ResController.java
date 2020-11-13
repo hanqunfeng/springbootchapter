@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 /**
  * <h1>获取资源服务器数据</h1>
  * Created by hanqf on 2020/11/7 22:47.
@@ -37,6 +39,11 @@ public class ResController {
     @RequestMapping("/rbac")
     public AjaxResponse getRbac(){
         return restTemplate.getForObject("http://localhost:8082/rbac", AjaxResponse.class);
+    }
+
+    @RequestMapping("/userInfo")
+    public Map<String, Object> getuserInfo(){
+        return restTemplate.getForObject("http://localhost:8082/userInfo", Map.class);
     }
 
 

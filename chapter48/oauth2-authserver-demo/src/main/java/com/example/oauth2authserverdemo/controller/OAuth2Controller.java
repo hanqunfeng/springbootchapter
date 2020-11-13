@@ -1,7 +1,6 @@
 package com.example.oauth2authserverdemo.controller;
 
 import com.sun.istack.internal.Nullable;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import java.util.Map;
  * <h1></h1>
  * Created by hanqf on 2020/11/12 16:13.
  */
-@Slf4j
 @Controller
 @SessionAttributes({"authorizationRequest"})
 public class OAuth2Controller {

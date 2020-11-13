@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/oauth/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/")
+                //.defaultSuccessUrl("/")
                 .failureForwardUrl("/oauth/login?error=true")
                 .permitAll(); //登记界面，默认是permitAll
 
