@@ -11,7 +11,7 @@ CREATE TABLE `oauth_client_details` (
     `access_token_validity` int(11) DEFAULT NULL COMMENT 'access_token的有效时间(秒),默认(60 * 60 * 12,12小时)',
     `refresh_token_validity` int(11) DEFAULT NULL COMMENT 'refresh_token有效期(秒)，默认(60 *60 * 24 * 30, 30天)',
     `additional_information` varchar(4096) DEFAULT NULL COMMENT '附加信息，值必须是json格式',
-    `autoapprove` varchar(256) DEFAULT NULL COMMENT '默认false,适用于authorization_code模式,设置用户是否自动approval操作,设置true跳过用户确认授权操作页面，直接跳到redirect_uri',
+    `autoapprove` varchar(256) DEFAULT NULL COMMENT '默认false,适用于authorization_code模式,设置用户是否自动approval操作,设置true跳过用户确认授权操作页面，直接跳到redirect_uri，也可以这只scope中设置的值，表示只有这个scope会跳过授权页面，多个scope逗号分隔',
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
