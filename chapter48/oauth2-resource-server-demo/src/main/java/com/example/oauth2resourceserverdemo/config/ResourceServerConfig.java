@@ -39,7 +39,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources.tokenStore(jwtTokenStore)
+        resources
+                //指定资源id
+                .resourceId("demo-resource-id")
+                //指定tokenStore
+                .tokenStore(jwtTokenStore)
                 //token无效或过期时的处理方式
                 .authenticationEntryPoint(customAuthExceptionEntryPoint)
                 //没有访问权限时的处理方式
