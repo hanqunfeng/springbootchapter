@@ -50,11 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**", "/v3/api-docs**").permitAll()
                 //其它路径需要根据指定的方法判断是否有权限访问，基于权限管理模型认证
                 .anyRequest().access("@rbacService.hasPerssion(request,authentication)");
-        ;
 
 
         //鉴权时只支持Bearer Token的形式，不支持url后加参数access_token
-        http.oauth2ResourceServer().jwt() //开启oauth2资源认证
+        http.oauth2ResourceServer()//开启oauth2资源认证
+                .jwt() //token为jwt
                 //默认情况下，权限是scope，而我们希望使用的是用户的角色，所以这里需要通过转换器进行处理
                 .jwtAuthenticationConverter(jwt -> { //通过自定义Converter来指定权限，Converter是函数接口，当前上下问参数为JWT对象
                     Collection<SimpleGrantedAuthority> authorities =
