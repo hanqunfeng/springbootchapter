@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -267,6 +268,7 @@ public class FileAndDirUtil {
         try (Stream<String> stringStream = FileAndDirUtil.readFileToStream("/Users/hanqf/Desktop/1.html")) {
             FileAndDirUtil.writerFileByStreamString("/Users/hanqf/Desktop/2.html", stringStream);
         }
+        Supplier<FileAndDirUtil> aNew = FileAndDirUtil::new;
 
 
     }

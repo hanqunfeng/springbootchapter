@@ -5,6 +5,15 @@ import java.util.function.*;
 /**
  * <h1>Lambda异常处理工具类</h1>
  * 参考：https://gitee.com/Robot-L/LambdaUtil
+ * <p>
+ * 函数接口主要在java.util.function包下，主要分成下面几类：
+ * 参考：https://blog.csdn.net/wiselyman/article/details/105731779
+ * <p>
+ * Predicate：有输入，输出布尔值的函数；
+ * Function：有输入有输出的函数；
+ * Consumer：有输入无输出的函数；
+ * Supplier：无输入有输出的函数；
+ * Operator：输入输出为相同类型的函数；
  */
 public final class LambdaExceptionUtil {
 
