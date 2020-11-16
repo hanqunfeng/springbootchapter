@@ -4,7 +4,7 @@
  */
 buildscript {
 	ext {
-		//一下springboot版本全部测试通过
+		//以下springboot版本全部测试通过
 		//springBootVersion = '2.3.4.RELEASE'
 		//springBootVersion = '2.3.6.RELEASE'
 		springBootVersion = '2.4.0'
