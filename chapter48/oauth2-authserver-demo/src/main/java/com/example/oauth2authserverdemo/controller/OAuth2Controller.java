@@ -58,7 +58,7 @@ public class OAuth2Controller {
         String queryString = request.getQueryString();
 
         //从客户端logout后，第一次重新登录会不成功，这里加一个处理逻辑，如果发现其queryString的值为logout就重定向到首页
-        //暂时不清楚客户端登出后该如何设置才能直接重新登录客户端
+        //暂时不清楚客户端登出后该如何设置才能直接重新登录客户端，可以在认证服务器首页增加客户端入口
         if("logout".equals(queryString)){
             return "redirect:/";
         }
