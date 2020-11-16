@@ -50,8 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
+     * 为了测试方便，这里使用内存用户模型，真实系统请使用基于RBAC的权限模型
      * 用户策略设置，这里使用内存用户策略，自定义策略需要实现UserDetailsService接口
-     * 因为是jwt服务器认证，所以这里密码没用
      */
     @Override
     @Bean

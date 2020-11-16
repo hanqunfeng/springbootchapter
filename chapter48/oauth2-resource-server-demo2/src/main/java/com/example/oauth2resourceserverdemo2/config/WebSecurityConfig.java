@@ -73,7 +73,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 });
 
         http.exceptionHandling()
+                //access_token无效或过期时的处理方式
                 .authenticationEntryPoint(customAuthExceptionEntryPoint)
+                //access_token认证后没有对应的权限时的处理方式
                 .accessDeniedHandler(customAccessDeniedHandler);
     }
 

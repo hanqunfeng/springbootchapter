@@ -55,8 +55,8 @@ security:
     - /redirect/**
   ignoring:
     - /webjars/**
-    - '**/*.js'
-    - '**/*.css'
+    - /**/*.js
+    - /**/*.css
     - /static/**
 
 #自定义jwt属性信息

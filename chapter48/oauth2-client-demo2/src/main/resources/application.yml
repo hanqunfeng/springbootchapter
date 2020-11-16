@@ -47,7 +47,7 @@ spring:
       max-lifetime: 1800000     #毫秒，默认30分钟
       maximum-pool-size: 10     #默认10
 
-  #oauth2客户端配置，默认基于内存，如果基于数据库，需要在config配置类中加入
+  #oauth2客户端配置，默认基于内存，如果基于数据库，需要在config配置类中进行相应的配置
   security:
     oauth2:
       client:
@@ -98,12 +98,12 @@ spring:
           my-client: # 6 注册客户端名称
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
-            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置，切该地址可用
+            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
           my-client2: # 6 注册客户端名称
             authorization-uri: ${oauth2.server.url}/oauth/authorize # 7 认证地址
             token-uri: ${oauth2.server.url}/oauth/token # 8 获取token地址
-            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置，切该地址可用
+            user-info-uri: http://localhost:8080/userInfo # 9 获取用户信息地址，必须配置
             userNameAttribute: username # 10 指定用户信息中哪个属性是用户名称
 
 

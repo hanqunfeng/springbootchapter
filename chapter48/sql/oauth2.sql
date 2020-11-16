@@ -15,7 +15,7 @@ CREATE TABLE `oauth_client_details` (
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-# 密码要经过加密
+# 初始化数据，密码要经过PasswordEncoder加密
 INSERT INTO `oauth_client_details` VALUES ('postman', NULL, '$2a$10$Owubqs9VaN.vmskZ2B0UTe0GmOMwgTmhGtlIFBjrfCz2glBqISHSu', 'any,all', 'authorization_code,refresh_token,implicit,password,client_credentials', 'http://localhost:8080/redirect,http://localhost:8088/postman/login', NULL, 42300, 2592000, NULL, 'any');
 INSERT INTO `oauth_client_details` VALUES ('demo-client', NULL, '$2a$10$v/B9.6c9NUXFbJDHqc28he6VWeyJNOBOD1UI7bwBDfBZTwY4zzcda', 'any', 'authorization_code,refresh_token,password', 'http://localhost:8080/redirect', NULL, 42300, 2592000, NULL, '');
 

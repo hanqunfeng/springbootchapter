@@ -40,9 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private String oauth2_server_logout;
 
 
-    //@Autowired
-    //private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
