@@ -53,7 +53,14 @@ public class OAuth2Controller {
      * @author hanqf
      */
     @RequestMapping("/oauth/login")
-    public String login(Model model,@Nullable Boolean error) {
+    public String login(Model model,@Nullable Boolean error,HttpServletRequest request) {
+
+        String queryString = request.getQueryString();
+
+        //从客户端logout后，第一次重新登录会不成功，这里加一个处理逻辑，如果发现其queryString的值为logout就重定向到首页
+        if("logout".equals(queryString)){
+            return "redirect:/";
+        }
 
         if(error!=null){
             model.addAttribute("error",error);
