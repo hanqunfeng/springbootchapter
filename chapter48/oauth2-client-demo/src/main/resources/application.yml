@@ -29,5 +29,12 @@ security:
       auto-approve-scopes: any
     resource:
       jwt:
-        #获取jwt密钥的地址
+        #通过认证服务器获取jwt密钥的地址
         key-uri: ${oauth2.server.url}/oauth/token_key
+#        #对称密钥
+#        key-value: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ==
+#        #jks密钥
+#        key-store: classpath:xxxx.jsk
+#        key-store-password: 123456
+#        key-alias: oauth2
+#        key-password: 123456
