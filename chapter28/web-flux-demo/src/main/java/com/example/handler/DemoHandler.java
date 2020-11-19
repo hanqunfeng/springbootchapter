@@ -1,6 +1,7 @@
 package com.example.handler;
 
 import com.example.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -33,6 +34,10 @@ public class DemoHandler {
     }
 
     public Mono<ServerResponse> user(ServerRequest request) {
+        //接收请求参数
+        //request.queryParam("name");
+
+        //接收请求路径参数
         String name = request.pathVariable("name");
         User user = new User();
         user.setName(name);
@@ -40,6 +45,15 @@ public class DemoHandler {
         return ServerResponse.ok().contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
                 .body(BodyInserters.fromValue(user));
 
+    }
+
+    public Mono<ServerResponse> userObject(ServerRequest request) {
+        //接收请求body数据
+        Mono<User> userMono = request.bodyToMono(User.class);
+        return userMono.flatMap(user -> ServerResponse
+                .status(HttpStatus.CREATED)
+                .body(Mono.just(user),User.class)
+        );
     }
 
     public Mono<ServerResponse> userAll(ServerRequest request) {

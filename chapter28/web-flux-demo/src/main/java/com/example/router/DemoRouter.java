@@ -29,6 +29,7 @@ public class DemoRouter {
         return RouterFunctions.route(RequestPredicates.GET("/hello").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), demoHandler::hello)
                 .andRoute(RequestPredicates.GET("/index").and(RequestPredicates.accept(MediaType.TEXT_PLAIN)), demoHandler::index)
                 .andRoute(RequestPredicates.GET("/username/{name}").and(RequestPredicates.accept(new MediaType("application", "json", StandardCharsets.UTF_8))), demoHandler::user)
+                .andRoute(RequestPredicates.POST("/user").and(RequestPredicates.accept(new MediaType("application", "json", StandardCharsets.UTF_8))), demoHandler::userObject)
                 .andRoute(RequestPredicates.GET("/ua").and(RequestPredicates.accept(new MediaType("application", "json", StandardCharsets.UTF_8))), demoHandler::userAll)
                 ;
     }

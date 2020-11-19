@@ -1,7 +1,7 @@
 package com.example.mongo.dao;
 
 import com.example.mongo.model.MongoUser;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 /**
@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
  */
 
 
-public interface MongoUserRepository extends ReactiveCrudRepository<MongoUser, String> {
+public interface MongoUserRepository extends ReactiveMongoRepository<MongoUser, String> {
 
     Mono<MongoUser> findByUserName(String userName);
 

@@ -2,11 +2,14 @@ package com.example;
 
 import com.example.model.User;
 import com.example.mongo.model.MongoUser;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -22,36 +25,63 @@ public class TestMain {
 
     private static final Mono<ClientResponse> HELLO = CLIENT.get()
             .uri("/hello")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(MediaType.TEXT_PLAIN)
-            .exchange();
+            .exchange(); //exchange方法不推荐使用了，推荐使用retrieve方法
     private static final Mono<ClientResponse> INDEX = CLIENT.get()
             .uri("/index")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
     private static final Mono<ClientResponse> DEMO = CLIENT.get()
             .uri("/demo/100")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
     private static final Mono<ClientResponse> USER = CLIENT.get()
             .uri("/user/1")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
             .exchange();
     private static final Mono<ClientResponse> USER_ALL = CLIENT.get()
             .uri("/users")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
     private static final Mono<ClientResponse> USERNAME = CLIENT.get()
             .uri("/username/张三")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8))
             .exchange();
     private static final Mono<ClientResponse> UA = CLIENT.get()
             .uri("/ua")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(new MediaType("application", "json", StandardCharsets.UTF_8)).exchange();
     private static final Mono<ClientResponse> TIME = CLIENT.get()
             .uri("/time")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
     private static final Mono<ClientResponse> DATE = CLIENT.get()
             .uri("/date")
+            //增加了basic安全认证，所以这里需要传递header认证信息
+            .header(HttpHeaders.AUTHORIZATION,
+                    "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
             .accept(MediaType.TEXT_PLAIN)
             .exchange();
 
@@ -102,6 +132,9 @@ public class TestMain {
     private static String getTimes() {
         final String block = CLIENT.get()
                 .uri("/times")
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
                 .accept(MediaType.TEXT_EVENT_STREAM) //配置请求Header：Content-Type: text/event-stream，即SSE
                 .retrieve()//异步接收服务端响应
                 .bodyToFlux(String.class)
@@ -114,6 +147,9 @@ public class TestMain {
     private static String getTimes2() {
         final String block = CLIENT.get()
                 .uri("/times")
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
                 .accept(MediaType.TEXT_EVENT_STREAM) //配置请求Header：Content-Type: text/event-stream，即SSE
                 .exchange()//异步接收服务端响应
                 .flatMapMany(res -> {
@@ -139,11 +175,44 @@ public class TestMain {
         System.out.println(TestMain.getTimes2());
         TestMain.mongoUsers();
         TestMain.redisUsers();
+        TestMain.userObject();
+    }
+
+    public static void userObject(){
+        Mono<User> userMono = CLIENT
+                .post()
+                .uri("/user")
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
+                //发送请求数据
+                .body(Mono.just(new User(10L,"nnnnn")),User.class)
+                //.bodyValue(new User(10L,"nnnnn"))
+                .retrieve()
+                .bodyToMono(User.class);
+
+
+        //同步
+        User block = userMono.block();
+        System.out.println(block);
+
+        //异步
+        userMono.subscribe(System.out::println);
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void mongoUsers() {
         CLIENT.get().uri("/mongouser/stream")
-                .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_NDJSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
                 .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
                 .flatMapMany(response -> response.bodyToFlux(MongoUser.class))   // 使用flatMap来将ClientResponse映射为Flux；
                 .log()
@@ -153,7 +222,10 @@ public class TestMain {
 
     public static void redisUsers() {
         CLIENT.get().uri("/redisusers/stream")
-                .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
+                .accept(MediaType.APPLICATION_NDJSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
                 .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
                 .flatMapMany(response -> response.bodyToFlux(User.class))   // 使用flatMap来将ClientResponse映射为Flux；
                 .log()
