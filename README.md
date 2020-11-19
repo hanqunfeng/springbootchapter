@@ -27,7 +27,7 @@
 ### chapter25----springboot JPA 自定义JpaRepositories接口
 ### chapter26----springboot HttpClient 和 OkHttpClient
 ### chapter27----springboot 动态刷新外部属性文件 @PropertySource(value = "file:demo.properties")
-### chapter28----springWebFlux 一个Demo 支持反应式数据库mysql,mongodb,redis，基于反应式的安全认证
+### chapter28----springWebFlux 一个Demo 响应式编程 支持反应式数据库mysql,mongodb,redis，基于反应式的安全认证
 ### chapter29----springboot email 简单文本、附件、html、图片、thymeleaf模板
 ### chapter30----SpringBoot jar包瘦身，方便部署
 ### chapter31----SpringBoot 优雅关闭服务 springboot2.3+支持
@@ -48,5 +48,5 @@
 ### chapter46----Springboot Admin Server & Client
 ### chapter47----Springboot SpringSecurity JWT
 ### chapter48----Springboot SpringSecurity OAuth2-AuthServer-JWT OAuth2-ResourceServer-JWT OAuth2-ClientServer-JWT 
-### chapter49----Springboot 响应式编程
+### chapter49----Springboot 
 

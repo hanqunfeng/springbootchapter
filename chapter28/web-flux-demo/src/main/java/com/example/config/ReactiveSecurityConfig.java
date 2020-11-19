@@ -8,6 +8,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.ServerSecurityContextRepository;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 
 /**
  * <h1>安全认证配置</h1>
@@ -16,11 +18,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 
 
 @Configuration
-@EnableReactiveMethodSecurity//开启方法安全的支持
+@EnableReactiveMethodSecurity //启用@PreAuthorize注解配置
 public class ReactiveSecurityConfig {
+
 
     /**
      * 注册安全验证规则
+     * 配置方式与HttpSecurity基本一致
     */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){ //定义SecurityWebFilterChain对安全进行控制，使用ServerHttpSecurity构造过滤器链；
@@ -33,6 +37,16 @@ public class ReactiveSecurityConfig {
                 .and()
                 .build();
     }
+
+    /**
+     * 将登陆后的用户及权限信息存入session中，非必须
+     * @return
+     */
+    @Bean
+    ServerSecurityContextRepository serverSecurityContextRepository() {
+        return new WebSessionServerSecurityContextRepository();
+    }
+
 
     /**
      * 注册UserDetailsService

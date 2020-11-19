@@ -2,6 +2,7 @@ package com.example;
 
 import com.example.model.User;
 import com.example.mongo.model.MongoUser;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.Base64Utils;
@@ -161,24 +162,29 @@ public class TestMain {
         return ">> result = " + block; //这里会打印最后一次接收到的数据
     }
 
+    @SneakyThrows
     public static void main(String[] args) {
-        System.out.println(TestMain.getHello());
-        System.out.println(TestMain.getIndex());
-        System.out.println(TestMain.getDemo());
-        System.out.println(TestMain.getUser());
-        System.out.println(TestMain.getUserAll());
-        System.out.println(TestMain.getUserName());
-        System.out.println(TestMain.getUa());
-        System.out.println(TestMain.getTime());
-        System.out.println(TestMain.getDate());
-        System.out.println(TestMain.getTimes());
-        System.out.println(TestMain.getTimes2());
-        TestMain.mongoUsers();
-        TestMain.redisUsers();
-        TestMain.userObject();
+        //System.out.println(TestMain.getHello());
+        //System.out.println(TestMain.getIndex());
+        //System.out.println(TestMain.getDemo());
+        //System.out.println(TestMain.getUser());
+        //System.out.println(TestMain.getUserAll());
+        //System.out.println(TestMain.getUserName());
+        //System.out.println(TestMain.getUa());
+        //System.out.println(TestMain.getTime());
+        //System.out.println(TestMain.getDate());
+        //System.out.println(TestMain.getTimes());
+        //System.out.println(TestMain.getTimes2());
+        //TestMain.mongoUsers();
+        //TestMain.redisUsers();
+        //TestMain.userObject();
+
+        //TestMain.redisSaveUser();
+
+        TestMain.redisGetUser();
     }
 
-    public static void userObject(){
+    public static void userObject() {
         Mono<User> userMono = CLIENT
                 .post()
                 .uri("/user")
@@ -186,7 +192,7 @@ public class TestMain {
                 .header(HttpHeaders.AUTHORIZATION,
                         "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
                 //发送请求数据
-                .body(Mono.just(new User(10L,"nnnnn")),User.class)
+                .body(Mono.just(new User(10L, "nnnnn")), User.class)
                 //.bodyValue(new User(10L,"nnnnn"))
                 .retrieve()
                 .bodyToMono(User.class);
@@ -231,5 +237,44 @@ public class TestMain {
                 .log()
                 .doOnNext(System.out::println)  // 只读地peek每个元素，然后打印出来，它并不是subscribe，所以不会触发流；
                 .blockLast();   // 在收到最后一个元素前会阻塞，响应式业务场景中慎用
+    }
+
+
+    public static void redisSaveUser() throws InterruptedException {
+        Mono<Boolean> userMono = CLIENT.post().uri("/redisusers/save2")
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
+                .body(Mono.just(new User(12L, "张三")), User.class)
+                .retrieve()
+                .bodyToMono(Boolean.class);
+
+        Boolean aBoolean = userMono.block();
+        System.out.println("同步：" + aBoolean);
+
+        //如果保存时存在相同的filedId会返回false，但实际上数据已经保存了
+        userMono.subscribe(u -> {
+            System.out.println("异步：" + u);
+        });
+
+        Thread.sleep(2000);
+    }
+
+    public static void redisGetUser() throws InterruptedException {
+        Mono<User> userMono = CLIENT.get().uri("/redisusers/user/11")
+                //增加了basic安全认证，所以这里需要传递header认证信息
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
+                .retrieve()
+                .bodyToMono(User.class);
+
+        User user = userMono.block();
+        System.out.println("同步：" + user);
+
+        userMono.subscribe(u -> {
+            System.out.println("异步：" + u);
+        });
+
+        Thread.sleep(2000);
     }
 }

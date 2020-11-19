@@ -7,6 +7,7 @@ package com.example.redis.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.example.model.User;
+import com.example.redis.utils.ReactiveRedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
@@ -26,6 +27,12 @@ public class RedisDemoController {
     */
     @Autowired
     private ReactiveStringRedisTemplate reactiveStringRedisTemplate;
+
+    /**
+     * 自定义redis响应式工具类
+    */
+    @Autowired
+    private ReactiveRedisUtil reactiveRedisUtil;
 
 
     @GetMapping("/hello")
@@ -81,6 +88,19 @@ public class RedisDemoController {
         Flux<Map.Entry<String,String>> hentries = reactiveHashOperations.entries("USER_HS");
         return hentries.map(map -> JSON.parseObject(map.getValue(), User.class))
                 .delayElements(Duration.ofSeconds(1)); //每秒返回一条数据，模拟流式响应
+    }
+
+
+
+    @PostMapping("/save2")
+    public Mono<Boolean> saveUser2(@RequestBody User user) {
+        return reactiveRedisUtil.putHashValue("USER_HS2",user.getId(), user);
+    }
+
+
+    @GetMapping(value = "/user/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<User> getUser(@PathVariable Long id) {
+        return reactiveRedisUtil.getHashValue("USER_HS2", id);
     }
 
 
