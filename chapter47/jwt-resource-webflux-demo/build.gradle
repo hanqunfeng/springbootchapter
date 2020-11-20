@@ -1,0 +1,19 @@
+dependencies {
+    //webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation 'io.projectreactor:reactor-test'
+
+    //security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //r2dbc mysql 库
+    implementation 'dev.miku:r2dbc-mysql'
+    //Spring r2dbc 抽象层
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+
+    //jwt工具类
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+}
+
+

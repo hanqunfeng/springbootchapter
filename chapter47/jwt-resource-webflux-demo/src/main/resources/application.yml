@@ -1,0 +1,48 @@
+
+server:
+  port: 8891
+  servlet:
+    session:
+      timeout: 10s
+      cookie:
+        http-only: true  # \u5982\u679C\u4E3Atrue\uFF0C\u5219\u6D4F\u89C8\u5668\u811A\u672C\u5C06\u65E0\u6CD5\u8BBF\u95EEcookie
+        secure: false # \u5982\u679C\u4E3Atrue\uFF0C\u5219\u4EC5\u901A\u8FC7HTTPS\u8FDE\u63A5\u53D1\u9001cookie\uFF0CHTTP\u65E0\u6CD5\u643A\u5E26cookie\u3002
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application:
+    name: jwt-resources-webflux-server  #\u81EA\u5B9A\u4E49jwt\u5C5E\u6027\u4FE1\u606F
+
+  #r2dbc\uFF0C\u672C\u4F8B\u4E3Amysql
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+
+jwt:
+  # \u5BC6\u94A5\u7C7B\u578B\uFF0C\u53EF\u9009\u503C\u4E3Ajks,rsa,secret\uFF0C\u9ED8\u8BA4secret
+  type: jks
+  #  SECRET \u662F\u7B7E\u540D\u5BC6\u94A5\uFF0C\u53EA\u751F\u6210\u4E00\u6B21\u5373\u53EF\uFF0C\u751F\u6210\u65B9\u6CD5\uFF1A
+  #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+  #  String secretString = Encoders.BASE64.encode(key.getEncoded());
+  # \u4F7F\u7528 BASE64 \u7F16\u7801
+  secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ== # \u79D8\u94A5
+  expiration: 3600000   # \u8FC7\u671F\u65F6\u95F4 (\u6BEB\u79D2)
+  header: JWTHeaderName # \u8BF7\u6C42\u5934\u4FE1\u606F
+  # rsa\u516C\u94A5\u6587\u4EF6\u8DEF\u5F84
+  rsaPubKeyFile: classpath:id_key_rsa.pub
+  # jks\u516C\u94A5\u6587\u4EF6\u8DEF\u5F84
+  jksPubKeyFile: classpath:oauth2_key.pub
+
+
+#springsecurity \u81EA\u5B9A\u4E49\u5C5E\u6027
+security:
+  #\u4E0D\u9700\u8981\u9A8C\u8BC1\u7684\u8DEF\u5F84
+  permitAll:
+    - /login*
+  ignoring:
+    - '**/*.js'
+    - '**/*.css'
+    - /static/**
