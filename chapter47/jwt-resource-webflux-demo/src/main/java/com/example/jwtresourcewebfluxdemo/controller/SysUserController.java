@@ -7,6 +7,7 @@ import com.example.jwtresourcewebfluxdemo.exception.CustomExceptionType;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
 import com.example.jwtresourcewebfluxdemo.service.CustomReactiveUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,22 @@ public class SysUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    ///request?a=1&c=1&c=2
+    //    "a": [
+    //        "1"
+    //        ],
+    //    "c": [
+    //        "1",
+    //        "2"
+    //        ]
+    @GetMapping("/request")
+    public Mono<AjaxResponse> request(ServerWebExchange exchange){
+        ServerHttpRequest request = exchange.getRequest();
+        return Mono.just(AjaxResponse.success(request.getQueryParams()));
+    }
+
     @GetMapping("/session")
-    public Mono<AjaxResponse> hello(ServerWebExchange exchange){
+    public Mono<AjaxResponse> session(ServerWebExchange exchange){
         Mono<WebSession> session = exchange.getSession();
         Mono<Map<String, Object>> map = session.map(ses -> ses.getAttributes());
         return Mono.just(AjaxResponse.success(map));
