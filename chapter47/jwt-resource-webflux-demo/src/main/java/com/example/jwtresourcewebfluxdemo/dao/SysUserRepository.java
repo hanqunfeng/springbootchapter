@@ -4,6 +4,7 @@ import com.example.jwtresourcewebfluxdemo.model.SysUser;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -28,6 +29,11 @@ public interface SysUserRepository extends ReactiveSortingRepository<SysUser, St
     Mono<Boolean> addSysUser(String id, String username, String password, Boolean enable);
 
     Mono<Boolean> deleteByUsername(String username);
+
+    @Query("select id,username,password,enable from sys_user limit :start,:size")
+    Flux<SysUser> findAllByPage(Integer start,Integer size);
+
+
 }
 
 

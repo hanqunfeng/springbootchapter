@@ -44,38 +44,38 @@ public class SysUserController {
     //        "2"
     //        ]
     @GetMapping("/request")
-    public Mono<AjaxResponse> request(ServerWebExchange exchange){
+    public Mono<AjaxResponse> request(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
         return Mono.just(AjaxResponse.success(request.getQueryParams()));
     }
 
     @GetMapping("/session")
-    public Mono<AjaxResponse> session(ServerWebExchange exchange){
+    public Mono<AjaxResponse> session(ServerWebExchange exchange) {
         Mono<WebSession> session = exchange.getSession();
         Mono<Map<String, Object>> map = session.map(ses -> ses.getAttributes());
         return Mono.just(AjaxResponse.success(map));
     }
 
     @GetMapping("/me")
-    public Mono<AjaxResponse> user(Principal principal){
+    public Mono<AjaxResponse> user(Principal principal) {
         return Mono.just(AjaxResponse.success(principal));
     }
 
 
     @GetMapping("/{userName}")
-    public Mono<AjaxResponse> getSysUser(@PathVariable String userName){
+    public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
         Mono<SysUser> sysUserMono = userDetailsService.findUserByUsername(userName);
         return sysUserMono.map(AjaxResponse::success);
     }
 
     /**
      * {
-     *     "username":"001",
-     *     "password":"123456"
+     * "username":"001",
+     * "password":"123456"
      * }
-    */
+     */
     @PostMapping
-    public Mono<AjaxResponse> addSysUser(@RequestBody SysUser sysUser){
+    public Mono<AjaxResponse> addSysUser(@RequestBody SysUser sysUser) {
         sysUser.setId(UUID.randomUUID().toString());
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         sysUser.setEnable(true);
@@ -85,15 +85,15 @@ public class SysUserController {
 
     /**
      * {
-     *     "id": "d9ed56a6-b36b-40ee-842e-019e3113e47e",
-     *     "username":"001",
-     *     "password":"123456"
+     * "id": "d9ed56a6-b36b-40ee-842e-019e3113e47e",
+     * "username":"001",
+     * "password":"123456"
      * }
      */
     @PutMapping
-    public Mono<AjaxResponse> updateSysUser(@RequestBody SysUser sysUser){
-        if(StringUtils.isEmpty(sysUser.getId())){
-            throw new CustomException(CustomExceptionType.USER_INPUT_ERROR,"更新操作主键不能为空");
+    public Mono<AjaxResponse> updateSysUser(@RequestBody SysUser sysUser) {
+        if (StringUtils.isEmpty(sysUser.getId())) {
+            throw new CustomException(CustomExceptionType.USER_INPUT_ERROR, "更新操作主键不能为空");
         }
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         Mono<SysUser> sysUserMono = userDetailsService.update(sysUser);
@@ -102,14 +102,20 @@ public class SysUserController {
 
 
     @DeleteMapping("/{userName}")
-    public Mono<AjaxResponse> deleteSysUserByUserName(@PathVariable String userName){
+    public Mono<AjaxResponse> deleteSysUserByUserName(@PathVariable String userName) {
         Mono<Boolean> sysUserMono = userDetailsService.deleteByUserName(userName);
         return sysUserMono.map(AjaxResponse::success);
     }
 
     @GetMapping
-    public Mono<AjaxResponse> findAll(){
+    public Mono<AjaxResponse> findAll() {
         Mono<List<SysUser>> listMono = userDetailsService.findAll().collectList();
+        return listMono.map(AjaxResponse::success);
+    }
+
+    @GetMapping("/sort")
+    public Mono<AjaxResponse> findAllBySort() {
+        Mono<List<SysUser>> listMono = userDetailsService.findAllBySort().collectList();
         return listMono.map(AjaxResponse::success);
     }
 }
