@@ -46,7 +46,7 @@ public class MongoUserController {
     //这样是响应式的返回数据
     //因为返回的是json，所以用MediaType.APPLICATION_STREAM_JSON_VALUE，新版本推荐使用MediaType.APPLICATION_NDJSON_VALUE
     //使用 curl http://localhost:8080/mongouser/stream 可以看到效果，每秒打印一条记录
-    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_NDJSON_VALUE)
+    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<MongoUser> findAllStream() {
         return this.userService.findAll()
                 .delayElements(Duration.ofSeconds(1)); //每秒返回一条数据，模拟流式响应

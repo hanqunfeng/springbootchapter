@@ -1,4 +1,4 @@
-package com.example.config;
+package com.example.jwtresourcewebfluxdemo.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;
@@ -26,7 +26,6 @@ public class WebFluxConfig implements WebFluxConfigurer {
                 //When allowCredentials is true, allowedOrigins cannot contain the special value "*"since that cannot be set on the "Access-Control-Allow-Origin" response header.
                 // To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead.
                 .allowedOrigins("*") //开放哪些ip、端口、域名的访问权限
-                //.allowedOriginPatterns("*")
                 .allowCredentials(true); //是否允许发送Cookie信息
 
     }

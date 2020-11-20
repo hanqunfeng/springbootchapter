@@ -1,6 +1,6 @@
 package com.example.jwtdemo.security;
 
-import com.example.jwtdemo.exception.CustomException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +36,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
-            throws ServletException, IOException, CustomException {
+            throws ServletException, IOException {
 
         String jwtToken = request.getHeader(jwtProperties.getHeader());
         if (!StringUtils.isEmpty(jwtToken)) {
+            //去掉前缀
+            if (jwtToken.startsWith("Bearer ")) {
+                jwtToken = jwtToken.substring(7);
+            }
+
             String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 
             //如果可以正确的从JWT中提取用户信息，并且该用户未被授权

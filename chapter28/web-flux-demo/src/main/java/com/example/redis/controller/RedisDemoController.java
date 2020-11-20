@@ -82,7 +82,7 @@ public class RedisDemoController {
     }
 
     //curl http://localhost:8080/redisusers/stream
-    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_NDJSON_VALUE)
+    @GetMapping(value = "/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<User> findAllStream() {
         ReactiveHashOperations<String, String, String> reactiveHashOperations = reactiveStringRedisTemplate.opsForHash();
         Flux<Map.Entry<String,String>> hentries = reactiveHashOperations.entries("USER_HS");

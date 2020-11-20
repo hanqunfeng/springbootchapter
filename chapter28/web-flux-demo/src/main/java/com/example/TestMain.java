@@ -218,7 +218,7 @@ public class TestMain {
                 //增加了basic安全认证，所以这里需要传递header认证信息
                 .header(HttpHeaders.AUTHORIZATION,
                         "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
-                .accept(MediaType.APPLICATION_NDJSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
+                .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
                 .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
                 .flatMapMany(response -> response.bodyToFlux(MongoUser.class))   // 使用flatMap来将ClientResponse映射为Flux；
                 .log()
@@ -231,7 +231,7 @@ public class TestMain {
                 //增加了basic安全认证，所以这里需要传递header认证信息
                 .header(HttpHeaders.AUTHORIZATION,
                         "Basic " + Base64Utils.encodeToString("admin:123456".getBytes(Charset.defaultCharset())))
-                .accept(MediaType.APPLICATION_NDJSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
+                .accept(MediaType.APPLICATION_STREAM_JSON) // 配置请求Header：Content-Type: application/stream+json；新版本推荐使用application/x-ndjson
                 .exchange() //获取response信息，返回值为ClientResponse，retrive()可以看做是exchange()方法的“快捷版”；
                 .flatMapMany(response -> response.bodyToFlux(User.class))   // 使用flatMap来将ClientResponse映射为Flux；
                 .log()
