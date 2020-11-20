@@ -1,6 +1,9 @@
 package com.example.jwtresourcewebfluxdemo.config;
 
-import com.example.jwtresourcewebfluxdemo.security.*;
+import com.example.jwtresourcewebfluxdemo.security.CustomServerAccessDeniedHandler;
+import com.example.jwtresourcewebfluxdemo.security.CustomServerAuthenticationEntryPoint;
+import com.example.jwtresourcewebfluxdemo.security.JwtAuthenticationTokenFilter;
+import com.example.jwtresourcewebfluxdemo.security.JwtSecurityContextRepository;
 import com.example.jwtresourcewebfluxdemo.service.CustomReactiveUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +14,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.context.ServerSecurityContextRepository;
-import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 
 /**
  * <h1>安全认证配置</h1>
@@ -55,15 +56,6 @@ public class ReactiveSecurityConfig {
                 .authenticationEntryPoint(customServerAuthenticationEntryPoint)
                 .and()
                 .build();
-    }
-
-    /**
-     * 将登陆后的用户及权限信息存入session中，非必须
-     * @return
-     */
-    @Bean
-    ServerSecurityContextRepository serverSecurityContextRepository() {
-        return new WebSessionServerSecurityContextRepository();
     }
 
 

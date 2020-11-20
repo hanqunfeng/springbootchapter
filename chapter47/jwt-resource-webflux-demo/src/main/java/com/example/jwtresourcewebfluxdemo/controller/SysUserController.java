@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -31,9 +34,11 @@ public class SysUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/hello")
-    public Mono<AjaxResponse> hello(){
-        return Mono.just(AjaxResponse.success("hello"));
+    @GetMapping("/session")
+    public Mono<AjaxResponse> hello(ServerWebExchange exchange){
+        Mono<WebSession> session = exchange.getSession();
+        Mono<Map<String, Object>> map = session.map(ses -> ses.getAttributes());
+        return Mono.just(AjaxResponse.success(map));
     }
 
     @GetMapping("/me")
