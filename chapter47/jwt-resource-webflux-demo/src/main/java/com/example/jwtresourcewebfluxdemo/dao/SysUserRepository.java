@@ -1,5 +1,8 @@
-package com.example.jwtresourcewebfluxdemo.security;
+package com.example.jwtresourcewebfluxdemo.dao;
 
+import com.example.jwtresourcewebfluxdemo.model.SysUser;
+import org.springframework.data.r2dbc.repository.Modifying;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import reactor.core.publisher.Mono;
 
@@ -16,6 +19,15 @@ import reactor.core.publisher.Mono;
 */
 public interface SysUserRepository extends ReactiveSortingRepository<SysUser, String> {
     Mono<SysUser> findByUsername(String username);
+
+    /**
+     * 返回值可以是Mono<Integer>或Mono<Boolean>。
+    */
+    @Modifying
+    @Query("insert into sys_user (id,username,password,enable) values (:id,:username,:password,:enable)")
+    Mono<Boolean> addSysUser(String id, String username, String password, Boolean enable);
+
+    Mono<Boolean> deleteByUsername(String username);
 }
 
 

@@ -1,6 +1,7 @@
 package com.example.jwtresourcewebfluxdemo.config;
 
 import com.example.jwtresourcewebfluxdemo.security.*;
+import com.example.jwtresourcewebfluxdemo.service.CustomReactiveUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

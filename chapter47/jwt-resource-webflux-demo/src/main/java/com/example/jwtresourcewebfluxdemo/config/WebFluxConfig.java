@@ -1,6 +1,7 @@
 package com.example.jwtresourcewebfluxdemo.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
@@ -15,6 +16,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
  */
 
 @Configuration
+@EnableTransactionManagement(proxyTargetClass = true)
 public class WebFluxConfig implements WebFluxConfigurer {
 
     //跨域设置
