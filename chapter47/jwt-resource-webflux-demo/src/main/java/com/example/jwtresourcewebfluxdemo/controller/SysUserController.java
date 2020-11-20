@@ -118,4 +118,10 @@ public class SysUserController {
         Mono<List<SysUser>> listMono = userDetailsService.findAllBySort().collectList();
         return listMono.map(AjaxResponse::success);
     }
+
+    @GetMapping("/page/{page}/{size}")
+    public Mono<AjaxResponse> findAllByPage(@PathVariable Integer page,@PathVariable Integer size) {
+        Mono<List<SysUser>> listMono = userDetailsService.findAllByPage(page,size).collectList();
+        return listMono.map(AjaxResponse::success);
+    }
 }

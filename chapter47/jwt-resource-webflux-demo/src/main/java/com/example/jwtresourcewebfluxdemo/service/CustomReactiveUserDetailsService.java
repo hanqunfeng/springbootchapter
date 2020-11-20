@@ -4,6 +4,8 @@ import com.example.jwtresourcewebfluxdemo.dao.SysUserRepository;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
@@ -15,17 +17,19 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <h1>ReactiveUserDetailsService</h1>
  * Created by hanqf on 2020/11/19 10:06.
  */
-
-
 public class CustomReactiveUserDetailsService implements ReactiveUserDetailsService {
 
     @Autowired
     SysUserRepository sysUserRepository;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     /**
@@ -52,29 +56,53 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
 
     @Transactional(readOnly = true)
     public Mono<SysUser> findUserByUsername(String username) {
-        return sysUserRepository.findByUsername(username);
+        String key = "sysuser_" + username;
+        ValueOperations<String, SysUser> operations = redisTemplate.opsForValue();
+        boolean hasKey = redisTemplate.hasKey(key);
+        if (hasKey) {
+            SysUser sysUser = operations.get(key);
+            return Mono.just(sysUser);
+        } else {
+            return sysUserRepository.findByUsername(username).doOnNext(user -> operations.set(key, user));
+        }
     }
 
 
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> add(SysUser sysUser) {
+        //清空缓存
+        Set sysuser_ = redisTemplate.keys("sysuser_*");
+        redisTemplate.delete(sysuser_);
         return sysUserRepository.addSysUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getEnable()).flatMap(data -> sysUserRepository.findById(sysUser.getId()));
     }
 
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> update(SysUser sysUser) {
-
+        //清空缓存
+        Set sysuser_ = redisTemplate.keys("sysuser_*");
+        redisTemplate.delete(sysuser_);
         Mono<SysUser> save = sysUserRepository.save(sysUser);
         return save;
     }
 
     @Transactional(readOnly = true)
     public Flux<SysUser> findAll() {
-        return sysUserRepository.findAll();
+        String key = "sysuser_all";
+        ValueOperations<String, List<SysUser>> operations = redisTemplate.opsForValue();
+        boolean hasKey = redisTemplate.hasKey(key);
+        if (hasKey) {
+            List<SysUser> sysUsers = operations.get(key);
+            return Flux.fromIterable(sysUsers);
+        } else {
+            return sysUserRepository.findAll().collectList().doOnNext(list -> operations.set(key, list)).flatMapMany(list -> Flux.fromIterable(list));
+        }
     }
 
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<Boolean> deleteByUserName(String username) {
+        //清空缓存
+        Set sysuser_ = redisTemplate.keys("sysuser_*");
+        redisTemplate.delete(sysuser_);
         return sysUserRepository.deleteByUsername(username);
     }
 
@@ -85,7 +113,7 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
 
     @Transactional(readOnly = true)
     public Flux<SysUser> findAllBySort() {
-        return sysUserRepository.findAll(Sort.by(Sort.Direction.DESC,"username"));
+        return sysUserRepository.findAll(Sort.by(Sort.Direction.DESC, "username"));
     }
 }
 
