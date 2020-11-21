@@ -1,11 +1,14 @@
 package com.example.jwtresourcewebfluxdemo.service;
 
+import com.example.jwtresourcewebfluxdemo.aop.RedisCacheEvict;
+import com.example.jwtresourcewebfluxdemo.aop.RedisCachePut;
+import com.example.jwtresourcewebfluxdemo.aop.RedisCacheable;
+import com.example.jwtresourcewebfluxdemo.aop.RedisCaching;
 import com.example.jwtresourcewebfluxdemo.dao.SysUserRepository;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
@@ -17,7 +20,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * <h1>ReactiveUserDetailsService</h1>
@@ -54,55 +56,67 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
                         true, true, resultAuths));
     }
 
+    @RedisCacheable(cacheName = "sysuser", key = "'find_' + #username")
     @Transactional(readOnly = true)
     public Mono<SysUser> findUserByUsername(String username) {
-        String key = "sysuser_" + username;
-        ValueOperations<String, SysUser> operations = redisTemplate.opsForValue();
-        boolean hasKey = redisTemplate.hasKey(key);
-        if (hasKey) {
-            SysUser sysUser = operations.get(key);
-            return Mono.just(sysUser);
-        } else {
-            return sysUserRepository.findByUsername(username).doOnNext(user -> operations.set(key, user));
-        }
+        //String key = "sysuser_" + username;
+        //ValueOperations<String, SysUser> operations = redisTemplate.opsForValue();
+        //boolean hasKey = redisTemplate.hasKey(key);
+        //if (hasKey) {
+        //    SysUser sysUser = operations.get(key);
+        //    return Mono.just(sysUser);
+        //} else {
+        //    return sysUserRepository.findByUsername(username).doOnNext(user -> operations.set(key, user));
+        //}
+        return sysUserRepository.findByUsername(username);
     }
 
 
+    @RedisCacheEvict(cacheName = "sysuser", allEntries = true)
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> add(SysUser sysUser) {
         //清空缓存
-        Set sysuser_ = redisTemplate.keys("sysuser_*");
-        redisTemplate.delete(sysuser_);
+        //Set sysuser_ = redisTemplate.keys("sysuser_*");
+        //redisTemplate.delete(sysuser_);
         return sysUserRepository.addSysUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getEnable()).flatMap(data -> sysUserRepository.findById(sysUser.getId()));
     }
 
+    //@RedisCacheEvict(cacheName = "sysuser",allEntries = true)
+    @RedisCaching(
+            evict = {@RedisCacheEvict(cacheName = "sysuser", key = "all")},
+            put = {@RedisCachePut(cacheName = "sysuser", key = "'find_' + #sysUser.username")}
+    )
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> update(SysUser sysUser) {
         //清空缓存
-        Set sysuser_ = redisTemplate.keys("sysuser_*");
-        redisTemplate.delete(sysuser_);
+        //Set sysuser_ = redisTemplate.keys("sysuser_*");
+        //redisTemplate.delete(sysuser_);
         Mono<SysUser> save = sysUserRepository.save(sysUser);
         return save;
     }
 
+    @RedisCacheable(cacheName = "sysuser", key = "all")
     @Transactional(readOnly = true)
     public Flux<SysUser> findAll() {
-        String key = "sysuser_all";
-        ValueOperations<String, List<SysUser>> operations = redisTemplate.opsForValue();
-        boolean hasKey = redisTemplate.hasKey(key);
-        if (hasKey) {
-            List<SysUser> sysUsers = operations.get(key);
-            return Flux.fromIterable(sysUsers);
-        } else {
-            return sysUserRepository.findAll().collectList().doOnNext(list -> operations.set(key, list)).flatMapMany(list -> Flux.fromIterable(list));
-        }
+        //String key = "sysuser_all";
+        //ValueOperations<String, List<SysUser>> operations = redisTemplate.opsForValue();
+        //boolean hasKey = redisTemplate.hasKey(key);
+        //if (hasKey) {
+        //    List<SysUser> sysUsers = operations.get(key);
+        //    return Flux.fromIterable(sysUsers);
+        //} else {
+        //    return sysUserRepository.findAll().collectList().doOnNext(list -> operations.set(key, list)).flatMapMany(list -> Flux.fromIterable(list));
+        //}
+
+        return sysUserRepository.findAll();
     }
 
+    @RedisCacheEvict(cacheName = "sysuser", allEntries = true)
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<Boolean> deleteByUserName(String username) {
         //清空缓存
-        Set sysuser_ = redisTemplate.keys("sysuser_*");
-        redisTemplate.delete(sysuser_);
+        //Set sysuser_ = redisTemplate.keys("sysuser_*");
+        //redisTemplate.delete(sysuser_);
         return sysUserRepository.deleteByUsername(username);
     }
 

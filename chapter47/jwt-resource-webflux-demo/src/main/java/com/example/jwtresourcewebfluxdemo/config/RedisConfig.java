@@ -15,7 +15,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -33,8 +32,6 @@ import java.time.format.DateTimeFormatter;
  * @date 2020/3/23 15:38
  */
 @Configuration
-//<!-- 启用缓存注解 --> <cache:annotation-driven cache-manager="cacheManager" />
-@EnableCaching
 public class RedisConfig {
 
 
@@ -86,6 +83,8 @@ public class RedisConfig {
 
         return redisTemplate;
     }
+
+
 
 
 }

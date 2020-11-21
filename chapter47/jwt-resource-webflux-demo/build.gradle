@@ -18,6 +18,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //redis lettuce连接池依赖
     implementation 'org.apache.commons:commons-pool2'
+
+
+    //aop 面向方面编程 支持@Aspect
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 
