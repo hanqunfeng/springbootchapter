@@ -114,28 +114,50 @@ public class RedisCacheAspect {
         String cacheName = annotation.cacheName();
         String key = annotation.key();
         boolean allEntries = annotation.allEntries();
+        boolean beforeInvocation = annotation.beforeInvocation();
 
         //转换EL表达式
         cacheName = (String) AspectSupportUtils.getKeyValue(proceedingJoinPoint, cacheName);
         key = (String) AspectSupportUtils.getKeyValue(proceedingJoinPoint, key);
 
-        //实际执行的方法
-        Object proceed = proceedingJoinPoint.proceed();
 
-        //清除全部缓存
-        if (allEntries) {
-            Set keys = redisTemplate.keys(cacheName + "_*");
-            if (!keys.isEmpty()) {
-                redisTemplate.delete(keys);
+        //执行方法前清除缓存
+        if(beforeInvocation) {
+
+            //清除全部缓存
+            if (allEntries) {
+                Set keys = redisTemplate.keys(cacheName + "_*");
+                if (!keys.isEmpty()) {
+                    redisTemplate.delete(keys);
+                }
+            } else {
+                String redis_key = cacheName + "_" + key;
+                if (redisTemplate.hasKey(redis_key)) {
+                    redisTemplate.delete(redis_key);
+                }
             }
-        } else {
-            String redis_key = cacheName + "_" + key;
-            if (redisTemplate.hasKey(redis_key)) {
-                redisTemplate.delete(redis_key);
+
+            //实际执行的方法
+            Object proceed = proceedingJoinPoint.proceed();
+            return proceed;
+        }else {//成功执行方法后清除缓存
+
+            //实际执行的方法
+            Object proceed = proceedingJoinPoint.proceed();
+            //清除全部缓存
+            if (allEntries) {
+                Set keys = redisTemplate.keys(cacheName + "_*");
+                if (!keys.isEmpty()) {
+                    redisTemplate.delete(keys);
+                }
+            } else {
+                String redis_key = cacheName + "_" + key;
+                if (redisTemplate.hasKey(redis_key)) {
+                    redisTemplate.delete(redis_key);
+                }
             }
+            return proceed;
         }
-
-        return proceed;
     }
 
 
@@ -245,29 +267,57 @@ public class RedisCacheAspect {
             }
 
         } else {
-            //实际执行的方法
-            Object proceed = proceedingJoinPoint.proceed();
 
+
+            Map<String, Boolean> map = new HashMap<>();
             if (cacheEvicts.length > 0) {
                 Arrays.stream(cacheEvicts).forEach(cacheEvict -> {
                     String cacheName = cacheEvict.cacheName();
                     String key = cacheEvict.key();
                     boolean allEntries = cacheEvict.allEntries();
+                    boolean beforeInvocation = cacheEvict.beforeInvocation();
 
                     //转换EL表达式
                     cacheName = (String) AspectSupportUtils.getKeyValue(proceedingJoinPoint, cacheName);
                     key = (String) AspectSupportUtils.getKeyValue(proceedingJoinPoint, key);
 
-                    //清除全部缓存
-                    if (allEntries) {
-                        Set keys = redisTemplate.keys(cacheName + "_*");
+                    if(beforeInvocation) { //执行方法前清除缓存
+                        //清除全部缓存
+                        if (allEntries) {
+                            Set keys = redisTemplate.keys(cacheName + "_*");
+                            if (!keys.isEmpty()) {
+                                redisTemplate.delete(keys);
+                            }
+                        } else {
+                            String redis_key = cacheName + "_" + key;
+                            if (redisTemplate.hasKey(redis_key)) {
+                                redisTemplate.delete(redis_key);
+                            }
+                        }
+                    }else { //成功执行方法后清除缓存，先保存到map中
+                        //清除全部缓存
+                        if (allEntries) {
+                            map.put(cacheName + "_*",true);
+                        } else {
+                            map.put(cacheName + "_" + key,false);
+                        }
+                    }
+                });
+            }
+
+            //实际执行的方法
+            Object proceed = proceedingJoinPoint.proceed();
+            //执行方法后清除缓存
+            if(map.size() > 0){
+                map.forEach((key,val) -> {
+                    if(val){
+                        Set keys = redisTemplate.keys(key);
                         if (!keys.isEmpty()) {
                             redisTemplate.delete(keys);
                         }
-                    } else {
-                        String redis_key = cacheName + "_" + key;
-                        if (redisTemplate.hasKey(redis_key)) {
-                            redisTemplate.delete(redis_key);
+                    }else {
+                        if (redisTemplate.hasKey(key)) {
+                            redisTemplate.delete(key);
                         }
                     }
                 });

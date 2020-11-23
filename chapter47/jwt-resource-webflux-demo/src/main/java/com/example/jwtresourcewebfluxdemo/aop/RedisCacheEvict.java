@@ -29,4 +29,10 @@ public @interface RedisCacheEvict {
      * false时key值不能为空
      */
     boolean allEntries() default false;
+
+    /**
+     * 调用清除缓存的时机，true:执行方法前，false:执行方法后
+     * 如果是false，则方法执行过程中发生异常，则不会清除缓存
+    */
+    boolean beforeInvocation() default false;
 }

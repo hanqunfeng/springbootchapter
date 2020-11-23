@@ -5,7 +5,7 @@ import com.example.jwtresourcewebfluxdemo.exception.AjaxResponse;
 import com.example.jwtresourcewebfluxdemo.exception.CustomException;
 import com.example.jwtresourcewebfluxdemo.exception.CustomExceptionType;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
-import com.example.jwtresourcewebfluxdemo.service.CustomReactiveUserDetailsService;
+import com.example.jwtresourcewebfluxdemo.service.SysUserServcie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +30,7 @@ import java.util.UUID;
 public class SysUserController {
 
     @Autowired
-    private CustomReactiveUserDetailsService userDetailsService;
+    private SysUserServcie sysUserServcie;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -64,7 +64,7 @@ public class SysUserController {
 
     @GetMapping("/{userName}")
     public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
-        Mono<SysUser> sysUserMono = userDetailsService.findUserByUsername(userName);
+        Mono<SysUser> sysUserMono = sysUserServcie.findUserByUsername(userName);
         return sysUserMono.map(AjaxResponse::success);
     }
 
@@ -79,7 +79,7 @@ public class SysUserController {
         sysUser.setId(UUID.randomUUID().toString());
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         sysUser.setEnable(true);
-        Mono<SysUser> sysUserMono = userDetailsService.add(sysUser);
+        Mono<SysUser> sysUserMono = sysUserServcie.add(sysUser);
         return sysUserMono.map(AjaxResponse::success);
     }
 
@@ -96,32 +96,32 @@ public class SysUserController {
             throw new CustomException(CustomExceptionType.USER_INPUT_ERROR, "更新操作主键不能为空");
         }
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
-        Mono<SysUser> sysUserMono = userDetailsService.update(sysUser);
+        Mono<SysUser> sysUserMono = sysUserServcie.update(sysUser);
         return sysUserMono.map(AjaxResponse::success);
     }
 
 
     @DeleteMapping("/{userName}")
     public Mono<AjaxResponse> deleteSysUserByUserName(@PathVariable String userName) {
-        Mono<Boolean> sysUserMono = userDetailsService.deleteByUserName(userName);
+        Mono<Boolean> sysUserMono = sysUserServcie.deleteByUserName(userName);
         return sysUserMono.map(AjaxResponse::success);
     }
 
     @GetMapping
     public Mono<AjaxResponse> findAll() {
-        Mono<List<SysUser>> listMono = userDetailsService.findAll().collectList();
+        Mono<List<SysUser>> listMono = sysUserServcie.findAll().collectList();
         return listMono.map(AjaxResponse::success);
     }
 
     @GetMapping("/sort")
     public Mono<AjaxResponse> findAllBySort() {
-        Mono<List<SysUser>> listMono = userDetailsService.findAllBySort().collectList();
+        Mono<List<SysUser>> listMono = sysUserServcie.findAllBySort().collectList();
         return listMono.map(AjaxResponse::success);
     }
 
     @GetMapping("/page/{page}/{size}")
     public Mono<AjaxResponse> findAllByPage(@PathVariable Integer page,@PathVariable Integer size) {
-        Mono<List<SysUser>> listMono = userDetailsService.findAllByPage(page,size).collectList();
+        Mono<List<SysUser>> listMono = sysUserServcie.findAllByPage(page,size).collectList();
         return listMono.map(AjaxResponse::success);
     }
 }
