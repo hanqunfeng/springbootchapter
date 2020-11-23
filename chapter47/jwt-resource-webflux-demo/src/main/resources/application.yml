@@ -58,7 +58,7 @@ jwt:
   #  Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
   #  String secretString = Encoders.BASE64.encode(key.getEncoded());
   secret: Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ==
-  expiration: 3600000   # token过期时间
+  expiration: 3600000   # token过期时间 毫秒
   header: JWTHeaderName # header属性名称
   # rsa
   rsaPubKeyFile: classpath:id_key_rsa.pub
