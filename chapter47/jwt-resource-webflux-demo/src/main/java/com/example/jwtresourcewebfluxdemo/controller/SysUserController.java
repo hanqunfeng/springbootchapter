@@ -65,7 +65,10 @@ public class SysUserController {
     @GetMapping("/{userName}")
     public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
         Mono<SysUser> sysUserMono = sysUserServcie.findUserByUsername(userName);
-        return sysUserMono.map(AjaxResponse::success);
+        return sysUserMono
+                .defaultIfEmpty(new SysUser())
+                .map(AjaxResponse::success)
+                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     /**
@@ -98,6 +101,10 @@ public class SysUserController {
         sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         Mono<SysUser> sysUserMono = sysUserServcie.update(sysUser);
         return sysUserMono.map(AjaxResponse::success);
+                //统一使用异常拦截器WebExceptionHandler处理
+                //.doOnError(e -> e.printStackTrace()) //打印异常信息
+                ////异常时将异常信息封装到返回值中
+                //.onErrorResume(throwable -> Mono.just(AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,throwable.getMessage(),throwable.getClass().getName()))));
     }
 
 
@@ -110,18 +117,21 @@ public class SysUserController {
     @GetMapping
     public Mono<AjaxResponse> findAll() {
         Mono<List<SysUser>> listMono = sysUserServcie.findAll().collectList();
-        return listMono.map(AjaxResponse::success);
+        return listMono.map(AjaxResponse::success)
+                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     @GetMapping("/sort")
     public Mono<AjaxResponse> findAllBySort() {
         Mono<List<SysUser>> listMono = sysUserServcie.findAllBySort().collectList();
-        return listMono.map(AjaxResponse::success);
+        return listMono.map(AjaxResponse::success)
+                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     @GetMapping("/page/{page}/{size}")
     public Mono<AjaxResponse> findAllByPage(@PathVariable Integer page,@PathVariable Integer size) {
         Mono<List<SysUser>> listMono = sysUserServcie.findAllByPage(page,size).collectList();
-        return listMono.map(AjaxResponse::success);
+        return listMono.map(AjaxResponse::success)
+                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 }

@@ -109,6 +109,7 @@ public class RedisCacheAspect {
 
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
         Method method = methodSignature.getMethod();
+        String returnTypeName = method.getReturnType().getSimpleName();
 
         RedisCacheEvict annotation = method.getAnnotation(RedisCacheEvict.class);
         String cacheName = annotation.cacheName();
@@ -125,17 +126,7 @@ public class RedisCacheAspect {
         if(beforeInvocation) {
 
             //清除全部缓存
-            if (allEntries) {
-                Set keys = redisTemplate.keys(cacheName + "_*");
-                if (!keys.isEmpty()) {
-                    redisTemplate.delete(keys);
-                }
-            } else {
-                String redis_key = cacheName + "_" + key;
-                if (redisTemplate.hasKey(redis_key)) {
-                    redisTemplate.delete(redis_key);
-                }
-            }
+            deleteRedisCache(cacheName,key,allEntries);
 
             //实际执行的方法
             Object proceed = proceedingJoinPoint.proceed();
@@ -144,19 +135,24 @@ public class RedisCacheAspect {
 
             //实际执行的方法
             Object proceed = proceedingJoinPoint.proceed();
-            //清除全部缓存
-            if (allEntries) {
-                Set keys = redisTemplate.keys(cacheName + "_*");
-                if (!keys.isEmpty()) {
-                    redisTemplate.delete(keys);
-                }
+
+            final String cacheNameTemp = cacheName;
+            final String keyTemp = key;
+
+            if (returnTypeName.equals("Flux")) {
+                return ((Flux) proceed).collectList().doOnNext(list -> {
+                    //清除全部缓存
+                    deleteRedisCache(cacheNameTemp,keyTemp,allEntries);
+                }).flatMapMany(list -> Flux.fromIterable((List) list));
+            } else if (returnTypeName.equals("Mono")) {
+                return ((Mono) proceed).doOnNext(obj -> {
+                    //清除全部缓存
+                    deleteRedisCache(cacheNameTemp,keyTemp,allEntries);
+                });
             } else {
-                String redis_key = cacheName + "_" + key;
-                if (redisTemplate.hasKey(redis_key)) {
-                    redisTemplate.delete(redis_key);
-                }
+                return proceed;
             }
-            return proceed;
+
         }
     }
 
@@ -283,21 +279,11 @@ public class RedisCacheAspect {
 
                     if(beforeInvocation) { //执行方法前清除缓存
                         //清除全部缓存
-                        if (allEntries) {
-                            Set keys = redisTemplate.keys(cacheName + "_*");
-                            if (!keys.isEmpty()) {
-                                redisTemplate.delete(keys);
-                            }
-                        } else {
-                            String redis_key = cacheName + "_" + key;
-                            if (redisTemplate.hasKey(redis_key)) {
-                                redisTemplate.delete(redis_key);
-                            }
-                        }
+                        deleteRedisCache(cacheName,key,allEntries);
                     }else { //成功执行方法后清除缓存，先保存到map中
                         //清除全部缓存
                         if (allEntries) {
-                            map.put(cacheName + "_*",true);
+                            map.put(cacheName ,true);
                         } else {
                             map.put(cacheName + "_" + key,false);
                         }
@@ -307,21 +293,7 @@ public class RedisCacheAspect {
 
             //实际执行的方法
             Object proceed = proceedingJoinPoint.proceed();
-            //执行方法后清除缓存
-            if(map.size() > 0){
-                map.forEach((key,val) -> {
-                    if(val){
-                        Set keys = redisTemplate.keys(key);
-                        if (!keys.isEmpty()) {
-                            redisTemplate.delete(keys);
-                        }
-                    }else {
-                        if (redisTemplate.hasKey(key)) {
-                            redisTemplate.delete(key);
-                        }
-                    }
-                });
-            }
+
 
             if (cachePuts.length > 0) {
                 Map<String, Long> key_map = new HashMap<>();
@@ -347,20 +319,82 @@ public class RedisCacheAspect {
 
                 if (returnTypeName.equals("Flux")) {
                     return ((Flux) proceed).collectList()
-                            .doOnNext(list -> key_map.forEach((key, val) -> redisTemplate.opsForValue().set(key, list, val, TimeUnit.SECONDS)))
+                            .doOnNext(list -> {
+                                //执行方法后清除缓存
+                                if(map.size() > 0){
+                                    map.forEach((key,val) -> {
+                                        deleteRedisCache(key,val);
+                                    });
+                                }
+                                key_map.forEach((key, val) -> redisTemplate.opsForValue().set(key, list, val, TimeUnit.SECONDS));
+                            })
                             .flatMapMany(list -> Flux.fromIterable((List) list));
                 } else if (returnTypeName.equals("Mono")) {
                     return ((Mono) proceed)
-                            .doOnNext(obj -> key_map.forEach((key, val) -> redisTemplate.opsForValue().set(key, obj, val, TimeUnit.SECONDS)));
+                            .doOnNext(obj -> {
+                                //执行方法后清除缓存
+                                if(map.size() > 0){
+                                    map.forEach((key,val) -> {
+                                        deleteRedisCache(key,val);
+                                    });
+                                }
+                                key_map.forEach((key, val) -> redisTemplate.opsForValue().set(key, obj, val, TimeUnit.SECONDS));
+                            });
+                } else {
+                    return proceed;
+                }
+            }else {
+
+                if (returnTypeName.equals("Flux")) {
+                    return ((Flux) proceed).collectList().doOnNext(list -> {
+                        //执行方法后清除缓存
+                        if(map.size() > 0){
+                            map.forEach((key,val) -> {
+                                deleteRedisCache(key,val);
+                            });
+                        }
+                    }).flatMapMany(list -> Flux.fromIterable((List) list));
+                } else if (returnTypeName.equals("Mono")) {
+                    return ((Mono) proceed).doOnNext(obj -> {
+                        //执行方法后清除缓存
+                        if(map.size() > 0){
+                            map.forEach((key,val) -> {
+                                deleteRedisCache(key,val);
+                            });
+                        }
+                    });
                 } else {
                     return proceed;
                 }
             }
-
-            return proceed;
         }
 
 
+    }
+
+    private void deleteRedisCache(String key,boolean clearAll){
+        if(clearAll){
+            Set keys = redisTemplate.keys(key + "_*");
+            if (!keys.isEmpty()) {
+                redisTemplate.delete(keys);
+            }
+        }else {
+            if (redisTemplate.hasKey(key)) {
+                redisTemplate.delete(key);
+            }
+        }
+    }
+
+    private void deleteRedisCache(String cacheName,String key,boolean clearAll){
+
+        String redis_key = "";
+        if (clearAll) {
+            redis_key= cacheName + "_*";
+        } else {
+            redis_key = cacheName + "_" + key;
+        }
+
+        deleteRedisCache(redis_key,clearAll);
     }
 
 }

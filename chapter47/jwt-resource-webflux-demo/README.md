@@ -49,3 +49,53 @@ logging:
 Mono<Boolean> addSysUser(String id, String username, String password, Boolean enable);
 ```
 * 事务，使用方式和非响应式编程一致，SpringBoot会根据方法返回类型来决定事务的控制方式
+
+
+## 响应式编程注意事项
+* 返回值为空时要有对应的处理方式
+  - switchIfEmpty()
+    ```java
+        @GetMapping("/{userName}")
+        public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
+            Mono<SysUser> sysUserMono = sysUserServcie.findUserByUsername(userName);
+            return sysUserMono
+                    .map(AjaxResponse::success)
+                    .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+        }
+    ```
+  - defaultIfEmpty()，注意这种方式不能设置null
+    ```java
+          @GetMapping("/{userName}")
+          public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
+              Mono<SysUser> sysUserMono = sysUserServcie.findUserByUsername(userName);
+              return sysUserMono
+                      .defaultIfEmpty(new SysUser()) //不能设置null
+                      .map(AjaxResponse::success);
+          }
+ 
+     ```
+    
+* 执行过程抛出异常的情况
+  - 方法中处理
+    ```java
+        @PutMapping
+        public Mono<AjaxResponse> updateSysUser(@RequestBody SysUser sysUser) {
+            if (StringUtils.isEmpty(sysUser.getId())) {
+                throw new CustomException(CustomExceptionType.USER_INPUT_ERROR, "更新操作主键不能为空");
+            }
+            sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
+            Mono<SysUser> sysUserMono = sysUserServcie.update(sysUser);
+            return sysUserMono.map(AjaxResponse::success);
+                    .doOnError(e -> e.printStackTrace()) //打印异常信息
+                    //异常时将异常信息封装到返回值中
+                    .onErrorResume(throwable -> Mono.just(AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,throwable.getMessage(),throwable.getClass().getName()))));
+        }
+    ```
+  - 统一异常拦截器处理
+    ```java
+        @ExceptionHandler(Exception.class)
+        public AjaxResponse exception(Exception e) {  
+            e.printStackTrace();
+            return AjaxResponse.error(new CustomException(CustomExceptionType.OTHER_ERROR,e.getMessage(),e.getClass().getName()));
+        }
+    ```
