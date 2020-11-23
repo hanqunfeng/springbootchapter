@@ -45,6 +45,12 @@ spring:
         #获取连接池最大等待时间，单位毫秒
         max-wait: 2000
 
+
+# 可以打印sql
+logging:
+  level:
+    org.springframework.data.r2dbc: DEBUG
+
 jwt:
   # \u5BC6\u94A5\u7C7B\u578B\uFF0C\u53EF\u9009\u503C\u4E3Ajks,rsa,secret\uFF0C\u9ED8\u8BA4secret
   type: jks

@@ -10,11 +10,31 @@
 ```
 
 ## 响应式Mysql
+### 依赖
 ```gradle
 //r2dbc mysql 库，虽然是第三方库，但是已经被springboot纳入版本管理
 implementation 'dev.miku:r2dbc-mysql'
 //Spring r2dbc 抽象层
 implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+```
+
+### 配置
+```yaml
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+    pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30m
+
+# 可以打印sql
+logging:
+  level:
+    org.springframework.data.r2dbc: DEBUG
 ```
 
 ### 注意事项
