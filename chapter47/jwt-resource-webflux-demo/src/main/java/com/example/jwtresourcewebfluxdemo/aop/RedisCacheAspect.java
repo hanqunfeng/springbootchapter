@@ -35,8 +35,9 @@ public class RedisCacheAspect {
 
     //切点
     //execution 表示在执行的时候，拦截里面的正则匹配的方法
-    // *.*(..) : 表示任意类的任意方法，第一个*代表类名为任何名称，第二个*代表方法返回类型为任意类型，(..)代表方法的任意参数
-    //@Pointcut("execution(* com.example.jwtresourcewebfluxdemo.service.*.*(..))")
+    // * com.example.jwtresourcewebfluxdemo.service..*.*(..) : 表示任意类的任意方法，第一个* 代表任意返回值类型，第二个..*代表任意包名下的任意类，第三个*代表方法名称为任意，(..)代表方法的任意参数
+    //@Pointcut("execution(* com.example.jwtresourcewebfluxdemo.service..*.*(..))")
+    //@Pointcut("@annotation(com.example.jwtresourcewebfluxdemo.aop.RedisCacheable) && execution(* com.example.jwtresourcewebfluxdemo.service.*.*(..))")
     @Pointcut("@annotation(com.example.jwtresourcewebfluxdemo.aop.RedisCacheable)")
     public void cacheablePointCut() {
     }

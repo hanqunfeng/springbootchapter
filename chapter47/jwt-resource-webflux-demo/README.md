@@ -99,3 +99,34 @@ Mono<Boolean> addSysUser(String id, String username, String password, Boolean en
             return AjaxResponse.error(new CustomException(CustomExceptionType.OTHER_ERROR,e.getMessage(),e.getClass().getName()));
         }
     ```
+    
+* 以上两种情况，可以通过aop拦截器统一实现----RestControllerAspect
+```java
+@Component
+@Aspect
+@Slf4j
+public class RestControllerAspect {
+    @Pointcut("execution(* com.example.jwtresourcewebfluxdemo.controller.*.*(..))")
+    public void pointCut() {
+    }
+
+    @Around("pointCut()")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        log.info("RestControllerAspect around....");
+        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        String returnTypeName = method.getReturnType().getSimpleName();
+
+        //实际执行的方法
+        Object proceed = proceedingJoinPoint.proceed();
+        if (returnTypeName.equals("Mono")) {
+            return ((Mono) proceed)
+                    .doOnError((Consumer<Throwable>) throwable -> throwable.printStackTrace())
+                    .onErrorResume((Function<Throwable, Mono>) throwable -> Mono.just(AjaxResponse.error(new CustomException(CustomExceptionType.USER_INPUT_ERROR,throwable.getMessage(),throwable.getClass().getName()))))
+                    .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+        } else {
+            return proceed;
+        }
+    }
+}
+```

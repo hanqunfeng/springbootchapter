@@ -66,9 +66,8 @@ public class SysUserController {
     public Mono<AjaxResponse> getSysUser(@PathVariable String userName) {
         Mono<SysUser> sysUserMono = sysUserServcie.findUserByUsername(userName);
         return sysUserMono
-                .defaultIfEmpty(new SysUser())
-                .map(AjaxResponse::success)
-                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+                .map(AjaxResponse::success);
+                //.switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     /**
@@ -117,21 +116,21 @@ public class SysUserController {
     @GetMapping
     public Mono<AjaxResponse> findAll() {
         Mono<List<SysUser>> listMono = sysUserServcie.findAll().collectList();
-        return listMono.map(AjaxResponse::success)
-                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+        return listMono.map(AjaxResponse::success);
+                //.switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     @GetMapping("/sort")
     public Mono<AjaxResponse> findAllBySort() {
         Mono<List<SysUser>> listMono = sysUserServcie.findAllBySort().collectList();
-        return listMono.map(AjaxResponse::success)
-                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+        return listMono.map(AjaxResponse::success);
+                //.switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 
     @GetMapping("/page/{page}/{size}")
     public Mono<AjaxResponse> findAllByPage(@PathVariable Integer page,@PathVariable Integer size) {
         Mono<List<SysUser>> listMono = sysUserServcie.findAllByPage(page,size).collectList();
-        return listMono.map(AjaxResponse::success)
-                .switchIfEmpty(Mono.just(AjaxResponse.success(null)));
+        return listMono.map(AjaxResponse::success);
+                //.switchIfEmpty(Mono.just(AjaxResponse.success(null)));
     }
 }
