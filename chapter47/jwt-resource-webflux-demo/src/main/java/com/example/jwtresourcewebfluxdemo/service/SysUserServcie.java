@@ -6,6 +6,7 @@ import com.example.jwtresourcewebfluxdemo.aop.RedisCacheable;
 import com.example.jwtresourcewebfluxdemo.aop.RedisCaching;
 import com.example.jwtresourcewebfluxdemo.dao.SysUserRepository;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
+import com.hanqf.reactive.redis.cache.aop.ReactiveRedisCacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,7 +30,8 @@ public class SysUserServcie {
     private RedisTemplate redisTemplate;
 
 
-    @RedisCacheable(cacheName = "sysuser", key = "'find_' + #username")
+    //@RedisCacheable(cacheName = "sysuser", key = "'find_' + #username")
+    @ReactiveRedisCacheable(cacheName = "sysuser", key = "'find_' + #username")
     @Transactional(readOnly = true)
     public Mono<SysUser> findUserByUsername(String username) {
         //String key = "sysuser_" + username;

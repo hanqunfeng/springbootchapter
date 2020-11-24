@@ -1,0 +1,153 @@
+plugins {
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'com.hanqf'
+version = '1.0.0-SNAPSHOT'
+//version = '1.0.0'
+sourceCompatibility = '1.8'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:2.4.0") }
+}
+
+dependencies {
+
+    //lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    //注解相关
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+
+    //json-jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    //@Aspect
+    implementation 'org.aspectj:aspectjweaver'
+
+    //Mono Flux
+    implementation 'io.projectreactor:reactor-core'
+
+    //redis-template
+    implementation 'org.springframework.data:spring-data-redis'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// java编译的时候缺省状态下会因为中文字符而失败
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+/**
+ * 发布插件
+ */
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+            //如果不定义，则会按照以上默认值执行
+
+            from components.java
+
+            pom {
+                name = 'redis-cache-annotation-reactive'
+                description = 'redis cache function annotation for webflux'
+                url = 'http://www.example.com/library'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'hanqf'
+                        name = 'han qunfeng'
+                        email = 'qunfeng_han@126.com'
+                    }
+                }
+                scm {
+                    connection = 'git@github.com:hanqunfeng/springbootchapter.git'
+                    developerConnection = 'git@github.com:hanqunfeng/springbootchapter.git'
+                    url = 'https://github.com/hanqunfeng/springbootchapter'
+                }
+            }
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // 发布仓库配置，这里基于version后缀是否为SNAPSHOT来区分发布到release库还是snapshots库
+            def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
+            def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            //认证用户和密码，在配置文件gradle.properties中配置
+            credentials {
+                username nexusUser
+                password nexusPassword
+            }
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+//javadoc，如果用jdk11，默认就支持中文
+//查看可以配置的属性：https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+tasks.withType(Javadoc) {
+    options.version = true
+    options.author = true
+    options.encoding = "UTF-8"
+    options.charSet = "UTF-8"  //解决中文乱码
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            // disable the crazy super-strict doclint tool in Java 8
+            // noinspection SpellCheckingInspection
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+

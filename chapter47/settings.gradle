@@ -3,3 +3,5 @@ include('jwt-demo')
 include('jwt-authserver-demo')
 include('jwt-resources-demo')
 include('jwt-resource-webflux-demo')
+include 'test'
+

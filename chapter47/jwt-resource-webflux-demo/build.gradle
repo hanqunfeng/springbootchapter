@@ -22,6 +22,9 @@ dependencies {
 
     //aop 面向方面编程 支持@Aspect
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    //redis-缓存注解依赖
+    implementation 'com.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0.0-SNAPSHOT'
 }
 
 

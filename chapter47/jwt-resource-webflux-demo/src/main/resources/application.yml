@@ -50,6 +50,7 @@ spring:
 logging:
   level:
     org.springframework.data.r2dbc: DEBUG
+    com.hanqf.reactive.redis.cache: DEBUG
 
 jwt:
   # jks,rsa,secret,默认secret
