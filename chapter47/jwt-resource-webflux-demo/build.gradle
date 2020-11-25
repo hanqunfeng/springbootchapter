@@ -24,8 +24,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     //redis-缓存注解依赖
-    implementation 'com.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0.0-SNAPSHOT'
-//    implementation 'org.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0-SNAPSHOT'
+//    implementation 'com.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0.0-SNAPSHOT'
+    implementation 'com.hanqunfeng:reactive-redis-cache-annotation-spring-boot-starter:1.0.0'
 }
 
 

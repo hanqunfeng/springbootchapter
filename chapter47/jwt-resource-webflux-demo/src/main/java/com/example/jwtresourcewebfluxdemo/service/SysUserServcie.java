@@ -1,12 +1,11 @@
 package com.example.jwtresourcewebfluxdemo.service;
 
-import com.example.jwtresourcewebfluxdemo.aop.RedisCacheEvict;
-import com.example.jwtresourcewebfluxdemo.aop.RedisCachePut;
-import com.example.jwtresourcewebfluxdemo.aop.RedisCacheable;
-import com.example.jwtresourcewebfluxdemo.aop.RedisCaching;
 import com.example.jwtresourcewebfluxdemo.dao.SysUserRepository;
 import com.example.jwtresourcewebfluxdemo.model.SysUser;
-import com.hanqf.reactive.redis.cache.aop.ReactiveRedisCacheable;
+import com.hanqunfeng.reactive.redis.cache.aop.ReactiveRedisCacheEvict;
+import com.hanqunfeng.reactive.redis.cache.aop.ReactiveRedisCachePut;
+import com.hanqunfeng.reactive.redis.cache.aop.ReactiveRedisCacheable;
+import com.hanqunfeng.reactive.redis.cache.aop.ReactiveRedisCaching;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,7 +46,7 @@ public class SysUserServcie {
     }
 
 
-    @RedisCacheEvict(cacheName = "sysuser", allEntries = true)
+    @ReactiveRedisCacheEvict(cacheName = "sysuser", allEntries = true)
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> add(SysUser sysUser) {
         //清空缓存
@@ -57,9 +56,9 @@ public class SysUserServcie {
     }
 
     //@RedisCacheEvict(cacheName = "sysuser",allEntries = true)
-    @RedisCaching(
-            evict = {@RedisCacheEvict(cacheName = "sysuser", key = "all")},
-            put = {@RedisCachePut(cacheName = "sysuser", key = "'find_' + #sysUser.username")}
+    @ReactiveRedisCaching(
+            evict = {@ReactiveRedisCacheEvict(cacheName = "sysuser", key = "all")},
+            put = {@ReactiveRedisCachePut(cacheName = "sysuser", key = "'find_' + #sysUser.username")}
     )
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<SysUser> update(SysUser sysUser) {
@@ -70,7 +69,7 @@ public class SysUserServcie {
         return save;
     }
 
-    @RedisCacheable(cacheName = "sysuser", key = "all")
+    @ReactiveRedisCacheable(cacheName = "sysuser", key = "all")
     @Transactional(readOnly = true)
     public Flux<SysUser> findAll() {
         //String key = "sysuser_all";
@@ -86,7 +85,7 @@ public class SysUserServcie {
         return sysUserRepository.findAll();
     }
 
-    @RedisCacheEvict(cacheName = "sysuser", allEntries = true)
+    @ReactiveRedisCacheEvict(cacheName = "sysuser", allEntries = true)
     @Transactional(rollbackFor = {Throwable.class})
     public Mono<Boolean> deleteByUserName(String username) {
         //清空缓存
