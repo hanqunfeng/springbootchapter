@@ -15,7 +15,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
     //Spring Boot Redis 依赖
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     //redis lettuce连接池依赖
     implementation 'org.apache.commons:commons-pool2'
 
@@ -25,6 +25,7 @@ dependencies {
 
     //redis-缓存注解依赖
     implementation 'com.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0.0-SNAPSHOT'
+//    implementation 'org.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.0-SNAPSHOT'
 }
 
 

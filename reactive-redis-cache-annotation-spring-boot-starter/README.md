@@ -22,10 +22,8 @@ implementation 'com.hanqf:reactive-redis-cache-annotation-spring-boot-starter:1.
     //webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     
-    //Spring Boot Redis 依赖
+    //Spring Boot Redis 依赖，或者spring-boot-starter-data-redis-reactive
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    //redis lettuce连接池依赖
-    implementation 'org.apache.commons:commons-pool2'
 
     //aop 面向方面编程 支持@Aspect
     implementation 'org.springframework.boot:spring-boot-starter-aop'

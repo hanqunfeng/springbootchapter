@@ -1,6 +1,7 @@
 plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'java'
+    //此处必须是java-library，如果是java则api方法不可用，api可以理解为就是compile，支持传递依赖
+    id 'java-library'
     id 'maven-publish'
 }
 
@@ -25,30 +26,30 @@ dependencyManagement {
 }
 
 dependencies {
-
     //lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //如果不希望传递依赖，则使用implementation，传递依赖则使用compile或者api，gradle7后将不再支持compile
     //注解相关
-    implementation 'org.springframework.boot:spring-boot-autoconfigure'
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    api 'org.springframework.boot:spring-boot-autoconfigure'
+    api 'org.springframework.boot:spring-boot-configuration-processor'
 
 
 
     //json-jackson
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     //@Aspect
-    implementation 'org.aspectj:aspectjweaver'
+    api 'org.aspectj:aspectjweaver'
 
     //Mono Flux
-    implementation 'io.projectreactor:reactor-core'
+    api 'io.projectreactor:reactor-core'
 
     //redis-template
-    implementation 'org.springframework.data:spring-data-redis'
+    api 'org.springframework.data:spring-data-redis'
 
 }
 
@@ -61,6 +62,7 @@ test {
 
 /**
  * 发布插件
+ * 参考：https://docs.gradle.org/6.6.1/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
  */
 publishing {
     publications {
