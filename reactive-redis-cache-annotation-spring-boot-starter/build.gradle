@@ -63,6 +63,9 @@ test {
 /**
  * 发布插件
  * 参考：https://docs.gradle.org/6.6.1/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
+ *
+ * 发布为bom，参考：https://zhuanlan.zhihu.com/p/195678201
+ * 注意：java-platform不能与java和java-library同时存在
  */
 publishing {
     publications {
