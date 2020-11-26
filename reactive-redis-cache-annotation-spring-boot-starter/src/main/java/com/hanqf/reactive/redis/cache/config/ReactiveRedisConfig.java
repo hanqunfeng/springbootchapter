@@ -11,7 +11,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -51,12 +50,9 @@ public class ReactiveRedisConfig {
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
-
     @Bean
     @ConditionalOnMissingBean(value = RedisTemplate.class)
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
         log.debug("ReactiveRedisConfig RedisTemplate");
         ObjectMapper objectMapper = new ObjectMapper();
