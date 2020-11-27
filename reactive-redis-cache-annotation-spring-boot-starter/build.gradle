@@ -1,14 +1,23 @@
+
 plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     //此处必须是java-library，如果是java则api方法不可用，api可以理解为就是compile，支持传递依赖
     id 'java-library'
+    //发布插件
     id 'maven-publish'
+    //签名插件
+    id 'signing'
+    //自动发布到maven中央仓库插件
+    //https://github.com/Codearte/gradle-nexus-staging-plugin
+    id 'io.codearte.nexus-staging' version '0.22.0'
 }
 
-group = 'com.hanqf'
+group = 'com.hanqunfeng'
 version = '1.0.0-SNAPSHOT'
-//version = '1.0.0'
+//version = '1.0.3'
 sourceCompatibility = '1.8'
+
+
 
 java {
     withJavadocJar()
@@ -60,6 +69,7 @@ test {
 // java编译的时候缺省状态下会因为中文字符而失败
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+
 /**
  * 发布插件
  * 参考：https://docs.gradle.org/6.6.1/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
@@ -80,7 +90,7 @@ publishing {
             pom {
                 name = 'redis-cache-annotation-reactive'
                 description = 'redis cache function annotation for webflux'
-                url = 'http://www.example.com/library'
+                url = 'https://blog.hanqunfeng.com'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -95,9 +105,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'git@github.com:hanqunfeng/springbootchapter.git'
-                    developerConnection = 'git@github.com:hanqunfeng/springbootchapter.git'
-                    url = 'https://github.com/hanqunfeng/springbootchapter'
+                    connection = 'scm:git:https://github.com/hanqunfeng/reactive-redis-cache-annotation-spring-boot-starter.git'
+                    developerConnection = 'scm:git:https://github.com:hanqunfeng/reactive-redis-cache-annotation-spring-boot-starter.git'
+                    url = 'https://github.com/hanqunfeng/reactive-redis-cache-annotation-spring-boot-starter'
                 }
             }
 
@@ -116,6 +126,9 @@ publishing {
             // 发布仓库配置，这里基于version后缀是否为SNAPSHOT来区分发布到release库还是snapshots库
             def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
             def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
+
+//            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+//            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             //认证用户和密码，在配置文件gradle.properties中配置
@@ -153,6 +166,21 @@ javadoc {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+
+//签名，发布时会先执行签名
+//参考：https://docs.gradle.org/current/userguide/signing_plugin.html
+signing {
+    sign publishing.publications.mavenJava
+}
+
+nexusStaging {
+    username nexusUser
+    password nexusPassword
+    numberOfRetries 10
+    delayBetweenRetriesInMillis 20000
+//    packageGroup = "com.hanqunfeng" //optional if packageGroup == project.getGroup()
+//    stagingProfileId = "yourStagingProfileId" //when not defined will be got from server using "packageGroup"
 }
 
 
