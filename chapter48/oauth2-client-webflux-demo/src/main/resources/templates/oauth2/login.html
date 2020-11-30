@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>登录</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+
+<div class="container">
+    <h2 class="form-signin-heading">Login with OAuth 2.0</h2><table class="table table-striped">
+
+    <tr th:each="registration: ${registrations}">
+        <td><a th:href="@{'/oauth2/authorization/'+${registration.key}}" th:text="${registration.value}"></a></td>
+    </tr>
+
+</table>
+</div>
+
+</body>
+</html>
+
