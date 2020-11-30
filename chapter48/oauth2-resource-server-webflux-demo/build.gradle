@@ -1,0 +1,10 @@
+
+dependencies {
+	//oauth2资源服务依赖
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+	//webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+}
+

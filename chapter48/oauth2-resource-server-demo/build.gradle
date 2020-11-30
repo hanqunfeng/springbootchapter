@@ -1,5 +1,6 @@
 dependencies {
 
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//引入spring-security-oauth2-autoconfigure则不需要单独配置该依赖
 	//	implementation 'org.springframework.boot:spring-boot-starter-security'
 

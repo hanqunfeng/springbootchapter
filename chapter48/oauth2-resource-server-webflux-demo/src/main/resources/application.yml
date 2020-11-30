@@ -1,0 +1,19 @@
+
+#资源服务器端口号
+server:
+  port: 8083
+spring:
+  application:
+    name: oauth2-resource-server-webflux
+
+  #oauth2 配置
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 公钥文件路径
+          # public-key-location: classpath:oauth2_key.pub
+
+          # 认证服务器提供的密钥验证路径，这种方式每次验证access_token都需要访问认证服务器
+          jwk-set-uri: http://localhost:8080/.well-known/jwks.json
+
