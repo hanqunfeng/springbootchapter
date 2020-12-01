@@ -4,6 +4,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,8 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
             String username;
             if (principal instanceof Jwt) {
                 username = ((Jwt) principal).getClaimAsString("user_name");
+            } else if(principal instanceof OAuth2User) {
+                username = ((OAuth2User) principal).getName();
             } else {
                 username = principal.toString();
             }

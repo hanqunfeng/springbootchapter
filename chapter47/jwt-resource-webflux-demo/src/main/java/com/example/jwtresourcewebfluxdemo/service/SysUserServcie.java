@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Function;
+
 /**
  * <h1>SysUserService</h1>
  * Created by hanqf on 2020/11/23 11:12.
@@ -52,7 +54,14 @@ public class SysUserServcie {
         //清空缓存
         //Set sysuser_ = redisTemplate.keys("sysuser_*");
         //redisTemplate.delete(sysuser_);
-        return sysUserRepository.addSysUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getEnable()).flatMap(data -> sysUserRepository.findById(sysUser.getId()));
+        return sysUserRepository
+                .addSysUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getEnable())
+                .flatMap(new Function<Boolean, Mono<? extends SysUser>>() {
+                    @Override
+                    public Mono<? extends SysUser> apply(Boolean data) {
+                        return sysUserRepository.findById(sysUser.getId());
+                    }
+                });
     }
 
     //@RedisCacheEvict(cacheName = "sysuser",allEntries = true)

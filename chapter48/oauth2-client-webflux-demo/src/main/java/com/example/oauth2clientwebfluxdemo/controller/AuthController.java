@@ -1,5 +1,6 @@
 package com.example.oauth2clientwebfluxdemo.controller;
 
+import com.example.oauth2clientwebfluxdemo.security.CustomServerOAuth2AuthorizedClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -16,10 +17,13 @@ import java.util.Map;
  */
 
 @Controller
-public class LoginController {
+public class AuthController {
 
     @Autowired
     ReactiveClientRegistrationRepository reactiveClientRegistrationRepository;
+
+    @Autowired
+    private CustomServerOAuth2AuthorizedClientRepository customServerOAuth2AuthorizedClientRepository;
 
     @GetMapping("/login")
     public String login(Model model){
@@ -36,4 +40,14 @@ public class LoginController {
         model.addAttribute("registrations", map);
         return "oauth2/login";
     }
+
+    //@GetMapping("/logout")
+    //public String logout(Model model,Authentication principal, ServerWebExchange exchange){
+    //    String authorizedClientRegistrationId = null;
+    //    if(principal instanceof OAuth2AuthenticationToken){
+    //        authorizedClientRegistrationId = ((OAuth2AuthenticationToken) principal).getAuthorizedClientRegistrationId();
+    //    }
+    //    customServerOAuth2AuthorizedClientRepository.removeAuthorizedClient(authorizedClientRegistrationId,principal,exchange).subscribe();
+    //    return login(model);
+    //}
 }

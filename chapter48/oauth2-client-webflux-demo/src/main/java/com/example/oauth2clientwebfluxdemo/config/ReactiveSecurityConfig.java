@@ -4,6 +4,7 @@ package com.example.oauth2clientwebfluxdemo.config;
 import com.example.oauth2clientwebfluxdemo.security.CustomReactiveAuthorizationManager;
 import com.example.oauth2clientwebfluxdemo.security.CustomServerAccessDeniedHandler;
 import com.example.oauth2clientwebfluxdemo.security.CustomServerAuthenticationEntryPoint;
+import com.example.oauth2clientwebfluxdemo.security.CustomServerOAuth2AuthorizedClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,9 @@ public class ReactiveSecurityConfig {
     //@Autowired
     //private CustomReactiveClientRegistrationRepository customReactiveClientRegistrationRepository;
 
+    @Autowired
+    private CustomServerOAuth2AuthorizedClientRepository customServerOAuth2AuthorizedClientRepository;
+
     /**
      * 注册安全验证规则
      * 配置方式与HttpSecurity基本一致
@@ -58,6 +62,9 @@ public class ReactiveSecurityConfig {
                 //.anyExchange().permitAll()
                 .and()
                 .csrf().disable() //关闭CSRF（Cross-site request forgery）跨站请求伪造
+                //必须post访问
+                .logout().logoutUrl("/logout")
+                .and()
 
                 //开启oauth2登录认证
                 .oauth2Login()
@@ -66,6 +73,7 @@ public class ReactiveSecurityConfig {
                 .oauth2Client()
                 //客户端信息基于数据库，基于内存去掉下面配置即可
                 //.clientRegistrationRepository(customReactiveClientRegistrationRepository)
+                .authorizedClientRepository(customServerOAuth2AuthorizedClientRepository)
                 .and().exceptionHandling()
                 .accessDeniedHandler(customServerAccessDeniedHandler)
                 .authenticationEntryPoint(customServerAuthenticationEntryPoint)

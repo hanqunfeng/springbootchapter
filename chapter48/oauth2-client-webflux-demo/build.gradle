@@ -14,6 +14,12 @@ dependencies {
 	implementation 'org.webjars:webjars-locator:0.40'
 
 
+	//r2dbc mysql 库
+	implementation 'dev.miku:r2dbc-mysql'
+	//Spring r2dbc 抽象层
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+
+
 }
 
 

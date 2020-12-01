@@ -34,15 +34,15 @@ spring:
 
   #\u6570\u636E\u6E90\u914D\u7F6E
   #r2dbc mysql
-#  r2dbc:
-#    url: r2dbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
-#    username: root
-#    password: newpwd
-#    pool:
-#      enabled: true
-#      initial-size: 5
-#      max-size: 20
-#      max-idle-time: 30m
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf-8&useTimezone=true&serverTimezone=GMT%2B8
+    username: root
+    password: newpwd
+    pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30m
 
 
 
@@ -63,8 +63,8 @@ spring:
             client-name: 客户端1
 #          # /oauth2/authorization/flux-client2
           flux-client2: # 1 \u6CE8\u518C\u5BA2\u6237\u7AEF\u540D\u79F0\uFF0C\u968F\u610F\u6307\u5B9A\uFF0C\u4F46\u662F\u8981\u4E0Eprovider\u7684\u914D\u7F6E\u76F8\u4E00\u81F4
-            client-id: postman # 2 \u5BA2\u6237\u7AEFID
-            client-secret: postman # 3 \u5BA2\u6237\u7AEF\u5BC6\u7801
+            client-id: demo-client # 2 \u5BA2\u6237\u7AEFID
+            client-secret: demo-client # 3 \u5BA2\u6237\u7AEF\u5BC6\u7801
             authorization-grant-type: authorization_code # 4 \u8BA4\u8BC1\u7C7B\u578B
             redirect-uri: http://localhost:8099/login/oauth2/code/flux-client2  # 5 \u56DE\u8C03\u5730\u5740\uFF0C\u9700\u8981\u914D\u7F6E\u5230\u6570\u636E\u8868\u4E2D\uFF0C\u9ED8\u8BA4\u5199\u6CD5\uFF0C\u6CE8\u610F\u6700\u540E\u7684\u8DEF\u5F84\u662F\u6CE8\u518C\u5BA2\u6237\u7AEF\u540D\u79F0
             scope: any #\u8BF7\u6C42\u8303\u56F4
@@ -105,3 +105,8 @@ spring:
             user-info-uri: http://localhost:8080/userInfo # 9 \u83B7\u53D6\u7528\u6237\u4FE1\u606F\u5730\u5740\uFF0C\u5FC5\u987B\u914D\u7F6E
             userNameAttribute: username # 10 \u6307\u5B9A\u7528\u6237\u4FE1\u606F\u4E2D\u54EA\u4E2A\u5C5E\u6027\u662F\u7528\u6237\u540D\u79F0
 debug: true
+
+# 可以打印sql
+logging:
+  level:
+    org.springframework.data.r2dbc: DEBUG
