@@ -25,7 +25,7 @@ import java.net.URI;
 
 
 @Configuration
-@EnableWebFluxSecurity //非必要
+@EnableWebFluxSecurity //必要
 @EnableReactiveMethodSecurity //启用@PreAuthorize注解配置
 public class ReactiveSecurityConfig {
 
