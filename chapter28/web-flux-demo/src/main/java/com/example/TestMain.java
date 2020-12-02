@@ -181,7 +181,9 @@ public class TestMain {
 
         //TestMain.redisSaveUser();
 
-        TestMain.redisGetUser();
+        //TestMain.redisGetUser();
+
+
     }
 
     public static void userObject() {
