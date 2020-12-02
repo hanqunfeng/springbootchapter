@@ -47,7 +47,7 @@ public class ResController {
                 String tokenType = client.getAccessToken().getTokenType().getValue();
                 return CLIENT.get()
                         .uri("/res/res1")
-                        //增加了basic安全认证，所以这里需要传递header认证信息
+                        //增加了Bearer安全认证，所以这里需要传递header认证信息
                         .header(HttpHeaders.AUTHORIZATION,
                                 tokenType + " " + tokenValue)
                         .retrieve()//异步接收服务端响应
@@ -71,7 +71,7 @@ public class ResController {
                 String tokenType = client.getAccessToken().getTokenType().getValue();
                 return CLIENT.post()
                         .uri("/user")
-                        //增加了basic安全认证，所以这里需要传递header认证信息
+                        //增加了Bearer安全认证，所以这里需要传递header认证信息
                         .header(HttpHeaders.AUTHORIZATION,
                                 tokenType + " " + tokenValue)
                         .retrieve()//异步接收服务端响应
@@ -95,7 +95,7 @@ public class ResController {
                 String tokenType = client.getAccessToken().getTokenType().getValue();
                 return CLIENT.get()
                         .uri("/rbac")
-                        //增加了basic安全认证，所以这里需要传递header认证信息
+                        //增加了Bearer安全认证，所以这里需要传递header认证信息
                         .header(HttpHeaders.AUTHORIZATION,
                                 tokenType + " " + tokenValue)
                         .retrieve()//异步接收服务端响应
@@ -119,7 +119,7 @@ public class ResController {
                 String tokenType = client.getAccessToken().getTokenType().getValue();
                 return CLIENT.get()
                         .uri("/userInfo")
-                        //增加了basic安全认证，所以这里需要传递header认证信息
+                        //增加了Bearer安全认证，所以这里需要传递header认证信息
                         .header(HttpHeaders.AUTHORIZATION,
                                 tokenType + " " + tokenValue)
                         .retrieve()//异步接收服务端响应

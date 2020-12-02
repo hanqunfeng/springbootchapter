@@ -75,6 +75,9 @@ public class CustomServerOAuth2AuthorizedClientRepository implements ServerOAuth
     private ReactiveClientRegistrationRepository reactiveClientRegistrationRepository;
     // @formatter:on
 
+    /**
+     * 这里有一个注意事项：查询时不要使用.fetch()方法，其会按照字段名称的字母排序进行赋值，导致结果中key和value匹配混乱
+    */
     @Override
     public <T extends OAuth2AuthorizedClient> Mono<T> loadAuthorizedClient(String clientRegistrationId, Authentication principal, ServerWebExchange exchange) {
         Assert.hasText(clientRegistrationId, "clientRegistrationId cannot be empty");
