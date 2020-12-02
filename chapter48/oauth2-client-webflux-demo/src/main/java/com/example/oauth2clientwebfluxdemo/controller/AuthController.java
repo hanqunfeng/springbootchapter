@@ -26,18 +26,18 @@ public class AuthController {
     private CustomServerOAuth2AuthorizedClientRepository customServerOAuth2AuthorizedClientRepository;
 
     @GetMapping("/login")
-    public String login(Model model){
+    public String login(Model model) {
         Map<String, String> map = new HashMap<>();
-        if(reactiveClientRegistrationRepository instanceof InMemoryReactiveClientRegistrationRepository){
-            ((InMemoryReactiveClientRegistrationRepository)reactiveClientRegistrationRepository).forEach(registrations->{
+        if (reactiveClientRegistrationRepository instanceof InMemoryReactiveClientRegistrationRepository) {
+            ((InMemoryReactiveClientRegistrationRepository) reactiveClientRegistrationRepository).forEach(registrations -> {
                 String registrationId = registrations.getRegistrationId();
                 String clientName = registrations.getClientName();
                 System.out.println(registrationId + "---" + clientName);
-                map.put(registrationId,clientName);
+                map.put(registrationId, clientName);
             });
         }
-
         model.addAttribute("registrations", map);
+
         return "oauth2/login";
     }
 

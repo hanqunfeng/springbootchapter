@@ -13,6 +13,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.logout.RedirectServerLogoutSuccessHandler;
+import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
+
+import java.net.URI;
 
 /**
  * <h1>安全认证配置</h1>
@@ -63,7 +67,7 @@ public class ReactiveSecurityConfig {
                 .and()
                 .csrf().disable() //关闭CSRF（Cross-site request forgery）跨站请求伪造
                 //必须post访问
-                .logout().logoutUrl("/logout")
+                .logout().logoutUrl("/logout").logoutSuccessHandler(serverLogoutSuccessHandler())
                 .and()
 
                 //开启oauth2登录认证
@@ -79,6 +83,16 @@ public class ReactiveSecurityConfig {
                 .authenticationEntryPoint(customServerAuthenticationEntryPoint)
                 .and()
                 .build();
+    }
+
+
+    /**
+     * 重定向到认证登录页面
+    */
+    public ServerLogoutSuccessHandler serverLogoutSuccessHandler(){
+        RedirectServerLogoutSuccessHandler redirectServerLogoutSuccessHandler = new RedirectServerLogoutSuccessHandler();
+        redirectServerLogoutSuccessHandler.setLogoutSuccessUrl(URI.create(oauth2_server_logout));
+        return redirectServerLogoutSuccessHandler;
     }
 
 

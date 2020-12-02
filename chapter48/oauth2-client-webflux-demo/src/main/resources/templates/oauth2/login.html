@@ -10,17 +10,26 @@
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
+    <script type="text/javascript">
+        $(function () {
+
+        });
+
+
+    </script>
+
 </head>
 <body>
 
 <div class="container">
-    <h2 class="form-signin-heading">Login with OAuth 2.0</h2><table class="table table-striped">
+    <h2 class="form-signin-heading">Login with OAuth 2.0</h2>
+    <table class="table table-striped">
 
-    <tr th:each="registration: ${registrations}">
-        <td><a th:href="@{'/oauth2/authorization/'+${registration.key}}" th:text="${registration.value}"></a></td>
-    </tr>
+        <tr th:each="registration: ${registrations}">
+            <td><a th:href="@{'/oauth2/authorization/'+${registration.key}}" th:text="${registration.value}"></a></td>
+        </tr>
 
-</table>
+    </table>
 </div>
 
 <form th:action="@{/logout}" class="container" method="post">
