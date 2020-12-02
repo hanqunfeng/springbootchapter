@@ -57,6 +57,8 @@ public class ReactiveSecurityConfig {
                 .csrf().disable() //关闭CSRF（Cross-site request forgery）跨站请求伪造
                 .httpBasic().disable() //不支持HTTP Basic方式登录
                 .formLogin().disable()//不支持login页面登录
+                .cors() //开启跨域支持
+                .and()
                 
                 //鉴权时只支持Bearer Token的形式，不支持url后加参数access_token
                 .oauth2ResourceServer()//开启oauth2资源认证
