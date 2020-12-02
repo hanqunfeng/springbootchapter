@@ -87,13 +87,14 @@ public class ReactiveSecurityConfig {
 
 
     /**
-     * 重定向到认证登录页面
+     * 退出重定向到认证登录页面，默认"/login?logout"
     */
     public ServerLogoutSuccessHandler serverLogoutSuccessHandler(){
         RedirectServerLogoutSuccessHandler redirectServerLogoutSuccessHandler = new RedirectServerLogoutSuccessHandler();
         redirectServerLogoutSuccessHandler.setLogoutSuccessUrl(URI.create(oauth2_server_logout));
         return redirectServerLogoutSuccessHandler;
     }
+
 
 
 

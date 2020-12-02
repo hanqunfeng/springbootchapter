@@ -12,10 +12,8 @@ import reactor.core.publisher.Mono;
 @RestController
 public class DemoController {
 
-
     @RequestMapping("/")
-    public Mono<String> index(){
-
+    public Mono<String> index() {
         return Mono.just("index");
     }
 
