@@ -152,7 +152,15 @@
                     <groupId>org.apereo.cas</groupId>
                     <artifactId>cas-server-support-jdbc</artifactId>
                     <version>${cas.version}</version>
-                    <!--                    <scope>runtime</scope>-->
+                    <!--<scope>runtime</scope>-->
+                </dependency>
+
+                <!-- https://mvnrepository.com/artifact/org.pac4j/pac4j-saml -->
+                <dependency>
+                    <groupId>org.pac4j</groupId>
+                    <artifactId>pac4j-saml</artifactId>
+                    <version>3.6.1</version>
+                    <scope>runtime</scope>
                     <exclusions>
                         <exclusion>
                             <groupId>net.shibboleth.tool</groupId>
@@ -160,6 +168,8 @@
                         </exclusion>
                     </exclusions>
                 </dependency>
+
+
                 <!--   mysql 数据库支持  end -->
 
                 <!-- 本地代码依赖支持 start -->
