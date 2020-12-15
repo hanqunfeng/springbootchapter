@@ -3,6 +3,7 @@ package org.example.config;/**
  */
 
 
+import org.example.util.MyScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,5 +15,6 @@ import org.springframework.context.annotation.Configuration;
 //lazyInit = true 延迟注入
 //@ComponentScan(value = "org.example",lazyInit = true)
 @ComponentScan(value = "org.example")
+@MyScan("org.example.registerModel")
 public class AppConfig {
 }
