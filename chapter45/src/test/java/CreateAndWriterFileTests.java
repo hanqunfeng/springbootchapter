@@ -73,6 +73,7 @@ public class CreateAndWriterFileTests {
             //可以根据需要写入多行数据
             writer.write("Hello World -创建文件!!\n");
             writer.write("Hello World -创建文件!!\n");
+            writer.newLine();
         }
 
         //追加写模式
@@ -174,6 +175,8 @@ public class CreateAndWriterFileTests {
             writer.write("Hello World -创建文件!!\n");
             writer.write("你好，张三!!\n");
         }
+
+
 
     }
 
