@@ -50,7 +50,7 @@
 ### chapter48----Springboot SpringSecurity OAuth2-AuthServer-JWT OAuth2-ResourceServer-JWT OAuth2-ClientServer-JWT 
 ### reactive-redis-cache-annotation-spring-boot-starter----响应式Redis方法缓存注解，starter
 ### chapter49---Springboot启动方式  @Async异步任务注解
-### chapter50---Springboot 自定义配置文件加载工厂PropertySourceFactory
+### chapter50---Springboot 自定义配置文件加载工厂PropertySourceFactory，自定义国际化资源处理器ResourceBundleMessageSource
 
 ### 待定
 
