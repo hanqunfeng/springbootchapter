@@ -142,11 +142,11 @@ public class MyResourceBundleMessageSource extends ResourceBundleMessageSource i
         } else if (ObjectUtils.isEmpty(array2)) {
             return array1;
         } else {
-            LinkedHashSet set = new LinkedHashSet();
+            LinkedHashSet<String> set = new LinkedHashSet<>();
             set.addAll(Arrays.asList(array1));
             set.addAll(Arrays.asList(array2));
 
-            String[] c = (String[]) set.toArray(new String[0]);
+            String[] c = set.toArray(new String[0]);
             return c;
         }
     }
