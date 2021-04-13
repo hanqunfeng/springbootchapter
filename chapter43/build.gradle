@@ -41,7 +41,7 @@ repositories {
     maven { url '${REPOSITORY_HOME}/repository/public/' }
     mavenLocal()
     //com.github.wenhao:jpa-spec:3.2.5需要使用这个仓库下载，3.2.4可以从阿里的仓库下载
-    maven { url 'https://repo.spring.io/libs-release/' }
+//    maven { url 'https://repo.spring.io/libs-release/' }
     mavenCentral()
 }
 
@@ -103,7 +103,7 @@ dependencies {
     //    Specification封装工具类
     //    使用起来更简单，不过是非官方出品，可能会出现版本不兼容的问题
     //    https://github.com/wenhao/jpa-spec
-    implementation 'com.github.wenhao:jpa-spec:3.2.5'
+    implementation 'com.github.wenhao:jpa-spec:3.2.4'
 
 
     //spring-boot-admin-starter-client
