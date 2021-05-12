@@ -51,6 +51,6 @@
 ### reactive-redis-cache-annotation-spring-boot-starter----响应式Redis方法缓存注解，starter
 ### chapter49---Springboot启动方式  @Async异步任务注解
 ### chapter50---Springboot 自定义配置文件加载工厂PropertySourceFactory，自定义国际化资源处理器ResourceBundleMessageSource
-
+### chapter51---Springboot 消息中间件 activemq rocketMq kafka
 ### 待定
 
