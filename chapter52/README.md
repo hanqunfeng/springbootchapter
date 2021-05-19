@@ -11,7 +11,9 @@
 
 * 说明
 ```
-默认compile，这里provided表示，如果打成war包，则该依赖不会被放到WEB-INF/lib下，而是将其放到WEB-INF/lib-provided下，
+默认compile，这里provided表示，如果打成war包，
+则该依赖不会被放到WEB-INF/lib下，而是将其放到WEB-INF/lib-provided下，
 这么做的目的就是表示该依赖要求由容器提供，比如tomcat相关的包，
-打成jar则不受影响，因为spring-boot-starter-web已经包含该依赖
+只不过此时war包中会包含不必要的依赖，体积会大，
+打成jar则不受影响，因为spring-boot-starter-web已经包含该依赖。
 ```
