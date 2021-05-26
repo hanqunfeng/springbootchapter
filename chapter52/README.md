@@ -1,6 +1,6 @@
 # 实际上war包的构建方式，将其打包方式修改为jar就可以转为jar运行方式
 
-# 核心的关机就是tomcat依赖的引入方式
+# 核心的关键就是tomcat依赖的引入方式
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
