@@ -42,7 +42,7 @@ docker run -d
 -v $(pwd)/logs:/home/rocketmq/logs
 -v $(pwd)/store:/home/rocketmq/store \
 -v $(pwd)/conf:/home/rocketmq/conf \
---name rmqbroker \
+--name rmqbroker --link rmqnamesrv:rmqnamesrv \
 -e "NAMESRV_ADDR=rmqnamesrv:9876" \
 -e "JAVA_OPT_EXT=-Xms512M -Xmx512M -Xmn128m" \
 -p 10911:10911 -p 10912:10912 -p 10909:10909 \
