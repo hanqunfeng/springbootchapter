@@ -34,7 +34,17 @@ public class Producer01Controller {
         list.add("1");
         list.add("2");
         list.add("3");
-        mqSendService.send(list,topic,group);
-        return "send message success";
+        mqSendService.syncSend(list,topic,group);
+        return "syncSend message success";
+    }
+
+    @GetMapping("/rocketmq/sendMsg02")
+    public String sendMsg02() {
+        List<String> list=new ArrayList<>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        mqSendService.syncSend(list,topic,group,"tag02");
+        return "syncSend message success";
     }
 }

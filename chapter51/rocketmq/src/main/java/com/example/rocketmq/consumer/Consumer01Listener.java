@@ -21,6 +21,6 @@ public class Consumer01Listener implements RocketMQListener<RocketMqMessage> {
 
     @Override
     public void onMessage(RocketMqMessage rocketMqMessage) {
-        log.info("======我收到了消息,消息内容为:{}",rocketMqMessage);
+        log.info("======Consumer01Listener,我收到了消息,消息内容为:{}",rocketMqMessage);
     }
 }
