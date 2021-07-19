@@ -154,6 +154,7 @@ public class WebSecurityConfigByDefault extends WebSecurityConfigurerAdapter {
     /**
      * 用户策略设置，这里使用内存用户策略，自定义策略需要实现UserDetailsService接口
      * 因为是jwt服务器认证，所以这里密码没用
+     * 正式使用时可以查询数据库得到用户信息
      */
     @Override
     @Bean
