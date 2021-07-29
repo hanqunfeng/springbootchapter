@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * MinIO OSS工具类
  */
-@Component
+@Component("minio")
 public class MinIoOssTemplate implements OssTemplate {
 
     /**

@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * 阿里云OSS工具类
  */
-@Component
+@Component("aliyun")
 public class AliyunOssTemplate implements OssTemplate {
 
     /**
