@@ -1,8 +1,12 @@
 package com.example.support;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import com.example.config.OssConfig;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -21,17 +25,21 @@ public interface OssTemplate {
      *                 上传至根目录，例：abc.png
      * @return
      */
-    public OssResult uploadFile(File file, String fileName);
+    default public OssResult uploadFile(MultipartFile file, String fileName) {
+        // 文件流
+        InputStream inputStream;
+        try {
+            inputStream = file.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new OssResult(false, null, null, e.getMessage());
+        }
+        // 获取文件类型
+        String fileType = file.getContentType();
 
-    /**
-     * 上传文件-自定义路径
-     *
-     * @param file     上传文件
-     * @param fileName 上传至OSS的文件完整路径，例：cf/abc.png
-     *                 上传至根目录，例：abc.png
-     * @return
-     */
-    public OssResult uploadFile(MultipartFile file, String fileName);
+        // 上传文件
+        return uploadInputStream(inputStream, fileType, fileName);
+    }
 
     /**
      * 上传文件-自定义路径
@@ -42,7 +50,58 @@ public interface OssTemplate {
      *                    上传至根目录，例：abc.png
      * @return
      */
-    public OssResult uploadInputStream(InputStream inputStream, String fileType, String fileName);
+    default public OssResult uploadInputStream(InputStream inputStream, String fileType, String fileName) {
+        if (inputStream == null) {
+            return new OssResult(false, null, null, "文件不能为空");
+        }
+        if (StrUtil.isBlank(fileName)) {
+            return new OssResult(false, null, null, "文件名不能为空");
+        }
+        // 上传文件最大值 MB->bytes
+        long maxSize = OssConfig.MAX_SIZE * 1024 * 1024;
+        // 本次上传文件的大小
+        long fileSize = 0;
+        try {
+            fileSize = inputStream.available();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (fileSize <= 0 || fileSize > maxSize) {
+            return new OssResult(false, null, null, "文件超过最大限制");
+        }
+
+        // 上传文件
+        return putFile(inputStream, fileType, fileName);
+    }
+
+    /**
+     * 上传文件-自定义路径
+     *
+     * @param file     上传文件
+     * @param fileName 上传至OSS的文件完整路径，例：cf/abc.png
+     *                 上传至根目录，例：abc.png
+     * @return
+     */
+    default public OssResult uploadFile(File file, String fileName) {
+        // 文件流
+        InputStream inputStream = FileUtil.getInputStream(file);
+        // 获取文件类型
+        String fileType = FileUtil.getType(file);
+
+        // 上传文件
+        return uploadInputStream(inputStream, fileType, fileName);
+    }
+
+
+    /**
+     * 上传文件
+     *
+     * @param inputStream
+     * @param fileType
+     * @param fileName
+     * @return
+     */
+    public OssResult putFile(InputStream inputStream, String fileType, String fileName);
 
 
 

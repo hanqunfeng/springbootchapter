@@ -3,32 +3,27 @@ package com.example.config;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import cn.hutool.core.io.IoUtil;
-import com.aliyun.oss.ClientConfiguration;
-import com.aliyun.oss.ClientException;
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.OSSException;
-import com.aliyun.oss.common.auth.DefaultCredentialProvider;
-import com.aliyun.oss.model.*;
 import com.example.support.OssResult;
 import com.example.support.OssTemplate;
+import io.minio.*;
+import io.minio.http.Method;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 阿里云OSS工具类
+ * MinIO OSS工具类
  */
 @Component
-public class AliyunOssTemplate implements OssTemplate {
+public class MinIoOssTemplate implements OssTemplate {
 
     /**
      * oss 工具客户端
      */
-    private OSSClient ossClient;
+    private MinioClient minioClient;
+
 
 
     /**
@@ -42,20 +37,18 @@ public class AliyunOssTemplate implements OssTemplate {
     @Override
     public OssResult putFile(InputStream inputStream, String fileType, String fileName) {
         try {
-            // 创建上传Object的Metadata
-            ObjectMetadata meta = new ObjectMetadata();
-            // 设置上传内容类型
-            meta.setContentType(fileType);
-            //被下载时网页的缓存行为
-            meta.setCacheControl("no-cache");
-            //创建上传请求
-            PutObjectRequest request = new PutObjectRequest(OssConfig.BUCKET_NAME, fileName, inputStream, meta);
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .bucket(OssConfig.BUCKET_NAME)
+                    .object(fileName)
+                    .contentType(fileType)
+                    .stream(inputStream, -1, OssConfig.MAX_SIZE * 1024 * 1024)
+                    .build();
             //上传文件
-            ossClient.putObject(request);
+            minioClient.putObject(putObjectArgs);
 
             //获取上传成功的文件地址
             return new OssResult(true, fileName, getOssUrl(fileName), "上传成功");
-        } catch (OSSException | ClientException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new OssResult(false, fileName, null, e.getMessage());
         }
@@ -69,13 +62,19 @@ public class AliyunOssTemplate implements OssTemplate {
      */
     @Override
     public String getOssUrl(String fileName) {
-        // 生成过期时间
-        long expireEndTime = System.currentTimeMillis() + OssConfig.POLICY_EXPIRE * 1000;
-        Date expiration = new Date(expireEndTime);// 生成URL
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(OssConfig.BUCKET_NAME, fileName);
-        generatePresignedUrlRequest.setExpiration(expiration);
-        URL url = ossClient.generatePresignedUrl(generatePresignedUrlRequest);
-        return url.toString();
+        try {
+            GetPresignedObjectUrlArgs getPresignedObjectUrlArgs = GetPresignedObjectUrlArgs.builder()
+                    .bucket(OssConfig.BUCKET_NAME)
+                    .object(fileName)
+                    .method(Method.GET)
+                    .expiry(OssConfig.POLICY_EXPIRE.intValue(), TimeUnit.SECONDS)
+                    .build();
+
+            return minioClient.getPresignedObjectUrl(getPresignedObjectUrlArgs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -89,8 +88,18 @@ public class AliyunOssTemplate implements OssTemplate {
     @Override
     public boolean downloadFile(String fileName, String localFileName) {
         // 下载OSS文件到指定目录。如果指定的本地文件存在会覆盖，不存在则新建。
-        ossClient.getObject(new GetObjectRequest(OssConfig.BUCKET_NAME, fileName), new File(localFileName));
-        return true;
+        try {
+            DownloadObjectArgs downloadObjectArgs = DownloadObjectArgs.builder()
+                    .bucket(OssConfig.BUCKET_NAME)
+                    .object(fileName)
+                    .filename(localFileName)
+                    .build();
+            minioClient.downloadObject(downloadObjectArgs);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -101,8 +110,20 @@ public class AliyunOssTemplate implements OssTemplate {
      */
     @Override
     public InputStream getInputStream(String fileName) {
-        // 下载OSS文件到本地文件。如果指定的本地文件存在会覆盖，不存在则新建。
-        return ossClient.getObject(new GetObjectRequest(OssConfig.BUCKET_NAME, fileName)).getObjectContent();
+        // 下载OSS文件到流。
+        try {
+            GetObjectArgs getObjectArgs = GetObjectArgs.builder()
+                    .bucket(OssConfig.BUCKET_NAME)
+                    .object(fileName)
+                    .build();
+            GetObjectResponse response = minioClient.getObject(getObjectArgs);
+            return response;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     /**
@@ -131,13 +152,18 @@ public class AliyunOssTemplate implements OssTemplate {
             if (OssConfig.BUCKET_NAME == null || fileName == null) {
                 return false;
             }
-            GenericRequest request = new DeleteObjectsRequest(OssConfig.BUCKET_NAME).withKey(fileName);
-            ossClient.deleteObject(request);
+            RemoveObjectArgs removeObjectArgs = RemoveObjectArgs.builder()
+                    .bucket(OssConfig.BUCKET_NAME)
+                    .object(fileName)
+                    .build();
+
+            minioClient.removeObject(removeObjectArgs);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+
     }
 
 
@@ -146,11 +172,11 @@ public class AliyunOssTemplate implements OssTemplate {
      */
     @PostConstruct
     public void init() {
-        ossClient = new OSSClient(OssConfig.END_POINT,
-                new DefaultCredentialProvider(OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET),
-                new ClientConfiguration());
+        minioClient = MinioClient.builder()
+                .endpoint(OssConfig.END_POINT)
+                .credentials(OssConfig.ACCESS_KEY_ID, OssConfig.ACCESS_KEY_SECRET)
+                .build();
     }
-
 
 
 }

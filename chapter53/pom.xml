@@ -55,6 +55,13 @@
             <artifactId>hutool-core</artifactId>
             <version>5.7.5</version>
         </dependency>
+
+        <dependency>
+            <scope>compile</scope>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

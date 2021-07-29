@@ -53,5 +53,5 @@
 ### chapter50---Springboot 自定义配置文件加载工厂PropertySourceFactory，自定义国际化资源处理器ResourceBundleMessageSource
 ### chapter51---Springboot 消息中间件 activemq rocketMq kafka
 ### chapter52---Springboot 项目启动方式 同时支持jar和war
-### chapter53---Springboot 阿里云OSS
+### chapter53---Springboot 阿里云OSS，MinIO
 
