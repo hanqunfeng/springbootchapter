@@ -47,6 +47,9 @@ public class JpaUtil {
      * 查询结果为Map时，可以通过该方法转换为对象，注意Map中key要与对象属性匹配，或者对象属性标注了@JsonProperty
      */
     public <E> E mapToObject(Map map, Class clazz, boolean basic) {
+        if(map == null){
+            return null;
+        }
         E newInstance = null;
         //基本类型，说明返回值只有一列
         if (basic) {

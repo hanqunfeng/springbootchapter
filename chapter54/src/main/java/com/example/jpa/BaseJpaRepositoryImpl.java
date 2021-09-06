@@ -16,10 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * ${DESCRIPTION}
@@ -52,13 +49,6 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
                 .getResultList();
     }
 
-    @Override
-    public List<Map> findBySql(String sql) {
-        return entityManager.createNativeQuery(sql)
-                .unwrap(NativeQueryImpl.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
-                .getResultList();
-    }
 
     @Override
     public List<Map> findBySql(String sql, Object... params) {
@@ -94,12 +84,6 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
     //2.addEntity(clazz) clazz必须是Entity，必须select * from table
     @Override
-    public <E> List<E> findBySql(String sql, Class clazz, boolean basic) {
-        return getJpaUtil().mapListToObjectList(findBySql(sql), clazz, basic);
-
-    }
-
-    @Override
     public <E> List<E> findBySql(String sql, Class clazz, boolean basic, Object... params) {
         return getJpaUtil().mapListToObjectList(findBySql(sql, params), clazz, basic);
     }
@@ -107,40 +91,6 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     @Override
     public <E> List<E> findBySql(String sql, Class clazz, boolean basic, Map<String, Object> params) {
         return getJpaUtil().mapListToObjectList(findBySql(sql, params), clazz, basic);
-    }
-
-    @Override
-    public <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic) {
-        if (!sql.toLowerCase().contains("order by")) {
-            StringBuilder stringBuilder = new StringBuilder(sql);
-            stringBuilder.append(" order by ");
-            final Sort sort = pageable.getSort();
-            final List<Sort.Order> orders = sort.toList();
-            for (Sort.Order order : orders) {
-                stringBuilder.append(order.getProperty())
-                        .append(" ")
-                        .append(order.getDirection().name())
-                        .append(",");
-            }
-            sql = stringBuilder.toString();
-            sql = sql.substring(0, sql.length() - 1);
-        }
-
-        final Query nativeQuery = entityManager.createNativeQuery(sql);
-        nativeQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-        nativeQuery.setMaxResults(pageable.getPageSize());
-
-        List<Map> resultList = nativeQuery.unwrap(NativeQueryImpl.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).getResultList();
-
-        final List<E> objectList = getJpaUtil().mapListToObjectList(resultList, clazz, basic);
-
-        String countSql = "select count(*) from ( " + sql + " ) a";
-        final BigInteger count = findBySqlFirst(countSql, BigInteger.class, true);
-
-        Page<E> page = new PageImpl<>(objectList, pageable, count.longValue());
-
-        return page;
     }
 
     @Override
@@ -226,18 +176,6 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     }
 
     @Override
-    public Map findBySqlFirst(String sql) {
-        final Optional first = entityManager.createNativeQuery(sql)
-                .unwrap(NativeQueryImpl.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
-                .stream().findFirst();
-        if (first.isPresent()) {
-            return (Map) first.get();
-        }
-        return null;
-    }
-
-    @Override
     public Map findBySqlFirst(String sql, Object... params) {
         Query nativeQuery = entityManager.createNativeQuery(sql);
         if (params != null && params.length > 0) {
@@ -272,34 +210,13 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     }
 
     @Override
-    public <E> E findBySqlFirst(String sql, Class clazz, boolean basic) {
-
-        final Map map = findBySqlFirst(sql);
-        if (map == null) {
-            return null;
-        } else {
-            return getJpaUtil().mapToObject(map, clazz, basic);
-        }
-    }
-
-    @Override
     public <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Object... params) {
-        final Map map = findBySqlFirst(sql, params);
-        if (map == null) {
-            return null;
-        } else {
-            return getJpaUtil().mapToObject(map, clazz, basic);
-        }
+        return getJpaUtil().mapToObject(findBySqlFirst(sql, params), clazz, basic);
     }
 
     @Override
     public <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Map<String, Object> params) {
-        final Map map = findBySqlFirst(sql, params);
-        if (map == null) {
-            return null;
-        } else {
-            return getJpaUtil().mapToObject(map, clazz, basic);
-        }
+        return getJpaUtil().mapToObject(findBySqlFirst(sql, params), clazz, basic);
     }
 
     @Override
