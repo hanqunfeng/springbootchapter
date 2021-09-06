@@ -23,7 +23,6 @@ public interface BaseJpaRepository<T, ID extends Serializable> extends JpaReposi
 
     <E> List<E> findByHql(String hql);
 
-
     List<Map> findBySql(String sql, Object... params);
 
     List<Map> findBySql(String sql, Map<String, Object> params);
