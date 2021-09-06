@@ -39,6 +39,12 @@ public class AppTest {
     }
 
     @Test
+    public void getTestMopub() {
+
+    }
+
+
+    @Test
     public void getTest() {
         System.out.println("get=" + HttpClientUtil.get(URL_GET));
         System.out.println("getParam=" + HttpClientUtil.get(URL_GET, map));

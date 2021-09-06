@@ -54,4 +54,5 @@
 ### chapter51---Springboot 消息中间件 activemq rocketMq kafka
 ### chapter52---Springboot 项目启动方式 同时支持jar和war
 ### chapter53---Springboot 阿里云OSS，MinIO
+### chapter54---Springboot 自定义JpaRepository的基类
 
