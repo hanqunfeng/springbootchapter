@@ -2,6 +2,7 @@ package com.example.jpa;
 
 
 import com.example.context.ApplicationContextProvider;
+import org.hibernate.Hibernate;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.Transformers;
 import org.springframework.data.domain.Page;
@@ -11,10 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -27,6 +30,7 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
     //批量更新时的阀值，每500条数据commit一次
     private static final Integer BATCH_SIZE = 500;
+
 
     //通过构造方法初始化EntityManager
     private final EntityManager entityManager;
@@ -51,7 +55,12 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
 
     @Override
-    public List<Map> findBySql(String sql, Object... params) {
+    public List<Map> findBySql(String sql) {
+        return findBySql(sql, new HashMap<>());
+    }
+
+    @Override
+    public List<Map> findBySql(String sql, Object[] params) {
         Query nativeQuery = entityManager.createNativeQuery(sql);
         if (params != null && params.length > 0) {
             for (int i = 0; i < params.length; i++) {
@@ -76,15 +85,14 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
                 .getResultList();
     }
 
-    //1.setResultTransformer(Transformers.aliasToBean(clazz))
-    //不要钱clazz是Entity，也就是不用对应数据库的表
-    //Expected type: java.lang.Long, actual value: java.lang.Integer
-    //如果表中的id是int类型，而对象中的id是Long类型，就会抛上面的异常
-    //count(*) 返回的是java.math.BigInteger类型
 
-    //2.addEntity(clazz) clazz必须是Entity，必须select * from table
     @Override
-    public <E> List<E> findBySql(String sql, Class clazz, boolean basic, Object... params) {
+    public <E> List<E> findBySql(String sql, Class clazz, boolean basic) {
+        return findBySql(sql, clazz, basic, new HashMap<>());
+    }
+
+    @Override
+    public <E> List<E> findBySql(String sql, Class clazz, boolean basic, Object[] params) {
         return getJpaUtil().mapListToObjectList(findBySql(sql, params), clazz, basic);
     }
 
@@ -94,7 +102,22 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     }
 
     @Override
-    public <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Object... params) {
+    public <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic) {
+        return findPageBySql(sql, pageable, clazz, basic, new HashMap<>());
+    }
+
+    @Override
+    public <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic) {
+        return findPageBySql(sql, countSql, pageable, clazz, basic, new HashMap<>());
+    }
+
+    @Override
+    public <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Object[] params) {
+        return findPageBySql(sql, null, pageable, clazz, basic, params);
+    }
+
+    @Override
+    public <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic, Object[] params) {
         if (!sql.toLowerCase().contains("order by")) {
             StringBuilder stringBuilder = new StringBuilder(sql);
             stringBuilder.append(" order by ");
@@ -126,7 +149,9 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
         final List<E> objectList = getJpaUtil().mapListToObjectList(resultList, clazz, basic);
 
-        String countSql = "select count(*) from ( " + sql + " ) a";
+        if (!StringUtils.hasText(countSql)) {
+            countSql = "select count(*) from ( " + sql + " ) a";
+        }
         final BigInteger count = findBySqlFirst(countSql, BigInteger.class, true);
 
         Page<E> page = new PageImpl<>(objectList, pageable, count.longValue());
@@ -136,6 +161,11 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
     @Override
     public <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Map<String, Object> params) {
+        return findPageBySql(sql, null, pageable, clazz, basic, params);
+    }
+
+    @Override
+    public <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic, Map<String, Object> params) {
         if (!sql.toLowerCase().contains("order by")) {
             StringBuilder stringBuilder = new StringBuilder(sql);
             stringBuilder.append(" order by ");
@@ -167,7 +197,9 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
         final List<E> objectList = getJpaUtil().mapListToObjectList(resultList, clazz, basic);
 
-        String countSql = "select count(*) from ( " + sql + " ) a";
+        if (!StringUtils.hasText(countSql)) {
+            countSql = "select count(*) from ( " + sql + " ) a";
+        }
         final BigInteger count = findBySqlFirst(countSql, BigInteger.class, true);
 
         Page<E> page = new PageImpl<>(objectList, pageable, count.longValue());
@@ -176,7 +208,12 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     }
 
     @Override
-    public Map findBySqlFirst(String sql, Object... params) {
+    public Map findBySqlFirst(String sql) {
+        return findBySqlFirst(sql, new HashMap<>());
+    }
+
+    @Override
+    public Map findBySqlFirst(String sql, Object[] params) {
         Query nativeQuery = entityManager.createNativeQuery(sql);
         if (params != null && params.length > 0) {
             for (int i = 0; i < params.length; i++) {
@@ -209,8 +246,14 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
         return null;
     }
 
+
     @Override
-    public <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Object... params) {
+    public <E> E findBySqlFirst(String sql, Class clazz, boolean basic) {
+        return findBySqlFirst(sql, clazz, basic, new HashMap<>());
+    }
+
+    @Override
+    public <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Object[] params) {
         return getJpaUtil().mapToObject(findBySqlFirst(sql, params), clazz, basic);
     }
 
@@ -232,11 +275,6 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
 
     }
 
-
-    private JpaUtil getJpaUtil() {
-        JpaUtil jpaUtil = (JpaUtil) ApplicationContextProvider.getBean("jpaUtil");
-        return jpaUtil;
-    }
 
     @Override
     @Transactional
@@ -276,6 +314,59 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
             entityManager.clear();
         }
         return iterable;
+    }
+
+
+    @Override
+    public void lazyInitialize(Class<T> entityClazz, List<T> l, String[] fields) {
+        if (fields != null) {
+            for (String field : fields) {
+
+                String targetMethod = "get" + upperFirstWord(field);
+
+                Method method;
+                try {
+                    method = entityClazz.getDeclaredMethod(targetMethod);
+                    for (T o : l) {
+                        Hibernate.initialize(method.invoke(o));
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void lazyInitialize(T obj,
+                               String[] fields) {
+        if (obj != null) {
+            if (fields != null) {
+                for (String field : fields) {
+
+                    String targetMethod = "get" + upperFirstWord(field);
+
+                    Method method;
+                    try {
+                        method = obj.getClass().getDeclaredMethod(targetMethod);
+                        Hibernate.initialize(method.invoke(obj));
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    private String upperFirstWord(String str) {
+        StringBuffer sb = new StringBuffer(str);
+        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+        return sb.toString();
+    }
+
+    private JpaUtil getJpaUtil() {
+        JpaUtil objectUtil = (JpaUtil) ApplicationContextProvider.getBean("jpaUtil");
+        return objectUtil;
     }
 
 }

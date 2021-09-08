@@ -3,7 +3,6 @@ package com.example.demo;
 
 
 import lombok.Data;
-import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,8 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @Entity
-@Table(name = "ad_country")
-@Lazy(value=true)
+@Table(name = "tbl_country")
 public class Country implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -95,7 +93,14 @@ public class Country implements Serializable{
 	private String remark;
 
 
+	public Country(Long id, String nameZh, String nameEn) {
+		this.id = id;
+		this.nameZh = nameZh;
+		this.nameEn = nameEn;
+	}
 
+	public Country() {
+	}
 
 }
 

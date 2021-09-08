@@ -1,6 +1,8 @@
 package com.example.config;
 
 import com.example.jpa.BaseJpaRepositoryImpl;
+import com.example.jpa.JpaDto;
+import com.example.jpa.JpaUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -14,28 +16,41 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
  * <h1></h1>
  * Created by hanqf on 2021/9/6 11:15.
  */
-
+@Slf4j
 @Configuration
 @EnableJpaRepositories(repositoryBaseClass = BaseJpaRepositoryImpl.class, basePackages = "com.example.demo")
 @EntityScan(basePackages = "com.example.demo")
 public class JpaConfig {
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private JpaUtil jpaUtil;
 
     /**
      * 默认日期时间格式
@@ -49,6 +64,27 @@ public class JpaConfig {
      * 默认时间格式
      */
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+
+    /**
+     * 初始化注入@JpaDto对应的Converter
+     */
+    @PostConstruct
+    public void init() {
+        Map<String, Object> map = applicationContext.getBeansWithAnnotation(JpaDto.class);
+        for (Object o : map.values()) {
+            Class c = o.getClass();
+            log.info("Jpa添加Converter,class={}", c.getName());
+            DefaultConversionService defaultConversionService = ((DefaultConversionService) DefaultConversionService.getSharedInstance());
+            defaultConversionService.addConverter(Map.class, c, m -> {
+                try {
+                    //通过json作为中间媒介
+                    return jpaUtil.mapToObject(m, c, false);
+                } catch (Exception e) {
+                    throw new FatalBeanException("Jpa结果转换出错,class=" + c.getName(), e);
+                }
+            });
+        }
+    }
 
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {

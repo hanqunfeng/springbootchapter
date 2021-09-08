@@ -23,33 +23,50 @@ public interface BaseJpaRepository<T, ID extends Serializable> extends JpaReposi
 
     <E> List<E> findByHql(String hql);
 
-    List<Map> findBySql(String sql, Object... params);
+
+    List<Map> findBySql(String sql);
+
+    List<Map> findBySql(String sql, Object[] params);
 
     List<Map> findBySql(String sql, Map<String, Object> params);
 
 
-    Map findBySqlFirst(String sql, Object... params);
+    Map findBySqlFirst(String sql);
+
+    Map findBySqlFirst(String sql, Object[] params);
 
     Map findBySqlFirst(String sql, Map<String, Object> params);
 
     /**
      * basic == true 表示基本数据类型
      */
-    <E> List<E> findBySql(String sql, Class clazz, boolean basic, Object... params);
+    <E> List<E> findBySql(String sql, Class clazz, boolean basic);
+
+    <E> List<E> findBySql(String sql, Class clazz, boolean basic, Object[] params);
 
     <E> List<E> findBySql(String sql, Class clazz, boolean basic, Map<String, Object> params);
 
     /**
      * 分页查询
      */
-    <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Object... params);
+    <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic);
+
+    <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic);
+
+    <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Object[] params);
+
+    <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic, Object[] params);
 
     <E> Page<E> findPageBySql(String sql, Pageable pageable, Class clazz, boolean basic, Map<String, Object> params);
+
+    <E> Page<E> findPageBySql(String sql, String countSql, Pageable pageable, Class clazz, boolean basic, Map<String, Object> params);
 
     /**
      * basic == true 表示基本数据类型
      */
-    <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Object... params);
+    <E> E findBySqlFirst(String sql, Class clazz, boolean basic);
+
+    <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Object[] params);
 
     <E> E findBySqlFirst(String sql, Class clazz, boolean basic, Map<String, Object> params);
 
@@ -64,6 +81,11 @@ public interface BaseJpaRepository<T, ID extends Serializable> extends JpaReposi
      * 批量更新
      */
     <S extends T> Iterable<S> batchUpdate(Iterable<S> iterable);
+
+
+    void lazyInitialize(Class<T> entityClazz, List<T> l, String[] fields);
+
+    void lazyInitialize(T obj, String[] fields);
 
 
 }
