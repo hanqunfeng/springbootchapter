@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Description: <CountryPojo vo>. <br>
+ * Description: <CountryDto vo>. <br>
  * <p>
  * generate time:2021-8-27 15:47:30
  *
@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @JpaDto
 @Data
-public class CountryPojo implements Serializable {
+public class CountryDto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /*
@@ -67,10 +67,10 @@ public class CountryPojo implements Serializable {
     private String remark;
 
 
-    public CountryPojo() {
+    public CountryDto() {
     }
 
-    public CountryPojo(Long id, String nameZh, String nameEn) {
+    public CountryDto(Long id, String nameZh, String nameEn) {
         this.id = id;
         this.nameZh = nameZh;
         this.nameEn = nameEn;

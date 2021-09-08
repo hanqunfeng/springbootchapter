@@ -64,15 +64,15 @@ public class DemoController {
 
         final Country country = countryJpaRepository.findCountrySqlByName("中国");
         final Country country2 = countryJpaRepository.findCountryHqlByName("中国");
-        final CountryPojo country3 = countryJpaRepository.findCountryPojoNewHqlByName("中国");
+        final CountryDto country3 = countryJpaRepository.findCountryDtoNewHqlByName("中国");
 
-        final CountryPojo countryPojoSql = countryJpaRepository.findCountryPojoSqlByName("中国");
-        final CountryPojo countryPojoHql = countryJpaRepository.findCountryPojoHqlByName("中国");
+        final CountryDto countryDtoSql = countryJpaRepository.findCountryDtoSqlByName("中国");
+        final CountryDto countryDtoHql = countryJpaRepository.findCountryDtoHqlByName("中国");
 
         Pageable pageable = PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "id"));
 
         final Page<Country> countryPage = countryJpaRepository.findByIdAfter(45L, pageable);
-        final Page<CountryPojo> countryPojoPage = countryJpaRepository.findByIdAfterPojo(45L, pageable);
+        final Page<CountryDto> countryPojoPage = countryJpaRepository.findByIdAfterDto(45L, pageable);
 
         Map<String, Object> map = new HashMap<>();
 

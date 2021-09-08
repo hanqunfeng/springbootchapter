@@ -17,17 +17,17 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Data
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseDomain {
     @Id
     @GenericGenerator(
-            name = "uuid",
-            strategy = "uuid",
+            name = "uuid2",
+            strategy = "uuid2",
             parameters = {@org.hibernate.annotations.Parameter(
                     name = "uuid_gen_strategy_class",
                     value = "org.hibernate.id.uuid.CustomVersionOneStrategy")
             })
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "uuid2")
     private String id;
 
 
