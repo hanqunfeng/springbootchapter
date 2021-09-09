@@ -87,6 +87,11 @@ public class DemoController {
         final List<Country> countries2 = countryJpaRepository.nameSqlFindAll2();
         final List<Country> countries3 = countryJpaRepository.nameSqlFindSomeField();
 
+        List list = countryJpaRepository.getEntityManager().createNamedQuery("SQL_FIND_ALL_COUNTRY").getResultList();
+
+        List list2 = countryJpaRepository.getEntityManager().createNativeQuery("select id,name_zh as nameZh,name_en as nameEn from tbl_country","SQL_RESULT_COUNTRY_SOME_FIELD").getResultList();
+
+
         Map<String, Object> map = new HashMap<>();
 
         return map;
