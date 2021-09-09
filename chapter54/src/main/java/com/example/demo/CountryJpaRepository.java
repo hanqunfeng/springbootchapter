@@ -4,7 +4,8 @@ import com.example.jpa.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Description: <conf模块JpaRepository >. <br>
@@ -43,4 +44,18 @@ public interface CountryJpaRepository extends BaseJpaRepository<Country, Long> {
     //sql查询部分属性时，一定有使用as别名，这里返回值不能是@Entity，并且其要标注@JpaDto注解，page要指定countQuery
     @Query(value = "SELECT id,name_zh as nameZh,name_en as nameEn FROM tbl_country WHERE id > ?1", countQuery = "SELECT count(*) FROM tbl_country WHERE id > ?1", nativeQuery = true)
     Page<CountryDto> findByIdAfterDto(Long id, Pageable pageable);
+
+
+    @Query(name = "HQL_FIND_ALL_COUNTRY")
+    List<Country> nameHqlFindAll();
+
+    @Query(name = "SQL_FIND_ALL_COUNTRY")
+    List<Country> nameSqlFindAll();
+
+    @Query(name = "SQL_FIND_ALL_COUNTRY2")
+    List<Country> nameSqlFindAll2();
+
+    @Query(name = "SQL_FIND_SOME_FIELD_COUNTRY")
+    List<Country> nameSqlFindSomeField();
+
 }

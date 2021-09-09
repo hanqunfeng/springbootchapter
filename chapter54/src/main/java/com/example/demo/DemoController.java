@@ -78,4 +78,17 @@ public class DemoController {
 
         return map;
     }
+
+    @GetMapping("/query2")
+    public Map query2() {
+
+        final List<Country> countries = countryJpaRepository.nameHqlFindAll();
+        final List<Country> countries1 = countryJpaRepository.nameSqlFindAll();
+        final List<Country> countries2 = countryJpaRepository.nameSqlFindAll2();
+        final List<Country> countries3 = countryJpaRepository.nameSqlFindSomeField();
+
+        Map<String, Object> map = new HashMap<>();
+
+        return map;
+    }
 }
