@@ -265,14 +265,13 @@ public class BaseJpaRepositoryImpl<T, ID extends Serializable> extends SimpleJpa
     @Override
     public T findByIdNew(ID id) {
         T t = null;
-
-        Optional<T> optional = this.findById(id);
-        if (optional.isPresent()) {
-            t = optional.get();
+        if (id != null) {
+            Optional<T> optional = this.findById(id);
+            if (optional.isPresent()) {
+                t = optional.get();
+            }
         }
-
         return t;
-
     }
 
 
