@@ -164,7 +164,7 @@ public class ExcelUtil {
                             T t = cls.newInstance();
                             //判断是否为空白行
                             boolean allBlank = true;
-                            for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
+                            for (int j = 0; j <= row.getLastCellNum(); j++) {
                                 if (reflectionMap.containsKey(j)) {
                                     Cell cell = row.getCell(j);
                                     Pair<CellType, String> pair = getCellValue(cell);
