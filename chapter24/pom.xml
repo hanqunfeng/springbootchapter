@@ -59,6 +59,14 @@
             <scope>true</scope>
         </dependency>
 
+        <!-- 支持aes-cbc-pkcs7加解密 -->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
     </dependencies>
 
     <build>
