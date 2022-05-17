@@ -69,6 +69,13 @@ public class AppTest {
         System.out.println("postParamGetBytesZip=" + new String(HttpClientUtil.postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
     }
 
+    @Test
+    public void novelTest(){
+        String url = "http://127.0.0.1:8088/novel-api/app";
+        String json = "{\"data\": \"O7D9tqFq+UTewESEokysj5citKwDg1Z3MTIm7AU5omJWTpmTjitwxX5lpIZUkqGTQgHTYLffBE8GuRfDu0NHNS3HopNrTHgOhQyGNWK8eJTfaNLwuYXYa7vDrbOeZn+Uus5oUgMC3kkGveS5xj7iIMncn85wLcRMlo4vPVmSURxtFkJoe1k9LTjPyk948/imjTEh2AMjITenncb4F86g5g==\"}";
+        System.out.println(HttpClientUtil.postJson(url, json));
+    }
+
 
 
 

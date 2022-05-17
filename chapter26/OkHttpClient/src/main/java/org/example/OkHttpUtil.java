@@ -34,19 +34,20 @@ public class OkHttpUtil {
             .writeTimeout(5L, TimeUnit.SECONDS) //写超时时间，5秒
             .followRedirects(true) //设置是否允许重定向，默认true
             //注意拦截器的顺序
-            .addInterceptor(new GzipRequestInterceptor()) //开启gzip压缩，支持对流或Json进行gzip压缩，服务端需要支持解压缩
+            //.addInterceptor(new GzipRequestInterceptor()) //开启gzip压缩，支持对流或Json进行gzip压缩，服务端需要支持解压缩
             .addInterceptor(new RetryIntercepter()) //重试拦截器，默认3次
             .addInterceptor(new HeadersLoggingInterceper()) //header拦截器
             .build();
-    
-    
+
+
     /**
      * <p>异步调用</p>
+     *
+     * @param request
      * @author hanqf
      * 2020/4/22 20:37
-     * @param request
      */
-    private static void executeAsync(Request request){
+    private static void executeAsync(Request request) {
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -63,11 +64,11 @@ public class OkHttpUtil {
                 }
                 Headers headers = response.headers();
                 StringBuilder stringBuffer = new StringBuilder();
-                for(int i=0;i<headers.size();i++){
+                for (int i = 0; i < headers.size(); i++) {
                     stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
                 }
                 log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
-                log.info(String.format("响应结果：%s",responseResult));
+                log.info(String.format("响应结果：%s", responseResult));
             }
         });
     }
@@ -94,7 +95,7 @@ public class OkHttpUtil {
             Headers headers = response.headers();
 
             StringBuilder stringBuffer = new StringBuilder();
-            for(int i=0;i<headers.size();i++){
+            for (int i = 0; i < headers.size(); i++) {
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }
             log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
@@ -148,7 +149,7 @@ public class OkHttpUtil {
             long t2 = System.nanoTime();//收到响应的时间
             Headers headers = response.headers();
             StringBuilder stringBuffer = new StringBuilder();
-            for(int i=0;i<headers.size();i++){
+            for (int i = 0; i < headers.size(); i++) {
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }
             log.info(String.format("响应头信息: [%s]", stringBuffer.toString()));
@@ -456,6 +457,48 @@ public class OkHttpUtil {
     }
 
 
+    public static String postImage(String url, String json, File[] files) {
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        int i = 1;
+        try {
+            String filesKey = "files";
+            for (File file : files) {
+                //URLEncoder.encode(file.getName(), "utf-8") //中文文件名使用encode，服务端使用decode解析
+                builder.addFormDataPart(filesKey, URLEncoder.encode(file.getName(), "utf-8"),
+                        RequestBody.create(file, MediaType.parse("multipart/form-data")));
+                i++;
+            }
+
+            final RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json; charset=utf8"));
+            builder.addFormDataPart("imageInfo", "imageInfo", requestBody);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        log.info(String.format("请求地址: [%s]", request.url()));
+
+        log.info(String.format("请求参数: %s", json));
+
+        if (files != null && files.length > 0) {
+            JSONArray jArray = new JSONArray();
+            jArray.add(files);
+            log.info(String.format("请求参数: %s", jArray.toJSONString()));
+        }
+        log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
+        return execute(request);
+    }
+
+
     /**
      * This interceptor compresses the HTTP request body. Many webservers can't handle this!
      */
@@ -526,6 +569,7 @@ public class OkHttpUtil {
             Response response = chain.proceed(request);
             while (!response.isSuccessful() && retryNum < maxRetry) {
                 retryNum++;
+                response.close();
                 response = chain.proceed(request);
             }
             return response;
@@ -542,7 +586,7 @@ public class OkHttpUtil {
             Request request = chain.request();
             Headers headers = request.headers();
             StringBuilder stringBuffer = new StringBuilder();
-            for(int i=0;i<headers.size();i++){
+            for (int i = 0; i < headers.size(); i++) {
                 stringBuffer.append(headers.name(i)).append(":").append(headers.value(i)).append(",");
             }
             log.info(String.format("请求头信息: [%s]", stringBuffer.toString()));

@@ -72,10 +72,10 @@ public class IndexController {
     }
 
     @PostMapping("/files")
-    public String files(@RequestParam Map<String, Object> map, @RequestParam("files") List<MultipartFile> multipartFileList){
+    public String files(@RequestParam Map<String, Object> map, @RequestParam("files") List<MultipartFile> multipartFileList) {
         JSONObject jsonObject = new JSONObject();
         JSONObject jsonObjectMap = new JSONObject(map);
-        jsonObject.put("map",jsonObjectMap);
+        jsonObject.put("map", jsonObjectMap);
 
         JSONArray jsonArray = new JSONArray();
         JSONObject js;
@@ -87,17 +87,17 @@ public class IndexController {
                 js.put("fileContentType", file.getContentType());
                 jsonArray.add(js);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        jsonObject.put("files",jsonArray);
+        jsonObject.put("files", jsonArray);
         return jsonObject.toJSONString();
     }
 
     @RequestMapping("/getBytes")
-    public byte[] getBytes(@RequestParam Map<String, Object> map){
+    public byte[] getBytes(@RequestParam Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject(map);
         return jsonObject.toJSONString().getBytes(StandardCharsets.UTF_8);
     }
@@ -118,6 +118,11 @@ public class IndexController {
         return baos.toByteArray();
     }
 
+    @PostMapping("/upload")
+    public ImageInfo upload(@RequestPart("files") List<MultipartFile> multipartFileList, @RequestPart("imageInfo") ImageInfo imageInfo) {
+
+        return imageInfo;
+    }
 
 
 }

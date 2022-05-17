@@ -47,17 +47,32 @@ public class AppTest {
 
     @Test
     public void postTest() {
-        System.out.println("post=" + OkHttpUtil.post(URL_POST));
-        System.out.println("postParam=" + OkHttpUtil.post(URL_POST, map));
-        System.out.println("postForm=" + OkHttpUtil.post(URL_POST_FORM, map));
-        System.out.println("postJson=" + OkHttpUtil.post(URL_POST_JSON, JSON));
-        System.out.println("postBytes=" + OkHttpUtil.post(URL_POST_STREAM, BYTES));
-        System.out.println("postStream=" + OkHttpUtil.post(URL_POST_STREAM, INPUTSTREAM));
-        System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES, files));
+        //System.out.println("post=" + OkHttpUtil.post(URL_POST));
+        //System.out.println("postParam=" + OkHttpUtil.post(URL_POST, map));
+        //System.out.println("postForm=" + OkHttpUtil.post(URL_POST_FORM, map));
+        //System.out.println("postJson=" + OkHttpUtil.post(URL_POST_JSON, JSON));
+        //System.out.println("postBytes=" + OkHttpUtil.post(URL_POST_STREAM, BYTES));
+        //System.out.println("postStream=" + OkHttpUtil.post(URL_POST_STREAM, INPUTSTREAM));
+        //System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES, files));
         System.out.println("postFiles=" + OkHttpUtil.post(URL_POST_FILES, map, files));
 
-        System.out.println("postParamGetBytes=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES, map), StandardCharsets.UTF_8));
-        System.out.println("postParamGetBytesZip=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
+        //System.out.println("postParamGetBytes=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES, map), StandardCharsets.UTF_8));
+        //System.out.println("postParamGetBytesZip=" + new String(OkHttpUtil.postBytes(URL_GET_BYTES_ZIP, map), StandardCharsets.UTF_8));
 
+    }
+
+    @Test
+    public void novelTest() {
+        String url = "http://127.0.0.1:8088/novel-api/app";
+        String json = "{\"data\": \"O7D9tqFq+UTewESEokysj5citKwDg1Z3MTIm7AU5omJWTpmTjitwxX5lpIZUkqGTQgHTYLffBE8GuRfDu0NHNS3HopNrTHgOhQyGNWK8eJTfaNLwuYXYa7vDrbOeZn+Uus5oUgMC3kkGveS5xj7iIMncn85wLcRMlo4vPVmSURxtFkJoe1k9LTjPyk948/imjTEh2AMjITenncb4F86g5g==\"}";
+        System.out.println(OkHttpUtil.post(url, json));
+    }
+
+
+    @Test
+    public void imageTest() {
+        String url = "http://127.0.0.1:8080/demo/upload";
+        String json = "{\"width\":\"100\",\"height\":\"200\"}";
+        System.out.println(OkHttpUtil.postImage(url, json, files));
     }
 }

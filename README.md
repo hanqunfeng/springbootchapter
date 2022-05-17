@@ -60,6 +60,7 @@
 ### chapter57--- Hutool工具类
 ### chapter58--- Springboot Spring-Retry
 ### chapter59--- 爬虫
+### chapter60--- 获取文件类型的多种方法
 
 
 
