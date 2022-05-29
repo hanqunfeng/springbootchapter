@@ -1,13 +1,11 @@
 package org.example;
 
 import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
 import org.junit.Test;
 
 import javax.activation.MimetypesFileTypeMap;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -151,7 +149,7 @@ public class AppTest {
      * 或者 根据文件流中前几个字符判断。
     */
     @Test
-    public void ApacheTika() throws IOException {
+    public void ApacheTikaDetect() throws IOException {
         // 下面是通过文件扩展名判断类型，速度快，内置类型就很多了，基本常用类型都有，不认识就返回 application/octet-stream
         // 推荐这种方式，内置1千多种类型，又快又准
         final long start1 = System.currentTimeMillis();
@@ -175,6 +173,20 @@ public class AppTest {
         final long end2 = System.currentTimeMillis();
         System.out.println(end2-start1);
     }
+
+    @Test
+    public void ApacheTikaTranslate(){
+        //System.out.println(new Tika().translate("你好", "en"));
+        System.out.println(1);
+    }
+
+
+    @Test
+    public void ApacheTikaParser() throws TikaException, IOException {
+        System.out.println(new Tika().parseToString(txtPath));
+    }
+
+
 
 
 }
