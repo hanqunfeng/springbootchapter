@@ -10,6 +10,7 @@ import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
@@ -52,6 +53,25 @@ public class RestTemplateUtil {
 
         restTemplate = new RestTemplate(factory);
         restTemplate.setInterceptors(list);
+
+        //非200的http状态码导致默认的restTemplate调用直接抛异常而不是直接得到对方的错误json信息
+        //这里增加自定义的错误处理器，不管状态码是200还是其它的都会返回结果
+        ResponseErrorHandler responseErrorHandler = new ResponseErrorHandler() {
+            //hasError默认写死true，都进；
+            @Override
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                return true;
+            }
+
+            //handleError 为空，相当于跳过错误抛出
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+                // 只要重写此方法，不去抛出HttpClientErrorException异常即可
+                HttpStatus statusCode = response.getStatusCode();
+                log.error("错误码::[{}]",statusCode);
+            }
+        };
+        restTemplate.setErrorHandler(responseErrorHandler);
     }
 
     public static String get(String url) {
