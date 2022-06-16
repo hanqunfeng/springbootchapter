@@ -7,6 +7,7 @@ import okhttp3.*;
 import okio.BufferedSink;
 import okio.GzipSink;
 import okio.Okio;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -81,12 +82,13 @@ public class OkHttpUtil {
      * @author hanqf
      * 2020/4/18 23:47
      */
-    private static String execute(Request request) {
+    private static String execute(Request request, int... codes) {
         String responseResult = null;
         try {
             long t1 = System.nanoTime();//请求发起的时间
             Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
+            log.info("状态码::[{}]", response.code());
+            if (response.isSuccessful() || (codes != null && ArrayUtils.contains(codes, response.code()))) {
                 responseResult = Objects.requireNonNull(response.body()).string();
                 //byte[] bytes = response.body().bytes();
                 //responseResult = new String(bytes,"utf-8");
@@ -268,7 +270,7 @@ public class OkHttpUtil {
      * @author hanqf
      * 2020/4/18 23:49
      */
-    public static String post(String url, Map<String, Object> params) {
+    public static String post(String url, Map<String, Object> params, int... codes) {
         //请求头会加入：application/x-www-form-urlencoded
         FormBody.Builder builder = new FormBody.Builder();
         for (String key : params.keySet()) {
@@ -288,7 +290,7 @@ public class OkHttpUtil {
         }
         log.info(String.format("请求类型: %s", Objects.requireNonNull(Objects.requireNonNull(request.body()).contentType()).toString()));
 
-        return execute(request);
+        return execute(request,codes);
 
     }
 
