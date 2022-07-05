@@ -62,7 +62,7 @@
 ### chapter59--- 爬虫
 ### chapter60--- 获取文件类型的多种方法
 ### chapter61--- spring session
-### chapter62--- 数据类型
+### chapter62--- 数据类型，获取带泛型的类型
 
 
 

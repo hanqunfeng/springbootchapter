@@ -3,6 +3,7 @@ package com.example.config;/**
  */
 
 
+import com.example.support.RedisCacheAspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,5 +125,11 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     protected void RedisErrorException(Exception exception, Object key) {
         logger.error("redis异常：key=[{}]", key, exception);
+    }
+
+
+    @Bean
+    public RedisCacheAspect redisCacheAspect(){
+        return new RedisCacheAspect();
     }
 }

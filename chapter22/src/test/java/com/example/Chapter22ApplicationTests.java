@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.service.RedisService;
+import com.example.service.TestRedisService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,23 +9,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 class   Chapter22ApplicationTests {
 
     @Autowired
-    private RedisService redisService;
+    private TestRedisService testRedisService;
 
     @Test
     void cacheKey() {
-        redisService.deleteAllkey();
-        System.out.println(redisService.getValueByKey("aaa"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey2("ccc"));
-        System.out.println(redisService.getValueByKey3("ddd"));
+        testRedisService.deleteAllkey();
+        System.out.println(testRedisService.getValueByKey("aaa"));
+        System.out.println(testRedisService.getValueByKey("qqq"));
+        System.out.println(testRedisService.getValueByKey2("ccc"));
+        System.out.println(testRedisService.getValueByKey3("ddd"));
 
-        redisService.deleteByKey("qqq");
-        System.out.println(redisService.getValueByKey("aaa"));
-        System.out.println(redisService.getValueByKey("qqq"));
-        System.out.println(redisService.getValueByKey2("ccc"));
-        System.out.println(redisService.getValueByKey3("ddd"));
+        testRedisService.deleteByKey("qqq");
+        System.out.println(testRedisService.getValueByKey("aaa"));
+        System.out.println(testRedisService.getValueByKey("qqq"));
+        System.out.println(testRedisService.getValueByKey2("ccc"));
+        System.out.println(testRedisService.getValueByKey3("ddd"));
 
-        redisService.deleteCache("aaa");
+        testRedisService.deleteCache("aaa");
 
     }
 
