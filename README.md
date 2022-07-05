@@ -21,7 +21,7 @@
 ### chapter19----springboot mongoDB 复制集 事务(4.0+版本支持事务，但至少为复制集，事务不支持读写分理，所以读写都必须为主库,另外需要提前创建好集合，事务下不会自动创建集合)
 ### chapter20----springboot redis 事务 批量执行 Lua执行 分布式锁 RedisRepository Jackson2HashMapper
 ### chapter21----springboot redis集群 不支持事务
-### chapter22----springboot redis注解式缓存，分组缓存配置，名词解释(缓存穿透,缓存击穿,缓存雪崩)
+### chapter22----springboot redis注解式缓存，分组缓存配置，名词解释(缓存穿透,缓存击穿,缓存雪崩)，自定义清除缓存注解支持模糊匹配
 ### chapter23----springboot redis发布订阅
 ### chapter24----springboot MVC thymeleaf i18n 跨域 基于RequestBodyAdvice和ResponseBodyAdvice的请求和响应数据加解密
 ### chapter25----springboot JPA 自定义JpaRepositories接口
