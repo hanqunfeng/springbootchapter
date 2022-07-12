@@ -290,24 +290,24 @@
             </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>com.soebes.maven.plugins</groupId>
-                        <artifactId>echo-maven-plugin</artifactId>
-                        <version>0.3.0</version>
-                        <executions>
-                            <execution>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>echo</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <echos>
-                                <echo>Executable profile to make the generated CAS web application executable.</echo>
-                            </echos>
-                        </configuration>
-                    </plugin>
+<!--                    <plugin>-->
+<!--                        <groupId>com.soebes.maven.plugins</groupId>-->
+<!--                        <artifactId>echo-maven-plugin</artifactId>-->
+<!--                        <version>0.3.0</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <phase>prepare-package</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>echo</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                        <configuration>-->
+<!--                            <echos>-->
+<!--                                <echo>Executable profile to make the generated CAS web application executable.</echo>-->
+<!--                            </echos>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
                 </plugins>
             </build>
         </profile>
@@ -339,25 +339,25 @@
             <id>pgp</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>com.github.s4u.plugins</groupId>
-                        <artifactId>pgpverify-maven-plugin</artifactId>
-                        <version>1.1.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <pgpKeyServer>hkp://pool.sks-keyservers.net</pgpKeyServer>
-                            <pgpKeysCachePath>${settings.localRepository}/pgpkeys-cache</pgpKeysCachePath>
-                            <scope>test</scope>
-                            <verifyPomFiles>true</verifyPomFiles>
-                            <failNoSignature>false</failNoSignature>
-                        </configuration>
-                    </plugin>
+<!--                    <plugin>-->
+<!--                        <groupId>com.github.s4u.plugins</groupId>-->
+<!--                        <artifactId>pgpverify-maven-plugin</artifactId>-->
+<!--                        <version>1.1.0</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <goals>-->
+<!--                                    <goal>check</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                        <configuration>-->
+<!--                            <pgpKeyServer>hkp://pool.sks-keyservers.net</pgpKeyServer>-->
+<!--                            <pgpKeysCachePath>${settings.localRepository}/pgpkeys-cache</pgpKeysCachePath>-->
+<!--                            <scope>test</scope>-->
+<!--                            <verifyPomFiles>true</verifyPomFiles>-->
+<!--                            <failNoSignature>false</failNoSignature>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
                 </plugins>
             </build>
         </profile>
