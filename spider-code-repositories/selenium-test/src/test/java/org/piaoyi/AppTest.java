@@ -23,6 +23,7 @@ public class AppTest {
     private Map<String, Object> vars;
     JavascriptExecutor js;
 
+
     @Before
     public void setUp() {
         //chrome
@@ -103,6 +104,7 @@ public class AppTest {
         driver.get("https://boss3.picooapps.com/BOSS_SUPPORT/auth/authority/list.do");
         //打印页面html内容
         System.out.println(driver.getPageSource());
+
     }
 }
 
