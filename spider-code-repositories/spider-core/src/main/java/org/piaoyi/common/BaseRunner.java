@@ -17,6 +17,8 @@ package org.piaoyi.common;/**
 import org.piaoyi.config.SpringPipelineFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
+
 /**
  * @author hanqf
  * @date 2020/4/5 16:04
@@ -40,10 +42,16 @@ public abstract class BaseRunner {
 
     /**
      * 启动方法
+     * map : 初始化参数，为了扩展用，比如初始化cookie
      *
      * @author hanqf
      * @date2020/4/10 11:20
      * @since
      */
-    public abstract void start();
+    public abstract void start(Map<String,Object> map);
+
+    /**
+     * 初始化
+    */
+    public abstract void init(Map<String,Object> map);
 }

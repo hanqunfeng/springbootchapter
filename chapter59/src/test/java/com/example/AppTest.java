@@ -14,6 +14,10 @@ import org.openqa.selenium.html5.WebStorage;
 import org.openqa.selenium.remote.Augmenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
@@ -98,7 +102,7 @@ public class AppTest {
         //打印页面html内容
         System.out.println(driver.getPageSource());
         List<String> cookieList = new ArrayList<>();
-        for(Cookie cookie : cookies){
+        for (Cookie cookie : cookies) {
             System.out.println(cookie);
             cookieList.add(cookie.toString());
 
@@ -108,6 +112,54 @@ public class AppTest {
                 .format(new Date()));
 
 
+    }
+
+    /**
+     * 这个可以正常访问登录后的页面
+     */
+    @Test
+    public void test_gitlab() {
+        driver.get("https://gitlab.zzzz.com/users/sign_in");
+        driver.manage().window().setSize(new Dimension(1680, 1025));
+        driver.findElement(By.id("user_login")).click();
+        driver.findElement(By.id("user_login")).sendKeys("xxxxx");
+        driver.findElement(By.id("user_password")).sendKeys("xxxxx");
+        driver.findElement(By.name("commit")).click();
+
+
+        System.out.println("当前页面url:" + driver.getCurrentUrl());
+        // 如下是获取cookies的方法，一般老一点的网站会用cookie
+        Set<Cookie> cookies = driver.manage().getCookies();
+        List<String> cookieList = new ArrayList<>();
+        for (Cookie cookie : cookies) {
+            System.out.println(cookieToString(cookie));
+            cookieList.add(cookieToString(cookie));
+        }
+
+        //driver.get("https://gitlab.androidsec.com");
+        //System.out.println(driver.getPageSource());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(HttpHeaders.COOKIE, cookieList);
+        // 设置请求boby
+        HttpEntity entity = new HttpEntity(headers);
+
+        String url = "https://gitlab.zzzz.com";
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        System.out.println("模拟浏览器请求接口，返回数据:" + response.getBody());
+
+
+    }
+
+    private String cookieToString(Cookie cookie) {
+        return cookie.getName() + "=" + cookie.getValue()
+                + (cookie.getExpiry() == null ? ""
+                //Thu, 01-Jan-1970 00:00:10 GMT，这里重新toString主要是为了设置为英文格式
+                : "; expires=" + new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss", Locale.ENGLISH)
+                .format(cookie.getExpiry()))
+                + ("".equals(cookie.getPath()) ? "" : "; path=" + cookie.getPath())
+                + (cookie.getDomain() == null ? "" : "; domain=" + cookie.getDomain())
+                + (cookie.isSecure() ? ";secure;" : "");
     }
 }
 

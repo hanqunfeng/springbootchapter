@@ -30,6 +30,7 @@ public class GeccoCommandLineRunner implements CommandLineRunner {
     static {
         beanMap.put("github", "GithubSearchResultRunner");
         beanMap.put("gitee", "GiteeSearchResultRunner");
+        beanMap.put("gitlab", "GitlabMainResultRunner");
     }
 
     @Override
@@ -38,10 +39,10 @@ public class GeccoCommandLineRunner implements CommandLineRunner {
             String beanName = beanMap.get(spider_start);
             if (beanName != null) {
                 exec(beanName);
-            }else{
+            } else {
                 System.out.println("！！！--spider.start 参数错误：取值范围sina，xzw，horo，astro，msn，alman！！！");
             }
-        }else {
+        } else {
             System.out.println("！！！请指定抓取网站参数：--spider.start 取值范围sina，xzw，horo，astro，msn，alman！！！");
         }
 
@@ -63,14 +64,14 @@ public class GeccoCommandLineRunner implements CommandLineRunner {
                 BaseDynamicRunner baseDynamicRunner = ((BaseDynamicRunner) object);
                 baseDynamicRunner.setInterval(2000);
                 baseDynamicRunner.setThread(2);
-                baseDynamicRunner.start();
+                baseDynamicRunner.start(new HashMap<>());
             } else if (object != null && object instanceof BaseBeanRunner) {
                 BaseBeanRunner baseBeanRunner = ((BaseBeanRunner) object);
                 baseBeanRunner.setInterval(100);
                 baseBeanRunner.setThread(1);
-                baseBeanRunner.start();
+                baseBeanRunner.start(new HashMap<>());
             } else if (object != null && object instanceof BaseRunner) {
-                ((BaseRunner) object).start();
+                ((BaseRunner) object).start(new HashMap<>());
             }
         } else {
             log.info("args error!");

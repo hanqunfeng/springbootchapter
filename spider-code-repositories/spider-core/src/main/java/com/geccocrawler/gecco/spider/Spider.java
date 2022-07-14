@@ -11,6 +11,7 @@ import com.geccocrawler.gecco.response.HttpResponse;
 import com.geccocrawler.gecco.scheduler.Scheduler;
 import com.geccocrawler.gecco.scheduler.UniqueSpiderScheduler;
 import com.geccocrawler.gecco.spider.render.Render;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -239,7 +240,13 @@ public class Spider implements Runnable {
         if (before != null) {
             before.process(request);
         }
+
+        String[] engineCookies = engine.getCookies();
+        if (engineCookies != null && engineCookies.length > 0) {
+            request.addHeader("Cookie", StringUtils.join(engineCookies, ","));
+        }
         HttpResponse response = currDownloader.download(request, timeout);
+
         if (after != null) {
             after.process(request, response);
         }

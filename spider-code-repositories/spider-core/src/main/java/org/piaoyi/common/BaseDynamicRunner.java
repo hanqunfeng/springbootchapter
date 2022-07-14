@@ -13,6 +13,8 @@ package org.piaoyi.common;
 
 import com.geccocrawler.gecco.GeccoEngine;
 
+import java.util.Map;
+
 /**
  * ${DESCRIPTION}
  * Created by hanqf on 2018/11/28 16:41.
@@ -63,9 +65,17 @@ public abstract class BaseDynamicRunner extends BaseRunner {
      * 启动抓取线程
      */
     @Override
-    public void start() {
+    public void start(Map<String,Object> map) {
+        init(map);
         makeDynamicGecco();
         makeGeccoEngine(makeHttpUrls(), thread, interval);
     }
 
+    /**
+     * 初始化
+    */
+    @Override
+    public void init(Map<String, Object> map) {
+        //subClass toDo
+    }
 }
