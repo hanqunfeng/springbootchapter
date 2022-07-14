@@ -87,7 +87,7 @@ public abstract class AbstractRender implements Render {
 
     private void doSomething(String discardPattern, BeanMap beanMap, Field hrefField, HttpRequest request) {
         Object object = beanMap.get(hrefField.getName());
-        if (!"".equals(discardPattern)) {
+        if (discardPattern != null && !"".equals(discardPattern)) {
             Pattern r = Pattern.compile(discardPattern);
             Matcher m = r.matcher((String) object);
             if (m.matches()) {

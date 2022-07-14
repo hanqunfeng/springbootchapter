@@ -32,6 +32,16 @@ public abstract class BaseRunner {
     protected int interval = 2000;
 
 
+    protected void setCookies(String[] cookies) {
+        this.cookies = cookies;
+    }
+
+    /**
+     * 全局cookies
+     */
+    protected String[] cookies;
+
+
     public void setThread(int thread) {
         this.thread = thread;
     }

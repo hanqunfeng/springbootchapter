@@ -1,6 +1,7 @@
 package org.piaoyi.data.gitee.htmlbean;
 
 import com.geccocrawler.gecco.annotation.*;
+import com.geccocrawler.gecco.request.HttpRequest;
 import lombok.Data;
 import org.piaoyi.common.BaseHtmlBean;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,17 @@ public class GiteeSearchResultHtmlBean extends BaseHtmlBean {
 
     private static final long serialVersionUID = -5741703927403198440L;
 
+    @Request
+    private HttpRequest request;
+
+    public String getCurrentUrl() {
+        return request.getUrl();
+    }
+
+    /**
+     * 当前访问的url
+    */
+    private String currentUrl;
     /**
      * 页码，从1开始
      */

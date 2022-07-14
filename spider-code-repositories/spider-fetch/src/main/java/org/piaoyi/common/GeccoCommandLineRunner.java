@@ -31,6 +31,7 @@ public class GeccoCommandLineRunner implements CommandLineRunner {
         beanMap.put("github", "GithubSearchResultRunner");
         beanMap.put("gitee", "GiteeSearchResultRunner");
         beanMap.put("gitlab", "GitlabMainResultRunner");
+        beanMap.put("giteeDynamic", "GiteeSearchResultDynamicRunner");
     }
 
     @Override

@@ -45,7 +45,7 @@ public abstract class BaseDynamicRunner extends BaseRunner {
     /**
      * 构建
      */
-    public void makeGeccoEngine(String[] urls, int thread, int interval) {
+    private void makeGeccoEngine(String[] urls) {
         GeccoEngine.create()
                 .pipelineFactory(springPipelineFactory)
                 //Gecco搜索的包路径，因为时使用的是DynamicGecco，所以不需要搜索，这里是要全局唯一的值就可以了
@@ -57,6 +57,8 @@ public abstract class BaseDynamicRunner extends BaseRunner {
                 .thread(thread)
                 //单个爬虫每次抓取完一个请求后的间隔时间
                 .interval(interval)
+                //配置全局cookie
+                .cookies(cookies)
                 .start();
     }
 
@@ -68,7 +70,7 @@ public abstract class BaseDynamicRunner extends BaseRunner {
     public void start(Map<String,Object> map) {
         init(map);
         makeDynamicGecco();
-        makeGeccoEngine(makeHttpUrls(), thread, interval);
+        makeGeccoEngine(makeHttpUrls());
     }
 
     /**

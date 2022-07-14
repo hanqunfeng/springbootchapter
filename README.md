@@ -57,13 +57,13 @@
 ### chapter54---Springboot 自定义JpaRepository的基类
 ### chapter55---Springboot excel导入导出
 ### chapter56---Springboot csv导入导出
-### chapter57--- Hutool工具类
-### chapter58--- Springboot Spring-Retry
-### chapter59--- 爬虫
-### chapter60--- 获取文件类型的多种方法
-### chapter61--- spring session
-### chapter62--- 数据类型，获取带泛型的类型
-### spider-code-repositories--- html抓取
+### chapter57---Hutool工具类
+### chapter58---Springboot Spring-Retry
+### chapter59---爬虫
+### chapter60---获取文件类型的多种方法
+### chapter61---spring session
+### chapter62---数据类型，获取带泛型的类型
+### spider-code-repositories---html抓取，通过配置全局cookie实现抓取需要登录才能访问的页面
 
 
 
