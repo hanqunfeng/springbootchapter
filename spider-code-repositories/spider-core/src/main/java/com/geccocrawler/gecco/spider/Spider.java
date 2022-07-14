@@ -241,10 +241,12 @@ public class Spider implements Runnable {
             before.process(request);
         }
 
+        //设置全局cookie
         String[] engineCookies = engine.getCookies();
         if (engineCookies != null && engineCookies.length > 0) {
             request.addHeader("Cookie", StringUtils.join(engineCookies, ","));
         }
+
         HttpResponse response = currDownloader.download(request, timeout);
 
         if (after != null) {
