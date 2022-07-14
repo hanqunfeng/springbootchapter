@@ -1,10 +1,13 @@
 package org.piaoyi.data.github;
 
+import com.geccocrawler.gecco.request.HttpGetRequest;
+import com.geccocrawler.gecco.request.HttpRequest;
 import org.piaoyi.common.BaseBeanRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>github查询启动</h1>
@@ -27,10 +30,10 @@ public class GithubSearchResultRunner extends BaseBeanRunner {
     private String language = "Java";
 
     @Override
-    public String[] makeHttpUrls() {
-        List<String> urls = new ArrayList<>();
+    public List<HttpRequest> makeHttpUrls(Map<String, Object> map) {
+        List<HttpRequest> requestList = new ArrayList<>();
         STARTURL = STARTURL.replace("{query}", query + "+language%3A" + language);
-        urls.add(STARTURL);
-        return urls.toArray(new String[]{});
+        requestList.add(new HttpGetRequest(STARTURL));
+        return requestList;
     }
 }

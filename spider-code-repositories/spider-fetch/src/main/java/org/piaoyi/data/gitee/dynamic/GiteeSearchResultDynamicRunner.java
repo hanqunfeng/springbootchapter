@@ -1,11 +1,14 @@
 package org.piaoyi.data.gitee.dynamic;
 
 import com.geccocrawler.gecco.dynamic.DynamicGecco;
+import com.geccocrawler.gecco.request.HttpGetRequest;
+import com.geccocrawler.gecco.request.HttpRequest;
 import org.piaoyi.common.BaseDynamicRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>动态启动器</h1>
@@ -28,12 +31,12 @@ public class GiteeSearchResultDynamicRunner extends BaseDynamicRunner {
     private String MATCH_URL = "https://search.gitee.com/?q={query}&type={type}&lang={language}&pageno={page}";
 
     @Override
-    public String[] makeHttpUrls() {
-        List<String> urls = new ArrayList<>();
+    public List<HttpRequest> makeHttpUrls(Map<String, Object> map) {
+        List<HttpRequest> requestList = new ArrayList<>();
         STARTURL = STARTURL.replace("{query}", query);
         STARTURL = STARTURL.replace("{language}", language);
-        urls.add(STARTURL);
-        return urls.toArray(new String[]{});
+        requestList.add(new HttpGetRequest(STARTURL));
+        return requestList;
     }
 
     @Override

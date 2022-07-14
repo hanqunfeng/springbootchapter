@@ -1,5 +1,7 @@
 package org.piaoyi.data.gitlab;
 
+import com.geccocrawler.gecco.request.HttpGetRequest;
+import com.geccocrawler.gecco.request.HttpRequest;
 import org.piaoyi.common.BaseBeanRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,24 +21,23 @@ public class GitlabMainResultRunner extends BaseBeanRunner {
 
 
     @Override
-    public String[] makeHttpUrls() {
-        List<String> urls = new ArrayList<>();
-        urls.add(STARTURL);
-        urls.add("https://gitlab.xxxx.com/dashboard");
-        return urls.toArray(new String[]{});
+    public List<HttpRequest> makeHttpUrls(Map<String, Object> map) {
+        List<HttpRequest> requestList = new ArrayList<>();
+        requestList.add(new HttpGetRequest(STARTURL));
+        requestList.add(new HttpGetRequest("https://gitlab.xxxx.com/dashboard"));
+        return requestList;
     }
 
     @Override
     public void init(Map<String, Object> map) {
-        if (map != null && map.containsKey("cookies")) {
-            setCookies((String[]) map.get("cookies"));
-        } else {
-            List<String> cookies = new ArrayList<>();
-            //String cookie = "_gitlab_session=xxxxxx; expires=Wed, 20 Jul 2021 11:17:28; path=/; domain=gitlab.xxxx.com;secure;";
-            //String cookie = "_gitlab_session=xxxxxx; path=/; domain=gitlab.xxxx.com;";
-            String cookie = "_gitlab_session=xxxxx;";
-            cookies.add(cookie);
-            setCookies(cookies.toArray(new String[cookies.size()]));
-        }
+        super.init(map);
+
+        List<String> cookies = new ArrayList<>();
+        //String cookie = "_gitlab_session=xxxxxx; expires=Wed, 20 Jul 2021 11:17:28; path=/; domain=gitlab.xxxx.com;secure;";
+        //String cookie = "_gitlab_session=xxxxxx; path=/; domain=gitlab.xxxx.com;";
+        String cookie = "_gitlab_session=xxxxx;";
+        cookies.add(cookie);
+        setCookies(cookies.toArray(new String[cookies.size()]));
+
     }
 }
