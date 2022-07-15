@@ -240,10 +240,18 @@ public class JavassistDynamicField implements DynamicField {
 
 
     @Override
-    public DynamicField href(String discardPattern, boolean click, String... value) {
+    public DynamicField href(String[] discardPattern, boolean click, String... value) {
         Annotation annot = new Annotation(Href.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -259,7 +267,7 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField href(boolean click, String... value) {
-        return href("", click, value);
+        return href(new String[]{}, click, value);
     }
 
     @Override
@@ -294,11 +302,19 @@ public class JavassistDynamicField implements DynamicField {
 
 
     @Override
-    public DynamicField parentHref(String discardPattern, String cssPath, boolean click, String... value) {
+    public DynamicField parentHref(String[] discardPattern, String cssPath, boolean click, String... value) {
         Annotation annot = new Annotation(ParentHref.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
         annot.addMemberValue("cssPath", new StringMemberValue(cssPath, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -314,16 +330,24 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField parentHref(String cssPath, boolean click, String... value) {
-        return parentHref("", "", click, value);
+        return parentHref(new String[]{}, "", click, value);
     }
 
 
     @Override
-    public DynamicField parentNextHref(String discardPattern, String cssPath, boolean click, String... value) {
+    public DynamicField parentNextHref(String[] discardPattern, String cssPath, boolean click, String... value) {
         Annotation annot = new Annotation(ParentNextHref.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
         annot.addMemberValue("cssPath", new StringMemberValue(cssPath, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -339,16 +363,24 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField parentNextHref(String cssPath, boolean click, String... value) {
-        return parentNextHref("", cssPath, click, value);
+        return parentNextHref(new String[]{}, cssPath, click, value);
     }
 
 
     @Override
-    public DynamicField parentPrevHref(String discardPattern, String cssPath, boolean click, String... value) {
+    public DynamicField parentPrevHref(String[] discardPattern, String cssPath, boolean click, String... value) {
         Annotation annot = new Annotation(ParentPreviousHref.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
         annot.addMemberValue("cssPath", new StringMemberValue(cssPath, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -364,16 +396,24 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField parentPrevHref(String cssPath, boolean click, String... value) {
-        return parentPrevHref("", cssPath, click, value);
+        return parentPrevHref(new String[]{}, cssPath, click, value);
     }
 
 
     @Override
-    public DynamicField brotherPrevHref(String discardPattern, String cssPath, boolean click, String... value) {
+    public DynamicField brotherPrevHref(String[] discardPattern, String cssPath, boolean click, String... value) {
         Annotation annot = new Annotation(BrotherPreviousHref.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
         annot.addMemberValue("cssPath", new StringMemberValue(cssPath, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -390,15 +430,23 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField brotherPrevHref(String cssPath, boolean click, String... value) {
-        return brotherPrevHref("", cssPath, click, value);
+        return brotherPrevHref(new String[]{}, cssPath, click, value);
     }
 
     @Override
-    public DynamicField brotherNextHref(String discardPattern, String cssPath, boolean click, String... value) {
+    public DynamicField brotherNextHref(String[] discardPattern, String cssPath, boolean click, String... value) {
         Annotation annot = new Annotation(BrotherNextHref.class.getName(), cpool);
         annot.addMemberValue("click", new BooleanMemberValue(click, cpool));
         annot.addMemberValue("cssPath", new StringMemberValue(cssPath, cpool));
-        annot.addMemberValue("discardPattern", new StringMemberValue(discardPattern, cpool));
+
+        ArrayMemberValue discardPatternArrayMemberValue = new ArrayMemberValue(cpool);
+        MemberValue[] discardPatternMemberValues = new StringMemberValue[discardPattern.length];
+
+        for (int i = 0; i < discardPattern.length; i++) {
+            discardPatternMemberValues[i] = new StringMemberValue(discardPattern[i], cpool);
+        }
+        discardPatternArrayMemberValue.setValue(discardPatternMemberValues);
+        annot.addMemberValue("discardPattern", discardPatternArrayMemberValue);
 
         ArrayMemberValue arrayMemberValue = new ArrayMemberValue(cpool);
         MemberValue[] memberValues = new StringMemberValue[value.length];
@@ -414,7 +462,7 @@ public class JavassistDynamicField implements DynamicField {
 
     @Override
     public DynamicField brotherNextHref(String cssPath, boolean click, String... value) {
-        return brotherNextHref("", cssPath, click, value);
+        return brotherNextHref(new String[]{}, cssPath, click, value);
     }
 
     @Override

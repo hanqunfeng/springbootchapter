@@ -89,7 +89,7 @@ public interface DynamicField {
 
     public DynamicField href(boolean click, String... value);
 
-    public DynamicField href(String discardPattern, boolean click, String... value);
+    public DynamicField href(String[] discardPattern, boolean click, String... value);
 
     public DynamicField href(String... value);
 
@@ -103,23 +103,23 @@ public interface DynamicField {
 
     public DynamicField brotherNextHref(String... value);
 
-    public DynamicField parentHref(String discardPattern, String cssPath, boolean click, String... value);
+    public DynamicField parentHref(String[] discardPattern, String cssPath, boolean click, String... value);
 
     public DynamicField parentHref(String cssPath, boolean click, String... value);
 
-    public DynamicField parentNextHref(String discardPattern, String cssPath, boolean click, String... value);
+    public DynamicField parentNextHref(String[] discardPattern, String cssPath, boolean click, String... value);
 
     public DynamicField parentNextHref(String cssPath, boolean click, String... value);
 
-    public DynamicField parentPrevHref(String discardPattern, String cssPath, boolean click, String... value);
+    public DynamicField parentPrevHref(String[] discardPattern, String cssPath, boolean click, String... value);
 
     public DynamicField parentPrevHref(String cssPath, boolean click, String... value);
 
-    public DynamicField brotherPrevHref(String discardPattern, String cssPath, boolean click, String... value);
+    public DynamicField brotherPrevHref(String[] discardPattern, String cssPath, boolean click, String... value);
 
     public DynamicField brotherPrevHref(String cssPath, boolean click, String... value);
 
-    public DynamicField brotherNextHref(String discardPattern, String cssPath, boolean click, String... value);
+    public DynamicField brotherNextHref(String[] discardPattern, String cssPath, boolean click, String... value);
 
     public DynamicField brotherNextHref(String cssPath, boolean click, String... value);
 

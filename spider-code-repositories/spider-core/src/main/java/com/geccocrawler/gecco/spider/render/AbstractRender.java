@@ -85,13 +85,15 @@ public abstract class AbstractRender implements Render {
     public abstract void fieldRender(HttpRequest request, HttpResponse response, BeanMap beanMap, SpiderBean bean);
 
 
-    private void doSomething(String discardPattern, BeanMap beanMap, Field hrefField, HttpRequest request) {
+    private void doSomething(String[] discardPattern, BeanMap beanMap, Field hrefField, HttpRequest request) {
         Object object = beanMap.get(hrefField.getName());
-        if (discardPattern != null && !"".equals(discardPattern)) {
-            Pattern r = Pattern.compile(discardPattern);
-            Matcher m = r.matcher((String) object);
-            if (m.matches()) {
-                return;
+        if (discardPattern != null && discardPattern.length > 0) {
+            for (String dp : discardPattern) {
+                Pattern r = Pattern.compile(dp);
+                Matcher m = r.matcher((String) object);
+                if (m.matches()) {
+                    return;
+                }
             }
         }
 
@@ -120,12 +122,12 @@ public abstract class AbstractRender implements Render {
         for (Field hrefField : hrefFields) {
             Annotation href = hrefField.getAnnotation(tClass);
             boolean click;
-            String discardPattern;
+            String[] discardPattern;
 
             try {
                 Class<? extends Annotation> aClass = href.getClass();
                 click = (Boolean) aClass.getMethod("click").invoke(href);
-                discardPattern = (String) aClass.getMethod("discardPattern").invoke(href);
+                discardPattern = (String[]) aClass.getMethod("discardPattern").invoke(href);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }

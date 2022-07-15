@@ -50,6 +50,6 @@ public @interface ParentPreviousHref {
 	/**
 	 * 设置跳过哪个链接的匹配正则
 	 */
-	String discardPattern() default "";
+	String[] discardPattern() default "";
 
 }
