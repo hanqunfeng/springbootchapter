@@ -28,7 +28,7 @@ public @interface Href {
 	boolean click() default false;
 
 	/**
-	 * 设置跳过哪个链接的匹配正则
+	 * 设置跳过哪个链接的匹配正则，同时支持标准正则和Gecoo的url匹配语法
 	*/
 	String[] discardPattern() default "";
 

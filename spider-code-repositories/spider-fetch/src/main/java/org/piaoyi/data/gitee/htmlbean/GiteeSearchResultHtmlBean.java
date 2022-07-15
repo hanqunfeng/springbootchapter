@@ -71,6 +71,7 @@ public class GiteeSearchResultHtmlBean extends BaseHtmlBean {
      * 下一页url,discardPattern指定哪种url不进行调用的正则表达式
      */
     @Href(value = "href", click = true, discardPattern = "^.*q=.*&type=.*&lang=.*&pageno=21$")
+    //@Href(value = "href", click = true, discardPattern = "https://search.gitee.com/?q={query}&type={type}&lang={language}&pageno=21")
     @HtmlField(cssPath = "ul.pagination > li.next > a")
     private String nextPage;
 

@@ -63,13 +63,15 @@ public class GeccoCommandLineRunner implements CommandLineRunner {
             Object object = applicationContext.getBean(beanName);
             if (object != null && object instanceof BaseDynamicRunner) {
                 BaseDynamicRunner baseDynamicRunner = ((BaseDynamicRunner) object);
-                baseDynamicRunner.setInterval(2000);
-                baseDynamicRunner.setThread(2);
+                baseDynamicRunner.setInterval(100);
+                baseDynamicRunner.setThread(1);
+                baseDynamicRunner.setRetry(10);
                 baseDynamicRunner.start(new HashMap<>());
             } else if (object != null && object instanceof BaseBeanRunner) {
                 BaseBeanRunner baseBeanRunner = ((BaseBeanRunner) object);
                 baseBeanRunner.setInterval(100);
                 baseBeanRunner.setThread(1);
+                baseBeanRunner.setRetry(10);
                 baseBeanRunner.start(new HashMap<>());
             } else if (object != null && object instanceof BaseRunner) {
                 ((BaseRunner) object).start(new HashMap<>());

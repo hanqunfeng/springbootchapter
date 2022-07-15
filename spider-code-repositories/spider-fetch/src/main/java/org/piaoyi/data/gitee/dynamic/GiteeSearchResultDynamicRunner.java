@@ -60,7 +60,10 @@ public class GiteeSearchResultDynamicRunner extends BaseDynamicRunner {
                 .stringField("language").requestParameter("language").build()
                 .stringField("logo").csspath("div.header-box > div > a.logo-box > img").image("/Users/hanqf/idea_workspaces2/spider-code-repositories/imgDownload").build()
                 .stringField("resultNum").csspath("div.main > div.col_01.three_cols > div > div.hits-header > div.stats > b").text().build()
-                .stringField("nextPage").csspath("ul.pagination > li.next > a").href(new String[]{"^.*q=.*&type=.*&lang=.*&pageno=21$"}, true).build()
+                .stringField("nextPage").csspath("ul.pagination > li.next > a")
+                //.href(new String[]{"^.*q=.*&type=.*&lang=.*&pageno=21$"}, true)
+                .href(new String[]{"https://search.gitee.com/?q={query}&type={type}&lang={language}&pageno=21"}, true)
+                .build()
                 .requestField("request").request().build()
                 .listField("repositorySummaryList", repositorySummaryList).csspath("#hits-list > div").html(true).build()
                 .register();

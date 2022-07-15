@@ -146,5 +146,9 @@ public class UrlMatcher {
 		System.out.println(match(urlA2, regexA));
 		System.out.println(match(urlA3, regexA));
 		System.out.println(match(urlA4, regexA));
+
+		String regexB = "https://search.gitee.com/?q={query}&type={type}&lang={language}&pageno=20";
+		String urlB = "https://search.gitee.com/?q=java+xx&type=abc&lang=java&pageno=21";
+		System.out.println(match(urlB, regexB));
 	}
 }

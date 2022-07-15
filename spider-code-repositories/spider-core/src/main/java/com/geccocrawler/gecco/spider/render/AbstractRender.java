@@ -6,6 +6,7 @@ import com.geccocrawler.gecco.response.HttpResponse;
 import com.geccocrawler.gecco.scheduler.DeriveSchedulerContext;
 import com.geccocrawler.gecco.spider.SpiderBean;
 import com.geccocrawler.gecco.utils.ReflectUtils;
+import com.geccocrawler.gecco.utils.UrlMatcher;
 import net.sf.cglib.beans.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -89,11 +90,21 @@ public abstract class AbstractRender implements Render {
         Object object = beanMap.get(hrefField.getName());
         if (discardPattern != null && discardPattern.length > 0) {
             for (String dp : discardPattern) {
-                Pattern r = Pattern.compile(dp);
-                Matcher m = r.matcher((String) object);
-                if (m.matches()) {
+                try {
+                    Pattern r = Pattern.compile(dp);
+                    Matcher m = r.matcher((String) object);
+                    if (m.matches()) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    //log.error("discardPattern error", e);
+                }
+
+                //支持gecoo的匹配语法
+                if (UrlMatcher.match((String) object, dp) != null) {
                     return;
                 }
+
             }
         }
 
