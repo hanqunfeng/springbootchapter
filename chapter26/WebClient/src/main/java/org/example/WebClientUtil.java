@@ -296,7 +296,9 @@ public class WebClientUtil {
     public static String postBytes(String url, byte[] bytes, boolean gzip) {
         String responseResult;
         Mono<String> mono = null;
-        WebClient.RequestBodySpec requestBodySpec = WEB_CLIENT.post().uri(url).contentType(MediaType.APPLICATION_OCTET_STREAM);
+        WebClient.RequestBodySpec requestBodySpec = WEB_CLIENT.post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM);
         if (gzip) {
             try {
                 //headers.add("Content-Encoding", "gzip");
@@ -385,5 +387,6 @@ public class WebClientUtil {
         return responseResult;
 
     }
+
 
 }
