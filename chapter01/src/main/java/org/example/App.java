@@ -21,6 +21,7 @@ public class App {
 
     public static void main(String[] args) {
 
+
         //获取注解对象，多个配置类可以逗号分隔
         ApplicationContext ctx
                 = new AnnotationConfigApplicationContext(AppConfig.class, OtherConfig.class);

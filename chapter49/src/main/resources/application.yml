@@ -9,7 +9,7 @@ spring:
   task:
     execution:
       pool:
-        core-size: 10 # \u7EBF\u7A0B\u6C60\u6838\u5FC3\u7EBF\u7A0B\u6570\u8BBE\u7F6E\u4E3A10\uFF0C\u9ED8\u8BA4\u662F8
-        max-size: 16 # \u7EBF\u7A0B\u6C60\u6700\u5927\u7EBF\u7A0B\u6570\u4E3A16
-      thread-name-prefix: mytask- #\u5B9A\u5236\u7EBF\u7A0B\u540D\u524D\u7F00
+        core-size: 10 # 线程池核心线程数设置为10，默认是8
+        max-size: 16 # 线程池最大线程数为16
+      thread-name-prefix: mytask- #定制线程名前缀
 
