@@ -1,7 +1,7 @@
 package com.example.support;
 
-import io.reactivex.FlowableEmitter;
 import okhttp3.ResponseBody;
+import reactor.core.publisher.FluxSink;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
@@ -14,16 +14,16 @@ import java.io.InputStreamReader;
 
 /**
  * <h1></h1>
- * Created by hanqf on 2023/4/11 18:39.
+ * Created by hanqf on 2023/4/12 10:19.
  */
 
 
-public class ResponseBodyCallback implements Callback<ResponseBody> {
+public class FluxResponseBodyCallback implements Callback<ResponseBody> {
 
-    private FlowableEmitter<SSE> emitter;
+    private FluxSink<SSE> emitter;
     private boolean emitDone;
 
-    public ResponseBodyCallback(FlowableEmitter<SSE> emitter, boolean emitDone) {
+    public FluxResponseBodyCallback(FluxSink<SSE> emitter, boolean emitDone) {
         this.emitter = emitter;
         this.emitDone = emitDone;
     }
@@ -56,19 +56,19 @@ public class ResponseBodyCallback implements Callback<ResponseBody> {
                 } else if (line.equals("") && sse != null) {
                     if (sse.isDone()) {
                         if (emitDone) {
-                            emitter.onNext(sse);
+                            emitter.next(sse);
                         }
                         break;
                     }
 
-                    emitter.onNext(sse);
+                    emitter.next(sse);
                     sse = null;
                 } else {
                     throw new RuntimeException("Invalid sse format! " + line);
                 }
             }
 
-            emitter.onComplete();
+            emitter.complete();
 
         } catch (Throwable t) {
             onFailure(call, t);
@@ -81,10 +81,11 @@ public class ResponseBodyCallback implements Callback<ResponseBody> {
                 }
             }
         }
+
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
-        emitter.onError(t);
+        emitter.error(t);
     }
 }

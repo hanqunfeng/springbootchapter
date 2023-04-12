@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 
 
 public class ResponseBodyCallback implements Callback<ResponseBody> {
-
     private FlowableEmitter<SSE> emitter;
     private boolean emitDone;
 

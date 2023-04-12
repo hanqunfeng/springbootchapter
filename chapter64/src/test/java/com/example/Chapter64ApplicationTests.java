@@ -39,7 +39,7 @@ class Chapter64ApplicationTests {
             "                \"content\": \"Are you OK?\"\n" +
             "            }]\n" +
             "        },\n" +
-            "        \"stream\": false\n" +
+            "        \"stream\": true\n" +
             "    }\n" +
             "}";
     private static final ObjectMapper objectMapper = new ObjectMapper();
