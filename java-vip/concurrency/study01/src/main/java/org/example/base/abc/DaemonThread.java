@@ -10,10 +10,12 @@ public class DaemonThread {
 		@Override
 		public void run() {
 			try {
+				int i = 0;
 				//while(!isInterrupted()){
 				while (true) {
 					System.out.println(Thread.currentThread().getName()
-							+ " I am extends Thread.");
+							+ " I am extends Thread." + i);
+					i++;
 				}
 //				System.out.println(Thread.currentThread().getName()
 //						+ " interrupt flag is " + isInterrupted());

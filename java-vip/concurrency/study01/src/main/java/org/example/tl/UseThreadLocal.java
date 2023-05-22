@@ -9,6 +9,15 @@ public class UseThreadLocal {
     static ThreadLocal<Integer> threadLocal2 = new ThreadLocal<>();
 //    static MyThreadLocal<String> threadLocal = new MyThreadLocal<>();
 
+    static ThreadLocal<Integer> threadLocal3 = new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            return 10;
+        }
+    };
+
+    ThreadLocal<Integer> threadLocal4 = ThreadLocal.withInitial(() -> 10);
+
 
     /**
      * 运行3个线程,每个线程持有自己独有的String类型编号
@@ -35,6 +44,8 @@ public class UseThreadLocal {
             if(id == 2){
                 threadLocal2.set(id);//线程2才会执行
             }
+
+
 
             System.out.println(threadName+":"+threadLocal.get());
             System.out.println(threadName+":"+threadLocal2.get());

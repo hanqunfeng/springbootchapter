@@ -10,8 +10,9 @@ public class UseAtomicInt {
 
     public static void main(String[] args) {
         ai.getAndIncrement();
-        ai.incrementAndGet();
-        //ai.compareAndSet();
+        final int i = ai.incrementAndGet();
+        System.out.println(ai.compareAndSet(i, 10));
         ai.addAndGet(24);
+
     }
 }

@@ -39,8 +39,18 @@ public class AllofAnyOf {
             System.out.println("future3完成");
             return "123abc";
         });
+
         CompletableFuture.allOf(future1,future2,future3).thenRun(()->{
             System.out.println("All done!");
+            try {
+                System.out.println(future1.get());
+                System.out.println(future2.get());
+                System.out.println(future3.get());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
         });
 
 //        CompletableFuture<Object> f = CompletableFuture.anyOf(future1,future2,future3);

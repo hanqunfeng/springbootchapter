@@ -14,6 +14,7 @@ public class TryLock {
 
     //先尝试拿No13 锁，再尝试拿No14锁，No14锁没拿到，连同No13 锁一起释放掉
     private static void zhouYuDo() throws InterruptedException {
+        No13.newCondition();
         String threadName = Thread.currentThread().getName();
         Random r = new Random();
         while(true){
