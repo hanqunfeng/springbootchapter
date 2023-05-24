@@ -11,7 +11,6 @@ public class BlockingQueueExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-
         // 创建一个容量为QUEUE_CAPACITY的阻塞队列
         BlockingQueue<String> queue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
 
