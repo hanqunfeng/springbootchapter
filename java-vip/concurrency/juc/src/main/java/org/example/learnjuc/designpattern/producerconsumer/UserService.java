@@ -14,10 +14,10 @@ public class UserService {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        User user = new User(1,"fox","186xxxxxxxx","xxxx@163.com");
-        // 将用户信息放入队列
-        queue.put(user);
-        System.out.println("用户注册成功");
+//        User user = new User(1,"fox","186xxxxxxxx","xxxx@163.com");
+//        // 将用户信息放入队列
+//        queue.put(user);
+//        System.out.println("用户注册成功");
     }
 
 
@@ -30,7 +30,7 @@ public class UserService {
                     // 处理业务逻辑
                     sendEmail(user.getEmail());
                     sendSMS(user.getMobile());
-                } catch (InterruptedException e) {
+                } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
