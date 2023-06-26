@@ -10,6 +10,7 @@
   <name>java-vip</name>
   <modules>
     <module>concurrency</module>
+    <module>openai-study</module>
   </modules>
 
   <properties>
