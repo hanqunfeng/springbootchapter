@@ -15,6 +15,8 @@ public class AzureCreateImageResultNew {
      * 返回状态,Succeeded
      */
     private String status;
+
+
     /**
      * id
      */

@@ -63,7 +63,6 @@ public class OkHttpUtil {
                 log.info("Get responseResult：", e);
                 e.printStackTrace();
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseResult = null;

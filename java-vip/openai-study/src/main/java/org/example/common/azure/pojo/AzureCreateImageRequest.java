@@ -24,4 +24,6 @@ public class AzureCreateImageRequest {
     */
     private String caption;
 
+
+
 }

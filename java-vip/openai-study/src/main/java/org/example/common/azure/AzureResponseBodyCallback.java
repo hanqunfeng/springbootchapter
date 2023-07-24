@@ -33,7 +33,6 @@ public class AzureResponseBodyCallback implements Callback<ResponseBody> {
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         BufferedReader reader = null;
-
         try {
             if (!response.isSuccessful()) {
                 HttpException e = new HttpException(response);
