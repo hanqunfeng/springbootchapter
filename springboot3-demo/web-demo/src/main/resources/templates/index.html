@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="shortcut icon"  th:href="@{/resource/favicon.ico}"/>
+    <meta charset="UTF-8">
+    <title>[[#{cache.htitle}]]</title>
+</head>
+<body>
+<div>
+    hello 中国: [[#{message.cache.group.flushed(abc)}]]
+</div>
+<div th:text="#{common.menu.title}">
+</div>
+
+<div th:text="${message}">
+
+</div>
+
+<div th:text="${supportMessage}">
+
+</div>
+
+</body>
+</html>
