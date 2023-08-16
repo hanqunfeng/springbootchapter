@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.XmlAddressMapper">
+    <resultMap id="BaseResultMap" type="com.example.model.Address">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="INTEGER" property="city" />
+        <result column="userId" jdbcType="BIGINT" property="userId" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, province, city, userId
+    </sql>
+
+    <resultMap id="AddressAndUserResultMap" type="com.example.model.Address" extends="BaseResultMap">
+        <association column="userId" property="user" select="com.example.dao.XmlUserMapper.selectByPrimaryKey"
+                     fetchType="eager"/>
+    </resultMap>
+
+
+    <select id="getAddressByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from address
+        where userId = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="getAddressAndUserByUserId" parameterType="java.lang.Long" resultMap="AddressAndUserResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from address
+        where userId = #{userId,jdbcType=BIGINT}
+    </select>
+</mapper>

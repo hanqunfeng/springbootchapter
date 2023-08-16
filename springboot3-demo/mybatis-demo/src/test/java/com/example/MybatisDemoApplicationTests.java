@@ -28,6 +28,48 @@ class MybatisDemoApplicationTests {
     @Autowired
     private TestOrderMapper testOrderMapper;
 
+    @Autowired
+    private XmlUserMapper xmlUserMapper;
+
+    @Autowired
+    private XmlBookMapper xmlBookMapper;
+
+    @Autowired
+    private XmlAddressMapper xmlAddressMapper;
+
+
+    @Test
+    void getUserAddressAndBooksByIdxml(){
+        User user = xmlUserMapper.getUserAddressAndBooksById(65L);
+        System.out.println("======");
+        //预先抓取
+        System.out.println(user.getUserAddress());
+        //延迟加载books，只有用到时才从数据库中获取
+        System.out.println(user.getBooks());
+    }
+    @Test
+    void getUserAndBooksByIdxml(){
+        User user = xmlUserMapper.getUserAndBooksById(65L);
+        System.out.println(user);
+    }
+    @Test
+    void getUserByIdxml(){
+        User user = xmlUserMapper.getUserById(65L);
+        System.out.println(user);
+    }
+
+
+    @Test
+    void getBooksByUserId(){
+        List<Book> books = xmlBookMapper.getBooksByUserId(65L);
+        books.forEach(System.out::println);
+    }
+
+    @Test
+    void getBooksAndUserByUserId(){
+        List<Book> books = xmlBookMapper.getBooksAndUserByUserId(65L);
+        books.forEach(System.out::println);
+    }
 
     @Test
     void testTestOrder(){
@@ -85,7 +127,7 @@ class MybatisDemoApplicationTests {
     @Test
     void selectAll(){
         List<User> users = annotationsUserMapper.selectUsers();
-        users.stream().forEach(System.out::println);
+        users.forEach(System.out::println);
     }
 
     @Test
@@ -106,16 +148,16 @@ class MybatisDemoApplicationTests {
         PageHelper.startPage(pageNum, pageSize);
         //此时查询的结果已经是按分页的了
         List<User> userDomains = annotationsUserMapper.selectUsers();
-        userDomains.stream().forEach(System.out::println);
+        userDomains.forEach(System.out::println);
 
         //以下是为了获得分页信息
         System.out.println("PageInfo============");
-        PageInfo result = new PageInfo(userDomains);
+        PageInfo<User> result = new PageInfo<>(userDomains);
         System.out.println(result);
         System.out.println("getTotal = " + result.getTotal());
         System.out.println("getPages = " + result.getPages());
         List<User> users = result.getList();
-        users.stream().forEach(System.out::println);
+        users.forEach(System.out::println);
 
     }
 }

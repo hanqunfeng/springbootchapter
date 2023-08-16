@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.XmlUserMapper">
+    <resultMap id="BaseResultMap" type="com.example.model.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="age" jdbcType="INTEGER" property="age" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="del" jdbcType="VARCHAR" property="del" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, `name`, age, email, del
+    </sql>
+
+    <resultMap id="UserResultMap" type="com.example.model.User" extends="BaseResultMap">
+        <association column="id" property="userAddress"
+                     select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId" fetchType="eager"/>
+    </resultMap>
+
+    <resultMap id="BooksResultMap" type="com.example.model.User" extends="BaseResultMap">
+        <collection column="id" property="books" select="com.example.dao.AnnotationsBookMapper.getBooksByUserId"
+                    fetchType="lazy"/>
+    </resultMap>
+
+    <!--  只支持单继承 ，符合java特性 -->
+    <resultMap id="UserBooksResultMap" type="com.example.model.User" extends="BaseResultMap">
+        <association column="id" property="userAddress"
+                     select="com.example.dao.AnnotationsAddressMapper.getAddressByUserId" fetchType="eager"/>
+        <collection column="id" property="books" select="com.example.dao.AnnotationsBookMapper.getBooksByUserId"
+                    fetchType="lazy"/>
+    </resultMap>
+
+    <!--  只支持单继承 ，符合java特性 -->
+    <resultMap id="UserRolesResultMap" type="com.example.model.User" extends="UserBooksResultMap">
+        <collection column="id" property="roles" select="com.example.dao.XmlRoleMapper.getRoleListByUserId"
+                    fetchType="lazy"/>
+    </resultMap>
+
+    <select id="getUserRolesById" parameterType="java.lang.Long" resultMap="UserRolesResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getUserListByRoleId" parameterType="java.lang.Long" resultMap="BooksResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user u,userrole ur
+        where u.id = ur.userId and ur.roleId = #{roleId,jdbcType=BIGINT}
+    </select>
+
+    <select id="getUserAddressAndBooksById" parameterType="java.lang.Long" resultMap="UserBooksResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getUserAndBooksById" parameterType="java.lang.Long" resultMap="BooksResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="getUserById" parameterType="java.lang.Long" resultMap="UserResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selectUsers" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.model.User" useGeneratedKeys="true">
+        insert into user (`name`, age, email,
+                          del)
+        values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR},
+                #{del,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.model.User" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="age != null">
+                age,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="del != null">
+                del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="del != null">
+                #{del,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.model.User">
+        update user
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                age = #{age,jdbcType=INTEGER},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="del != null">
+                del = #{del,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.model.User">
+        update user
+        set `name` = #{name,jdbcType=VARCHAR},
+            age = #{age,jdbcType=INTEGER},
+            email = #{email,jdbcType=VARCHAR},
+            del = #{del,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
