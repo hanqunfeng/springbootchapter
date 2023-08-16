@@ -4,7 +4,6 @@ import com.example.support.security.CP_ImageFilter;
 import com.example.support.security.CP_RbacService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,8 +38,6 @@ import java.util.List;
 @EnableMethodSecurity
 public class SpringSecurityConfig {
 
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     private SessionRegistry sessionRegistry;
