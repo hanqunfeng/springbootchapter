@@ -7,7 +7,7 @@
 </head>
 <body>
 <div>
-    hello 中国: [[#{message.cache.group.flushed(abc)}]]
+    hello 中国
 </div>
 <div th:text="#{common.menu.title}">
 </div>
@@ -16,7 +16,10 @@
 
 </div>
 
-<div th:text="${supportMessage}">
+<div th:if="${userInfos}">
+    <div th:each="item:${userInfos}">
+        [[${item.id}]],[[${item.deviceId}]],[[${#temporals.format(item.createTime, 'yyyy-MM-dd HH:mm:ss')}]]
+    </div>
 
 </div>
 

@@ -1,0 +1,29 @@
+.suggest-list {
+    /*position: fixed;*/
+    position: absolute;
+    /*background-color: #e2e8e8;*/
+    background-color: white;
+    /*overflow-y: scroll;*/
+    overflow: auto;
+    width: 400px;
+    height: 130px;
+    border: 1px solid #4187c3;
+}
+
+/*不显示滚动条*/
+/*.suggest-list::-webkit-scrollbar {*/
+/*    display: none;*/
+/*}*/
+
+.suggest-item {
+
+    padding: 2px;
+    padding-left: 5px;
+    cursor: pointer;
+
+}
+
+.suggest-item:hover {
+    color: rgb(62, 149, 226);
+    background-color: #d2e4ee;
+}

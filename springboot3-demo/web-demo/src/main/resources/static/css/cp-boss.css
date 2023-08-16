@@ -1,0 +1,10 @@
+	.header:hover{
+	background: rgb(171,186,195);
+	cursor:pointer;
+}
+.header_up, .head_down{
+	background: rgb(171,186,195);
+}
+.required{
+	color:red
+}

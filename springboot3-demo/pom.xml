@@ -18,5 +18,10 @@
 		<java.version>17</java.version>
 	</properties>
 
+	<modules>
+		<module>web-demo</module>
+        <module>mybatis-plus-lombok</module>
+    </modules>
+
 
 </project>
