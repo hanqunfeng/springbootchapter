@@ -49,4 +49,13 @@
         where
         city = #{city,jdbcType=VARCHAR}
     </select>
+    <update id="updateSelective">
+        update address
+        <set>
+            <if test="province != null">province=#{province,jdbcType=VARCHAR},</if>
+            <if test="city != null">city=#{city,jdbcType=VARCHAR},</if>
+            <if test="userid != null">userId=#{userid,jdbcType=NUMERIC},</if>
+        </set>
+        where id = #{id,jdbcType=NUMERIC}
+    </update>
 </mapper>

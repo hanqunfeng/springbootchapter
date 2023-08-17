@@ -18,6 +18,8 @@ public interface AddressMapper {
 
     int insertSelective(Address address);
 
+    int updateSelective(Address address);
+
     List<Address> selectAllByCity(@Param("city") String city);
 }
 
