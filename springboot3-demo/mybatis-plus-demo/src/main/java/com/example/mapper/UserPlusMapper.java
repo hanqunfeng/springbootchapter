@@ -26,4 +26,8 @@ public interface UserPlusMapper extends BaseMapper<UserPlus> {
             +"</if>"
             +"</script>")
     List<UserPlus> getUserPlusByAge(@Param("a") Integer age);
+
+    List<UserPlus> selectUsers();
+
+    UserPlus selectByPrimaryKey(Long id);
 }

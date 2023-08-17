@@ -1,4 +1,4 @@
-## 插件功能
+## Mybatis插件功能
 * 1.为model对象添加@Data注解
 * 2.删除已经存在的mapper.xml，避免重新创建时生成合并的mapper.xml
 

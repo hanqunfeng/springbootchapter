@@ -17,6 +17,11 @@ class MybatisPlusDemoApplicationTests {
     @Autowired
     private UserPlusMapper userPlusMapper;
 
+
+    @Test
+    void testSelectAll(){
+        userPlusMapper.selectUsers().forEach(System.out::println);
+    }
     @Test
     void testInsert() {
         System.out.println("==============mybatis-plus=====================");

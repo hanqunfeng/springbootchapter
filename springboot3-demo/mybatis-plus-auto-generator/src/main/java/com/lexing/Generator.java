@@ -21,7 +21,8 @@ public class Generator {
     private static final String DB_PASSWORD = "123456";
     private static final String AUTHOR = "hanqf";
     private static final String PROJECT_DIR = "/Users/hanqf/idea_workspaces/springbootchapter/springboot3-demo/mybatis-plus-auto-generator";
-    private static final String OUTPUT_DIR = PROJECT_DIR + File.separator + "out";
+    private static final String JAVA_OUTPUT_DIR = PROJECT_DIR + File.separator + "out";
+    private static final String RESOURCES_OUTPUT_DIR = PROJECT_DIR + File.separator + "out";
 
     /**
      * 父包路径
@@ -33,7 +34,10 @@ public class Generator {
     private static final String PACKAGE_MAPPER = "dao.one";
     private static final String PACKAGE_MAPPER_XML = "mappers/one";
 
-    private static final String[] TABLE_ARRAY = {"books","address","role"};
+
+
+    //要生成代码的表名称列表
+    private static final String[] TABLE_ARRAY = {"books", "address", "role"};
 
     public static void main(String[] args) {
         mode1();
@@ -47,7 +51,7 @@ public class Generator {
                         .author(AUTHOR) //作者名
                         .dateType(DateType.TIME_PACK) //时间策略
                         .commentDate("yyyy-MM-dd HH:mm:ss") //注释日期
-                        .outputDir(OUTPUT_DIR)// 指定输出目录
+                        .outputDir(JAVA_OUTPUT_DIR)// 指定输出目录
                 )
 
                 //数据库配置
@@ -62,7 +66,7 @@ public class Generator {
                         .serviceImpl(PACKAGE_SERVICE_IMPL) //Service Impl 包名
                         .mapper(PACKAGE_MAPPER) //Mapper 包名
                         .controller("controller") //Controller 包名
-                        .pathInfo(Collections.singletonMap(OutputFile.xml, OUTPUT_DIR + File.separator + PACKAGE_MAPPER_XML)))
+                        .pathInfo(Collections.singletonMap(OutputFile.xml, RESOURCES_OUTPUT_DIR + File.separator + PACKAGE_MAPPER_XML)))
 
                 //策略配置
                 .strategyConfig(builder -> builder
@@ -85,7 +89,7 @@ public class Generator {
                         .mapperBuilder()
                         .mapperAnnotation(Mapper.class)
                         .formatMapperFileName("%sMapper")
-                        .formatXmlFileName("%sXml")
+                        .formatXmlFileName("%sMapper")
                         .enableFileOverride()
 
                         //service配置
@@ -125,7 +129,7 @@ public class Generator {
         // 全局配置
         final GlobalConfig globalConfig = new GlobalConfig.Builder()
                 .disableOpenDir() // 禁止打开输出目录，默认创建完成后会自动打开文件夹
-                .outputDir(OUTPUT_DIR) //指定输出目录
+                .outputDir(JAVA_OUTPUT_DIR) //指定输出目录
                 .author(AUTHOR) //作者名
                 .dateType(DateType.TIME_PACK) //时间策略
                 .commentDate("yyyy-MM-dd HH:mm:ss") //注释日期
@@ -141,7 +145,7 @@ public class Generator {
                 .serviceImpl(PACKAGE_SERVICE_IMPL) //Service Impl 包名
                 .mapper(PACKAGE_MAPPER) //Mapper 包名
                 .controller("controller") //Controller 包名
-                .pathInfo(Collections.singletonMap(OutputFile.xml, OUTPUT_DIR + File.separator + PACKAGE_MAPPER_XML))
+                .pathInfo(Collections.singletonMap(OutputFile.xml, RESOURCES_OUTPUT_DIR + File.separator + PACKAGE_MAPPER_XML))
                 .build();
         autoGenerator.packageInfo(packageConfig);
 
@@ -166,7 +170,7 @@ public class Generator {
                 .mapperBuilder()
                 .mapperAnnotation(Mapper.class)
                 .formatMapperFileName("%sMapper")
-                .formatXmlFileName("%sXml")
+                .formatXmlFileName("%sMapper")
                 .enableFileOverride()
 
                 //service配置
