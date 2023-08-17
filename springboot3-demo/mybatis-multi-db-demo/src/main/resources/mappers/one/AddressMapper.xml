@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.one.AddressMapper">
+    <resultMap id="BaseResultMap" type="com.example.model.one.Address">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="province" column="province" jdbcType="VARCHAR"/>
+            <result property="city" column="city" jdbcType="VARCHAR"/>
+            <result property="userid" column="userId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,province,city,
+        userId
+    </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from address
+    </select>
+
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from address
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
+
+    <insert id="insertSelective">
+        insert into address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="userid != null">userId,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="province != null">#{province,jdbcType=VARCHAR},</if>
+            <if test="city != null">#{city,jdbcType=VARCHAR},</if>
+            <if test="userid != null">#{userid,jdbcType=BIGINT},</if>
+        </trim>
+    </insert>
+    <select id="selectAllByCity" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from address
+        where
+        city = #{city,jdbcType=VARCHAR}
+    </select>
+</mapper>

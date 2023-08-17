@@ -1,8 +1,10 @@
 package com.example;
 
+import com.example.dao.one.AddressMapper;
 import com.example.dao.one.OrderMapper;
 import com.example.dao.one.UserMapper;
 import com.example.dao.two.SysUserMapper;
+import com.example.model.one.Address;
 import com.example.model.one.Order;
 import com.example.model.two.SysUser;
 import com.github.pagehelper.PageHelper;
@@ -24,6 +26,26 @@ class MybatisMultiDbDemoApplicationTests {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Test
+    void testOneAddressAdd(){
+        Address address = new Address();
+        address.setCity("beijing");
+        address.setProvince("beijing");
+        address.setUserid(18L);
+        addressMapper.insertSelective(address);
+    }
+
+    @Test
+    void testOneAddress(){
+        final List<Address> addressList = addressMapper.selectAll();
+        addressList.forEach(System.out::println);
+
+        addressMapper.selectAllByCity("beijing").forEach(System.out::println);
+    }
 
     @Test
     void testOne() {

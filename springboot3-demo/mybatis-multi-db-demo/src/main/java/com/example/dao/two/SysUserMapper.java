@@ -21,4 +21,5 @@ public interface SysUserMapper {
     int updateByPrimaryKey(SysUser row);
 
     List<SysUser> selectAll();
+
 }
