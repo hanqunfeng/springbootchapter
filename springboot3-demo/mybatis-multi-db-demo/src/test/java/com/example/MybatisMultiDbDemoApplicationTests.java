@@ -1,4 +1,4 @@
-package com.example.mybatismultidbdemo;
+package com.example;
 
 import com.example.dao.one.OrderMapper;
 import com.example.dao.one.UserMapper;

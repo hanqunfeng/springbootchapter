@@ -43,7 +43,7 @@ class MybatisPlusDemoApplicationTests {
     void testUserPlusByName() {
         List<UserPlus> userListByName = userPlusMapper.getUserPlusByName("hanqf");
         //Assert.assertEquals(5, userList.size());
-        userListByName.stream().forEach(System.out::println);
+        userListByName.forEach(System.out::println);
 
     }
 
@@ -51,10 +51,10 @@ class MybatisPlusDemoApplicationTests {
     void getUserPlusByAge() {
         List<UserPlus> userListByAge = userPlusMapper.getUserPlusByAge(null);
         //Assert.assertEquals(5, userList.size());
-        userListByAge.stream().forEach(System.out::println);
+        userListByAge.forEach(System.out::println);
         List<UserPlus> userListByAge2 = userPlusMapper.getUserPlusByAge(10);
         //Assert.assertEquals(5, userList.size());
-        userListByAge2.stream().forEach(System.out::println);
+        userListByAge2.forEach(System.out::println);
     }
 
     @Test
@@ -63,7 +63,7 @@ class MybatisPlusDemoApplicationTests {
 
         userPage = userPlusMapper.selectPage(userPage, new LambdaQueryWrapper<>(UserPlus.class).orderByDesc(UserPlus::getId));
         List<UserPlus> listpage = userPage.getRecords();
-        listpage.stream().forEach(System.out::println);
+        listpage.forEach(System.out::println);
 
         // 分页的所有数据都在userPage对象中封装着
         // 获取总页数

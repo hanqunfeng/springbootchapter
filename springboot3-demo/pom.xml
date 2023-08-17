@@ -21,6 +21,7 @@
 	<modules>
 		<module>web-demo</module>
         <module>mybatis-plus-lombok</module>
+        <module>mybatis-plus-auto-generator</module>
     </modules>
 
 
