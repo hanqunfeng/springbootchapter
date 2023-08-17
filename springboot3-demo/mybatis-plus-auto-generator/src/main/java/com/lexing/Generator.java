@@ -35,7 +35,6 @@ public class Generator {
     private static final String PACKAGE_MAPPER_XML = "mappers/one";
 
 
-
     //要生成代码的表名称列表
     private static final String[] TABLE_ARRAY = {"books", "address", "role"};
 
@@ -123,9 +122,6 @@ public class Generator {
                 .keyWordsHandler(new MySqlKeyWordsHandler())
                 .build();
 
-        // 创建代码生成器对象，执行生成代码操作
-        AutoGenerator autoGenerator = new AutoGenerator(dataSourceConfig);
-
         // 全局配置
         final GlobalConfig globalConfig = new GlobalConfig.Builder()
                 .disableOpenDir() // 禁止打开输出目录，默认创建完成后会自动打开文件夹
@@ -135,7 +131,6 @@ public class Generator {
                 .commentDate("yyyy-MM-dd HH:mm:ss") //注释日期
                 .build();
 
-        autoGenerator.global(globalConfig);
 
         // 包配置
         final PackageConfig packageConfig = new PackageConfig.Builder()
@@ -147,7 +142,7 @@ public class Generator {
                 .controller("controller") //Controller 包名
                 .pathInfo(Collections.singletonMap(OutputFile.xml, RESOURCES_OUTPUT_DIR + File.separator + PACKAGE_MAPPER_XML))
                 .build();
-        autoGenerator.packageInfo(packageConfig);
+
 
         //策略配置
         final StrategyConfig strategyConfig = new StrategyConfig.Builder()
@@ -184,7 +179,7 @@ public class Generator {
                 .formatFileName("%sController")
                 .enableFileOverride()
                 .build();
-        autoGenerator.strategy(strategyConfig);
+
 
         //模板配置
         // vm:velocity    ftl:freemarker
@@ -194,8 +189,14 @@ public class Generator {
                 //关闭controller模板，不创建controller文件
                 .disable(TemplateType.CONTROLLER)
                 .build();
-        autoGenerator.template(templateConfig);
 
+
+        // 整合配置，创建代码生成器对象，执行生成代码操作
+        AutoGenerator autoGenerator = new AutoGenerator(dataSourceConfig);
+        autoGenerator.global(globalConfig)
+                .packageInfo(packageConfig)
+                .strategy(strategyConfig)
+                .template(templateConfig);
         // 执行生成操作
         autoGenerator.execute();
 //        autoGenerator.execute(new VelocityTemplateEngine());
