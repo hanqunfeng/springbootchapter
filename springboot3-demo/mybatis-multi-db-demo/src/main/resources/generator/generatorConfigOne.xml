@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <!--导入springboot配置文件,目的是获取数据源配置信息-->
+    <properties resource="application.properties"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3" defaultModelType="flat" >
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <!-- 使用自定义的插件 -->
+        <plugin type="org.mybatis.generator.plugins.LombokPlugin" >
+            <!-- 是否添加lombok注解 -->
+            <property name="hasLombok" value="true"/>
+            <!-- 是否先清除已经存在的mapper.xml文件 -->
+            <property name="deleteMapperXml" value="true"/>
+        </plugin>
+
+        <commentGenerator>
+            <!-- 是否生成注释代时间戳-->
+            <property name="suppressDate" value="true"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${spring.datasource.druid.two.driver-class-name}"
+                        connectionURL="${spring.datasource.druid.two.url}"
+                        userId="${spring.datasource.druid.two.username}"
+                        password="${spring.datasource.druid.two.password}">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <!--该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。-->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="com.example.model.one" targetProject="src/main/java">
+            <!--enableSubPackages:如果true，MBG会根据catalog和schema来生成子包。如果false就会直接用targetPackage属性。默认为false。-->
+            <property name="enableSubPackages" value="true"/>
+            <!--trimStrings:是否对数据库查询结果进行trim操作，如果设置为true就会生成类似这样public void setUsername(String username) {this.username = username == null &#63; null : username.trim();}的setter方法。默认值为false。-->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--生成映射xml文件存放位置-->
+        <sqlMapGenerator targetPackage="mappers.one" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--生成Dao类存放位置(*Mapper.java)-->
+        <!-- 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
+            type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
+            type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
+            type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
+        -->
+        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="com.example.dao.one" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--生成对应表及类名-->
+        <table tableName="user" domainObjectName="User" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <!--useActualColumnNames:如果设置为true,那么MBG会使用从数据库元数据获取的列名作为生成的实体对象的属性。 如果为false(默认值)，MGB将会尝试将返回的名称转换为驼峰形式。 在这两种情况下，可以通过 元素显示指定，在这种情况下将会忽略这个（useActualColumnNames）属性。-->
+            <!-- <property name="useActualColumnNames" value="true"/> -->
+            <!-- 数据库表主键 可以不设置 -->
+            <!-- <generatedKey column="id" sqlStatement="Mysql" identity="true"/> -->
+        </table>
+
+    </context>
+</generatorConfiguration>
+
