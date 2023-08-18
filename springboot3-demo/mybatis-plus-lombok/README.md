@@ -28,8 +28,10 @@ jar -uvf mybatis-generator-core-1.4.2.jar org/*
 
 * 从jar中删除指定的文件
 ```shell
+# 安装7z
 brew install p7zip 
 
+# 删除指定的文件
 7z d mybatis-generator-core-1.4.2.jar org/mybatis/generator/plugins/LombokPlugin.class
 ```
 
