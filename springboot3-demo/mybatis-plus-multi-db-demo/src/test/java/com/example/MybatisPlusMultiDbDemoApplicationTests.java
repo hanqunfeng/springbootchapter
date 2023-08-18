@@ -1,11 +1,15 @@
 package com.example;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.dao.one.AddressMapper;
 import com.example.dao.one.UserMapper;
 import com.example.dao.two.SysUserDao;
+import com.example.model.one.Address;
 import com.example.model.one.BooksEntity;
 import com.example.model.one.User;
 import com.example.model.two.SysUser;
+import com.example.service.one.AddressService;
 import com.example.service.one.BooksService;
 import com.example.service.one.UserService;
 import com.example.service.two.SysUserService;
@@ -32,6 +36,32 @@ class MybatisPlusMultiDbDemoApplicationTests {
 
     @Autowired
     private BooksService booksService;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private AddressService addressService;
+
+    @Test
+    void testOneAddress(){
+        addressMapper.selectList(new Page<>(1, 10), new LambdaQueryWrapper<Address>()
+                        .eq(Address::getCity, "PERSIST")
+                        .isNull(Address::getUserid)
+                        .orderByDesc(Address::getId))
+                .forEach(System.out::println);
+
+        Address address = addressService.getOne(new LambdaQueryWrapper<Address>().eq(Address::getId, 6));
+        System.out.println(address);
+        address.setProvince("abc");
+        addressService.updateById(address);
+
+        addressService.list(new Page<>(1, 10), new LambdaQueryWrapper<Address>()
+                .eq(Address::getCity, "PERSIST")
+                .isNull(Address::getUserid)
+                .orderByDesc(Address::getId))
+                .forEach(System.out::println);
+    }
 
     @Test
     void testOneBook() {
