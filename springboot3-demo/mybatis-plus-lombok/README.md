@@ -1,6 +1,7 @@
 ## Mybatis插件功能
 * 1.为model对象添加@Data注解
 * 2.删除已经存在的mapper.xml，避免重新创建时生成合并的mapper.xml
+* 3.为MapperClass或者Mapper.xml的insert方法添加 `useGeneratedKeys = true`
 
 ## 插件使用方法
 ```shell
