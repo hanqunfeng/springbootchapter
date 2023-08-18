@@ -82,7 +82,7 @@ class MybatisDemoApplicationTests {
         System.out.println(order);
 
         final Order order1 = new Order();
-        order1.setOrderId("1234569");
+        order1.setOrderId("12345600");
         orderMapper.insert(order1);
         System.out.println(order1);
     }

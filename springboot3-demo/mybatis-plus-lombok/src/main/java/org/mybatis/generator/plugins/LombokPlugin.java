@@ -4,10 +4,9 @@ import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.Field;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.internal.util.StringUtility;
 
 import java.io.File;
@@ -30,6 +29,11 @@ public class LombokPlugin extends PluginAdapter {
      */
     private boolean deleteMapperXml;
 
+    /**
+     * 是否添加 useGeneratedKeys = true, keyProperty = "id", keyColumn = "id"
+     */
+    private boolean useGeneratedKeys;
+
     public LombokPlugin() {
     }
 
@@ -38,6 +42,7 @@ public class LombokPlugin extends PluginAdapter {
         super.setProperties(properties);
         hasLombok = Boolean.parseBoolean(properties.getProperty("hasLombok"));
         deleteMapperXml = Boolean.parseBoolean(properties.getProperty("deleteMapperXml"));
+        useGeneratedKeys = Boolean.parseBoolean(properties.getProperty("useGeneratedKeys"));
     }
 
     @Override
@@ -157,5 +162,47 @@ public class LombokPlugin extends PluginAdapter {
         } else {
             return super.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn, introspectedTable, modelClassType);
         }
+    }
+
+    @Override
+    public boolean clientInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1 && !introspectedTable.requiresXMLGenerator()) {
+            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options"));
+            method.addAnnotation("@Options(useGeneratedKeys = true, keyProperty = \""
+                    + introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty() + "\", keyColumn = \""
+                    + introspectedTable.getPrimaryKeyColumns().get(0).getActualColumnName() + "\")");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean clientInsertSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+        if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1 && !introspectedTable.requiresXMLGenerator()) {
+            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options"));
+            method.addAnnotation("@Options(useGeneratedKeys = true, keyProperty = \""
+                    + introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty() + "\", keyColumn = \""
+                    + introspectedTable.getPrimaryKeyColumns().get(0).getActualColumnName() + "\")");
+        }
+        return true;
+    }
+
+    @Override
+    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1) {
+            element.addAttribute(new Attribute("useGeneratedKeys", "true"));
+            element.addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
+            element.addAttribute(new Attribute("keyColumn", introspectedTable.getPrimaryKeyColumns().get(0).getActualColumnName()));
+        }
+        return true;
+    }
+
+    @Override
+    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1) {
+            element.addAttribute(new Attribute("useGeneratedKeys", "true"));
+            element.addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
+            element.addAttribute(new Attribute("keyColumn", introspectedTable.getPrimaryKeyColumns().get(0).getActualColumnName()));
+        }
+        return true;
     }
 }
