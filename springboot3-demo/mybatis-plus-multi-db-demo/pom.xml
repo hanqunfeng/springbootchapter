@@ -67,6 +67,15 @@
             <artifactId>p6spy</artifactId>
             <version>3.9.1</version>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/io.seata/seata-spring-boot-starter -->
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

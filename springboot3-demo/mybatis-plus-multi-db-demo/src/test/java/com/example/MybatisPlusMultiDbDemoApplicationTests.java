@@ -9,6 +9,7 @@ import com.example.model.one.Address;
 import com.example.model.one.BooksEntity;
 import com.example.model.one.User;
 import com.example.model.two.SysUser;
+import com.example.service.BusinessService;
 import com.example.service.one.AddressService;
 import com.example.service.one.BooksService;
 import com.example.service.one.UserService;
@@ -42,6 +43,14 @@ class MybatisPlusMultiDbDemoApplicationTests {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private BusinessService businessService;
+
+    @Test
+    void testBusiness() throws InterruptedException {
+        businessService.business();
+    }
 
     @Test
     void testOneAddress(){
