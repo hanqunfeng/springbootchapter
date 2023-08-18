@@ -4,7 +4,7 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * Created by Mybatis Generator on 2023-08-18 12:29:15
+ * Created by Mybatis Generator on 2023-08-18 18:07:03
  */
 @Data
 public class Order implements Serializable {

@@ -16,9 +16,10 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Mybatis Generator Lombok Plugin
+ * Mybatis Generator CustomerPlugin
+ * 自定义插件
  */
-public class LombokPlugin extends PluginAdapter {
+public class CustomerPlugin extends PluginAdapter {
 
     /**
      * 是否使用lombok注解
@@ -34,9 +35,15 @@ public class LombokPlugin extends PluginAdapter {
      */
     private boolean useGeneratedKeys;
 
-    public LombokPlugin() {
+    public CustomerPlugin() {
     }
 
+    /**
+     * 属性获取
+     *
+     * @param properties
+     *
+     */
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
@@ -45,6 +52,12 @@ public class LombokPlugin extends PluginAdapter {
         useGeneratedKeys = Boolean.parseBoolean(properties.getProperty("useGeneratedKeys"));
     }
 
+    /**
+     * 这里必须返回true，插件生效
+     *
+     * @param list
+     * @return boolean
+     */
     @Override
     public boolean validate(List<String> list) {
         return true;
@@ -55,7 +68,7 @@ public class LombokPlugin extends PluginAdapter {
      *
      * @param topLevelClass
      * @param introspectedTable
-     * @return
+     * @return boolean
      */
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
@@ -85,14 +98,14 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * 为实体类字段添加注释
+     * 实体类字段生成器，为字段添加注释
      *
      * @param field
      * @param topLevelClass
      * @param introspectedColumn
      * @param introspectedTable
      * @param modelClassType
-     * @return
+     * @return boolean
      */
     @Override
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
@@ -109,11 +122,11 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * mapper class的注释
+     * mapper class生成器，添加注释
      *
      * @param interfaze
      * @param introspectedTable
-     * @return
+     * @return boolean
      */
     @Override
     public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
@@ -125,12 +138,11 @@ public class LombokPlugin extends PluginAdapter {
     }
 
     /**
-     * 先删除存在的Mapper.xml
+     * Mapper.xml生成器，创建前先删除存在的Mapper.xml
      *
      * @param sqlMap
      * @param introspectedTable
      * @return boolean
-     * @author hanqf
      */
     @Override
     public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
@@ -146,6 +158,16 @@ public class LombokPlugin extends PluginAdapter {
         }
     }
 
+    /**
+     * 实体类setter方法生成器，这里返回false，表示不创建setter方法
+     *
+     * @param method
+     * @param topLevelClass
+     * @param introspectedColumn
+     * @param introspectedTable
+     * @param modelClassType
+     * @return boolean
+     */
     @Override
     public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
         if (hasLombok) {
@@ -155,6 +177,16 @@ public class LombokPlugin extends PluginAdapter {
         }
     }
 
+    /**
+     * 实体类getter方法生成器，这里返回false，表示不创建getter方法
+     *
+     * @param method
+     * @param topLevelClass
+     * @param introspectedColumn
+     * @param introspectedTable
+     * @param modelClassType
+     * @return boolean
+     */
     @Override
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
         if (hasLombok) {
@@ -164,6 +196,14 @@ public class LombokPlugin extends PluginAdapter {
         }
     }
 
+    /**
+     * Mapper class 的 insert方法生成器，这里为其加上注解 @Options(useGeneratedKeys=true)
+     *
+     * @param method
+     * @param interfaze
+     * @param introspectedTable
+     * @return boolean
+     */
     @Override
     public boolean clientInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
         if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1 && !introspectedTable.requiresXMLGenerator()) {
@@ -175,6 +215,14 @@ public class LombokPlugin extends PluginAdapter {
         return true;
     }
 
+    /**
+     * Mapper class 的 insertSelective方法生成器，这里为其加上注解 @Options(useGeneratedKeys=true)
+     *
+     * @param method
+     * @param interfaze
+     * @param introspectedTable
+     * @return boolean
+     */
     @Override
     public boolean clientInsertSelectiveMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
         if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1 && !introspectedTable.requiresXMLGenerator()) {
@@ -186,6 +234,13 @@ public class LombokPlugin extends PluginAdapter {
         return true;
     }
 
+    /**
+     * mapper.xml 中 insert方法生成器，添加 useGeneratedKeys=true
+     *
+     * @param element
+     * @param introspectedTable
+     * @return boolean
+     */
     @Override
     public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1) {
@@ -196,6 +251,13 @@ public class LombokPlugin extends PluginAdapter {
         return true;
     }
 
+    /**
+     * mapper.xml 中 insertSelective方法生成器，添加 useGeneratedKeys=true
+     *
+     * @param element
+     * @param introspectedTable
+     * @return boolean
+     */
     @Override
     public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         if (useGeneratedKeys && introspectedTable.getPrimaryKeyColumns().size() == 1) {

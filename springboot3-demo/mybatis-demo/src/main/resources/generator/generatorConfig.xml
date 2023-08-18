@@ -11,7 +11,7 @@
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
 
         <!-- 使用自定义的插件 -->
-        <plugin type="org.mybatis.generator.plugins.LombokPlugin" >
+        <plugin type="org.mybatis.generator.plugins.CustomerPlugin" >
             <!-- 是否添加lombok注解 -->
             <property name="hasLombok" value="true"/>
             <!-- 是否先清除已经存在的mapper.xml文件 -->
