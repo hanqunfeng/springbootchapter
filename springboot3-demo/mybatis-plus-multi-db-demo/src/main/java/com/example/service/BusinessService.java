@@ -23,6 +23,7 @@ public class BusinessService {
     @Autowired
     private SysUserService sysUserService;
 
+    // timeoutMills: 超时时间，单位毫秒，name: 事务名称
     @GlobalTransactional(timeoutMills = 30000,name = "business-tx")
     public void business() throws InterruptedException {
         userService.removeById(18);
