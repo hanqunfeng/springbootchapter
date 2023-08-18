@@ -69,7 +69,7 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/io.seata/seata-spring-boot-starter -->
+        <!-- seata 1.7.0开始才支持springboot3 -->
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>
