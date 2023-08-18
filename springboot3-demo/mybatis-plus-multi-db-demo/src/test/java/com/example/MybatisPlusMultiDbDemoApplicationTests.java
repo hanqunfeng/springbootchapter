@@ -45,6 +45,9 @@ class MybatisPlusMultiDbDemoApplicationTests {
 
     @Test
     void testOneAddress(){
+        addressMapper.findAllByCity("PERSIST").forEach(System.out::println);
+        addressMapper.findAllByProvince("abc").forEach(System.out::println);
+
         addressMapper.selectList(new Page<>(1, 10), new LambdaQueryWrapper<Address>()
                         .eq(Address::getCity, "PERSIST")
                         .isNull(Address::getUserid)

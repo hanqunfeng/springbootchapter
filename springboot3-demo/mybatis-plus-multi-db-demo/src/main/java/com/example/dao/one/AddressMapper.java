@@ -1,4 +1,8 @@
 package com.example.dao.one;
+import org.apache.ibatis.annotations.Select;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultMap;
 
 import com.example.model.one.Address;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -11,6 +15,19 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface AddressMapper extends BaseMapper<Address> {
 
+    @ResultMap("BaseResultMap")
+    @Select("<script>"
+            + "select * "
+            + "from address"
+            + "<where>"
+            + "<if test=\"city != null and city != ''\">"
+            + "city = #{city,jdbcType=VARCHAR}"
+            + "</if>"
+            + "</where>"
+            + "</script>")
+    List<Address> findAllByCity(@Param("city") String city);
+
+    List<Address> findAllByProvince(@Param("province") String province);
 }
 
 

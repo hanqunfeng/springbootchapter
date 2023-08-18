@@ -80,6 +80,11 @@ class MybatisDemoApplicationTests {
     void testOrder(){
         final Order order = orderMapper.selectByPrimaryKey(1);
         System.out.println(order);
+
+        final Order order1 = new Order();
+        order1.setOrderId("1234569");
+        orderMapper.insert(order1);
+        System.out.println(order1);
     }
 
     @Test

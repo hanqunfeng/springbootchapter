@@ -12,7 +12,14 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,province,city,
-        userId
+        id,province,city,userId
     </sql>
+
+    <select id="findAllByProvince" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from address
+        where
+        province = #{province,jdbcType=VARCHAR}
+    </select>
 </mapper>

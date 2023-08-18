@@ -30,6 +30,7 @@ class MybatisPlusDemoApplicationTests {
         userPlus.setEmail("hanqf@163.com");
         userPlus.setName("hanqf");
         userPlusMapper.insert(userPlus);
+        System.out.println(userPlus);
     }
 
     @Test

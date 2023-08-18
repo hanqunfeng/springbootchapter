@@ -53,7 +53,7 @@
             type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
             type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.dao" targetProject="src/main/java">
+        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="com.example.dao" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -63,7 +63,8 @@
             <!--useActualColumnNames:如果设置为true,那么MBG会使用从数据库元数据获取的列名作为生成的实体对象的属性。 如果为false(默认值)，MGB将会尝试将返回的名称转换为驼峰形式。 在这两种情况下，可以通过 元素显示指定，在这种情况下将会忽略这个（useActualColumnNames）属性。-->
             <!-- <property name="useActualColumnNames" value="true"/> -->
             <!-- 数据库表主键 可以不设置 -->
-            <!-- <generatedKey column="id" sqlStatement="Mysql" identity="true"/> -->
+            <!-- 当你将useGeneratedKeys属性设置为true时，执行插入(insert)时，MyBatis会尝试从数据库获取生成的主键值，并将其设置到插入操作的对象中 -->
+             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
     </context>
