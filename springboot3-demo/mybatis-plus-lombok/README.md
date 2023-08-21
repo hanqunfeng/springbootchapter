@@ -34,5 +34,8 @@ brew install p7zip
 
 # 删除指定的文件
 7z d mybatis-generator-core-1.4.2.jar org/mybatis/generator/plugins/LombokPlugin.class
+
+# 删除指定文件夹
+7z d mybatis-generator-core-1.4.2.jar org/
 ```
 
