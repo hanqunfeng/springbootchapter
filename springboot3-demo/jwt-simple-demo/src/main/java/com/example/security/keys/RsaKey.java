@@ -141,7 +141,7 @@ public class RsaKey {
     public static void main(String[] args) throws Exception {
         String publicKeyFilename = "id_key_rsa.pub";
         String privateKeyFilename = "id_key_rsa";
-        String secret = "Ayl7bn+aFwxlakekKCJiqUYguKS80bEVb7OZtd2qfZjdCbAwKxDmM6PWezGy5JIkiJfemtHNPc7Av1l+OWQSqQ==";
+        String secret = "123456";
         generateKey(publicKeyFilename, privateKeyFilename, secret, DEFAULT_KEY_SIZE);
     }
 }
