@@ -13,6 +13,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -37,6 +41,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class JksKey {
+    private static final String KEY_ALGORITHM = "RSA";
     private static Pattern PEM_DATA = Pattern.compile("-----BEGIN (.*)-----(.*)-----END (.*)-----", Pattern.DOTALL);
 
 
@@ -76,7 +81,7 @@ public class JksKey {
      */
     public static KeyPair getKeyPair(String filePath, String alias, String storePassword, String keyPassword) {
         InputStream inputStream = null;
-        KeyStore store = null;
+        KeyStore store;
         Resource resource;
         if (filePath.startsWith("classpath:")) {
             resource = new ClassPathResource(filePath.replace("classpath:", ""));
@@ -85,13 +90,13 @@ public class JksKey {
         }
 
         try {
-            store = KeyStore.getInstance("jks");
+            store = KeyStore.getInstance("JKS");
             inputStream = resource.getInputStream();
             store.load(inputStream, storePassword.toCharArray());
 
             RSAPrivateCrtKey key = (RSAPrivateCrtKey) store.getKey(alias, keyPassword.toCharArray());
             RSAPublicKeySpec spec = new RSAPublicKeySpec(key.getModulus(), key.getPublicExponent());
-            PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(spec);
+            PublicKey publicKey = KeyFactory.getInstance(KEY_ALGORITHM).generatePublic(spec);
             return new KeyPair(publicKey, key);
         } catch (Exception e) {
             throw new IllegalStateException("Cannot load keys from store: " + resource, e);
@@ -134,7 +139,7 @@ public class JksKey {
                 final byte[] bytes = Base64.getDecoder().decode(utf8Encode(m.group(2)));
 
                 X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
-                KeyFactory factory = KeyFactory.getInstance("RSA");
+                KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
                 return factory.generatePublic(spec);
             }
             return null;
@@ -166,7 +171,7 @@ public class JksKey {
         KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(null, null);
 
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
         keyPairGenerator.initialize(2048);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
         PublicKey publicKey = keyPair.getPublic();
@@ -197,8 +202,52 @@ public class JksKey {
         return new JcaX509CertificateConverter().setProvider(new BouncyCastleProvider()).getCertificate(x509CertificateHolder);
     }
 
+    /**
+     * 解密
+     *
+     * @param data 已加密数据
+     * @param key  密钥，公钥或私钥
+     * @return
+     */
+    public static byte[] decryptByKey(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+
+    /**
+     * 加密
+     *
+     * @param data 待加密数据
+     * @param key  密钥，公钥或私钥
+     * @return
+     */
+    public static byte[] encryptByKey(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+
     public static void main(String[] args) throws Exception {
-        generateKey("jks_key.jks","jks","123456","123456");
+        String jksFile = "jks_key.jks";
+        generateKey(jksFile, "jks", "123456", "123456");
+
+        final KeyPair keyPair = getKeyPair(jksFile, "jks", "123456", "123456");
+        final PublicKey publicKey = keyPair.getPublic();
+        final PrivateKey privateKey = keyPair.getPrivate();
+
+
+        //公钥加密，私钥解密
+        byte[] bytes = encryptByKey("hello 世界你好".getBytes(StandardCharsets.UTF_8), publicKey);
+
+        String s = new String(decryptByKey(bytes, privateKey), StandardCharsets.UTF_8);
+        System.out.println(s);
+
+        //私钥加密，公钥解密
+        bytes = encryptByKey("hello 世界你好".getBytes(StandardCharsets.UTF_8), privateKey);
+
+        s = new String(decryptByKey(bytes, publicKey), StandardCharsets.UTF_8);
+        System.out.println(s);
     }
 
 }

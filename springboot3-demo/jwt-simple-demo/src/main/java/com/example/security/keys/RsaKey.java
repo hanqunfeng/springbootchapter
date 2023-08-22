@@ -181,9 +181,17 @@ public class RsaKey {
 
         final PublicKey publicKey = getPublicKey(publicKeyFilename);
         final PrivateKey privateKey = getPrivateKey(privateKeyFilename);
-        final byte[] bytes = encryptByKey("hello 世界你好".getBytes(StandardCharsets.UTF_8), publicKey);
 
-        final String s = new String(decryptByKey(bytes, privateKey), StandardCharsets.UTF_8);
+        //公钥加密，私钥解密
+        byte[] bytes = encryptByKey("hello 世界你好".getBytes(StandardCharsets.UTF_8), publicKey);
+
+        String s = new String(decryptByKey(bytes, privateKey), StandardCharsets.UTF_8);
+        System.out.println(s);
+
+        //私钥加密，公钥解密
+        bytes = encryptByKey("hello 世界你好".getBytes(StandardCharsets.UTF_8), privateKey);
+
+        s = new String(decryptByKey(bytes, publicKey), StandardCharsets.UTF_8);
         System.out.println(s);
 
 
