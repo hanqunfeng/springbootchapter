@@ -28,6 +28,8 @@ public class RsaKey {
 
     private static final int DEFAULT_KEY_SIZE = 2048;
 
+    private static final String KEY_ALGORITHM = "RSA";
+
     /**
      * 从文件中读取公钥
      *
@@ -61,7 +63,7 @@ public class RsaKey {
     private static PublicKey getPublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         bytes = Base64.getDecoder().decode(bytes);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
-        KeyFactory factory = KeyFactory.getInstance("RSA");
+        KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
         return factory.generatePublic(spec);
     }
 
@@ -74,7 +76,7 @@ public class RsaKey {
     private static PrivateKey getPrivateKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
         bytes = Base64.getDecoder().decode(bytes);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
-        KeyFactory factory = KeyFactory.getInstance("RSA");
+        KeyFactory factory = KeyFactory.getInstance(KEY_ALGORITHM);
         return factory.generatePrivate(spec);
     }
 
@@ -86,8 +88,8 @@ public class RsaKey {
      * @param secret             生成密钥的密文
      * @param keySize            keySize
      */
-    public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret, int keySize) throws Exception {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+    public static void generateKey(String publicKeyFilename, String privateKeyFilename, String secret, int keySize) throws NoSuchAlgorithmException, IOException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
         SecureRandom secureRandom = new SecureRandom(secret.getBytes());
         keyPairGenerator.initialize(Math.max(keySize, DEFAULT_KEY_SIZE), secureRandom);
         KeyPair keyPair = keyPairGenerator.genKeyPair();
@@ -152,7 +154,7 @@ public class RsaKey {
      * @return
      */
     public static byte[] decryptByKey(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(data);
     }
@@ -165,7 +167,7 @@ public class RsaKey {
      * @return
      */
     public static byte[] encryptByKey(byte[] data, Key key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(data);
     }
