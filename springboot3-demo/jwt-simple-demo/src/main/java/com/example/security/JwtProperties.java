@@ -1,8 +1,8 @@
 package com.example.security;
 
 
-import com.example.security.keys.JksKey;
-import com.example.security.keys.RsaKey;
+import com.example.utils.JksKeyUtil;
+import com.example.utils.RsaKeyUtil;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -127,7 +127,7 @@ public class JwtProperties {
     @SneakyThrows
     public PublicKey rsaPublicKey() {
         if (rasPublicKey == null) {
-            rasPublicKey = RsaKey.getPublicKey(rsaPubKeyFile);
+            rasPublicKey = RsaKeyUtil.getPublicKey(rsaPubKeyFile);
         }
         return rasPublicKey;
     }
@@ -135,7 +135,7 @@ public class JwtProperties {
     @SneakyThrows
     public PrivateKey rsaPrivateKey() {
         if (rsaPrivateKey == null) {
-            rsaPrivateKey = RsaKey.getPrivateKey(rsaPriKeyFile);
+            rsaPrivateKey = RsaKeyUtil.getPrivateKey(rsaPriKeyFile);
         }
         return rsaPrivateKey;
     }
@@ -144,7 +144,7 @@ public class JwtProperties {
     public PublicKey jksPublicKey() {
         if (jksPublicKey == null) {
             if (StringUtils.hasText(jksPubKeyFile)) {
-                jksPublicKey = JksKey.getPublicKey(jksPubKeyFile);
+                jksPublicKey = JksKeyUtil.getPublicKey(jksPubKeyFile);
             } else {
 //                System.out.println("jksPublicKey_format: " + jksKeyPair().getPublic().getFormat());
 //                System.out.println("jksPublicKey_Algorithm: " + jksKeyPair().getPublic().getAlgorithm());
@@ -165,7 +165,7 @@ public class JwtProperties {
 
     public KeyPair jksKeyPair() {
         if (jksKeyPair == null) {
-            jksKeyPair = JksKey.getKeyPair(jksFile, jksAlias, jksStorePass, jksKeyPass);
+            jksKeyPair = JksKeyUtil.getKeyPair(jksFile, jksAlias, jksStorePass, jksKeyPass);
         }
         return jksKeyPair;
     }

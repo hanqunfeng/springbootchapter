@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.common.exception.CustomException;
-import com.example.common.response.AjaxResponse;
+import com.example.exception.CustomException;
+import com.example.response.AjaxResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

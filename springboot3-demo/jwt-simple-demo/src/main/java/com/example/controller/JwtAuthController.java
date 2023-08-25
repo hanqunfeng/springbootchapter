@@ -1,9 +1,9 @@
 package com.example.controller;
 
-import com.example.common.exception.CustomException;
-import com.example.common.exception.CustomExceptionType;
-import com.example.common.response.AjaxResponse;
+import com.example.exception.CustomException;
+import com.example.exception.CustomExceptionType;
 import com.example.model.User;
+import com.example.response.AjaxResponse;
 import com.example.service.JwtAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

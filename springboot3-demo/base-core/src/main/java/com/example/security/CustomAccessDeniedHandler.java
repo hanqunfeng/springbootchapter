@@ -1,9 +1,14 @@
-package com.example.security.support;
+package com.example.security;
+
+/**
+ * <h1>CustomAccessDeniedHandler</h1>
+ * Created by hanqf on 2023/8/24 16:05.
+ */
 
 
-import com.example.common.exception.CustomException;
-import com.example.common.response.AjaxResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.exception.CustomException;
+import com.example.response.AjaxResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;

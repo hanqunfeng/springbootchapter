@@ -3,21 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.example</groupId>
+        <artifactId>springboot3-demo</artifactId>
+        <version>0.0.1</version>
     </parent>
-    <groupId>com.example</groupId>
     <artifactId>web-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>web-demo</name>
-    <description>web-demo</description>
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- mvn -Pnative spring-boot:build-image -->
         <!-- docker run -\-rm -p 8001:8001 web-demo:0.0.1-SNAPSHOT -->
         <spring-boot.build.imageName>web-demo</spring-boot.build.imageName>

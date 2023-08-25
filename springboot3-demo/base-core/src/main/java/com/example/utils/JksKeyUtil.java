@@ -1,4 +1,4 @@
-package com.example.security.keys;
+package com.example.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * Created by hanqf on 2020/11/9 14:23.
  */
 @Slf4j
-public class JksKey {
+public class JksKeyUtil {
     private static final String KEY_ALGORITHM = "RSA";
     private static Pattern PEM_DATA = Pattern.compile("-----BEGIN (.*)-----(.*)-----END (.*)-----", Pattern.DOTALL);
 

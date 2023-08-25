@@ -6,9 +6,9 @@ package com.example.service;
  */
 
 
-import com.example.common.exception.CustomException;
-import com.example.common.exception.CustomExceptionType;
 import com.example.common.response.JwtResponse;
+import com.example.exception.CustomException;
+import com.example.exception.CustomExceptionType;
 import com.example.security.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

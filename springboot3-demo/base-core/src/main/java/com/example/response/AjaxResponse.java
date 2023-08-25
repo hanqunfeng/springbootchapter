@@ -1,7 +1,13 @@
-package com.example.common.response;
+package com.example.response;
 
-import com.example.common.exception.CustomException;
-import com.example.common.exception.CustomExceptionType;
+/**
+ * <h1>AjaxResponse</h1>
+ * Created by hanqf on 2023/8/24 15:31.
+ */
+
+
+import com.example.exception.CustomException;
+import com.example.exception.CustomExceptionType;
 import lombok.Data;
 
 @Data

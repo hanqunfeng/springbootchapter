@@ -3,19 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>com.example</groupId>
+		<artifactId>springboot3-demo</artifactId>
+		<version>0.0.1</version>
 	</parent>
-	<groupId>com.example</groupId>
+
 	<artifactId>jwt-simple-demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>jwt-simple-demo</name>
-	<description>jwt-simple-demo</description>
-	<properties>
-		<java.version>17</java.version>
-	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -62,11 +56,10 @@
 		</dependency>
 
 
-		<!-- 为了创建jks密钥 -->
 		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpkix-jdk18on</artifactId>
-			<version>1.76</version>
+			<groupId>com.example</groupId>
+			<artifactId>base-core</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 
 	</dependencies>

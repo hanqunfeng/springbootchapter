@@ -1,36 +1,31 @@
-package com.example.common.exception;
-
-import lombok.Getter;
-import org.springframework.http.HttpStatus;
-
-import java.io.Serial;
+package com.example.exception;
 
 /**
  * <h1>CustomException</h1>
- * Created by hanqf on 2023/8/21 12:11.
+ * Created by hanqf on 2023/8/24 15:31.
  */
 
-@Getter
+
+
+import org.springframework.http.HttpStatus;
+
 public class CustomException extends RuntimeException {
-    @Serial
-    private static final long serialVersionUID = 7517737797718858641L;
     //异常错误编码
-    private int code;
+    private int code ;
     //异常信息
     private String message;
 
     //返回数据
     private Object data;
 
-    private CustomException() {
-    }
+    private CustomException(){}
 
     public CustomException(CustomExceptionType exceptionTypeEnum, String message) {
         this.code = exceptionTypeEnum.getCode();
         this.message = message;
     }
 
-    public CustomException(CustomExceptionType exceptionTypeEnum, String message, Object data) {
+    public CustomException(CustomExceptionType exceptionTypeEnum, String message,Object data) {
         this.code = exceptionTypeEnum.getCode();
         this.message = message;
         this.data = data;
@@ -41,10 +36,14 @@ public class CustomException extends RuntimeException {
         this.message = message;
     }
 
-    public CustomException(HttpStatus httpStatus, String message, Object data) {
+    public CustomException(HttpStatus httpStatus, String message,Object data) {
         this.code = httpStatus.value();
         this.message = message;
         this.data = data;
+    }
+
+    public int getCode() {
+        return code;
     }
 
     @Override
@@ -52,4 +51,7 @@ public class CustomException extends RuntimeException {
         return message;
     }
 
+    public Object getData() {
+        return data;
+    }
 }

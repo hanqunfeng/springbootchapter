@@ -1,4 +1,4 @@
-package com.example.security.keys;
+package com.example.utils;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -24,11 +24,17 @@ import java.util.Base64;
  *
  * @author
  */
-public class RsaKey {
+public class RsaKeyUtil {
 
     private static final int DEFAULT_KEY_SIZE = 2048;
 
     private static final String KEY_ALGORITHM = "RSA";
+
+    public static KeyPair getKeyPair(String privateKeyfilePath, String publicKeyfilePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        final PrivateKey privateKey = getPrivateKey(privateKeyfilePath);
+        final PublicKey publicKey = getPublicKey(publicKeyfilePath);
+        return new KeyPair(publicKey, privateKey);
+    }
 
     /**
      * 从文件中读取公钥
@@ -37,7 +43,7 @@ public class RsaKey {
      * @return 公钥对象
      * @throws Exception
      */
-    public static PublicKey getPublicKey(String filename) throws Exception {
+    public static PublicKey getPublicKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] bytes = readFile(filename);
         return getPublicKey(bytes);
     }

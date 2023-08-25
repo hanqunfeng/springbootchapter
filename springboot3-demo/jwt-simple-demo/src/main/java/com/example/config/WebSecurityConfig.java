@@ -1,8 +1,9 @@
 package com.example.config;
 
+import com.example.security.CustomAccessDeniedHandler;
+import com.example.security.CustomAuthExceptionEntryPoint;
 import com.example.security.JwtProperties;
 import com.example.security.JwtToken;
-import com.example.security.support.CustomAccessDeniedHandler;
 import com.example.security.support.CustomSecurityProperties;
 import com.example.security.support.JwtAuthenticationTokenFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +27,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,8 +60,20 @@ public class WebSecurityConfig {
     @Autowired
     private CustomSecurityProperties securityProperties;
 
+    /**
+     * access_token无效或过期时的处理方式
+     */
     @Bean
-    public CustomAccessDeniedHandler customAccessDeniedHandler() {
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustomAuthExceptionEntryPoint(objectMapper);
+    }
+
+
+    /**
+     * access_token认证后没有对应的权限时的处理方式
+     */
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler(objectMapper);
     }
 
@@ -80,7 +95,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter(userDetailsService(), jwtToken, jwtProperties, objectMapper, securityProperties);
+        return new JwtAuthenticationTokenFilter(userDetailsService(), jwtToken, jwtProperties);
     }
 
 
@@ -136,7 +151,9 @@ public class WebSecurityConfig {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/**/*")).authenticated());
 
         http.exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer
-                .accessDeniedHandler(customAccessDeniedHandler()));
+                .accessDeniedHandler(accessDeniedHandler())
+                .authenticationEntryPoint(authenticationEntryPoint())
+        );
 
 
         //关闭csrf，默认开启，csrf不会拦截get请求

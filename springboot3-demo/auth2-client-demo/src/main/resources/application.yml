@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  # 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
+  devtools:
+    livereload:
+      port: 38002
+  application:
+    name: auth2-client-demo
+
+  # auth2 认证
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: fe35ae48b7c754af510f
+            client-secret: xxxxxx
+            client-name: Github Login
+          google:
+            client-id: 116430069637-35euocda196gv5566nqnqriqd33o9e16.apps.googleusercontent.com
+            client-secret: GOCSPX-xxxxxx
+            client-name: Google Login
+          my-oauth2:
+            provider: my-oauth2
+            client-id: client
+            client-secret: secret
+            scope:
+              - openid
+              - user:info
+            authorization-grant-type: authorization_code
+            redirect-uri: http://127.0.0.1:8080/login/oauth2/code/my-oauth2
+            clientName: my-oauth2
+            clientAuthenticationMethod: client_secret_post
+
+        provider:
+          my-oauth2:
+            # http://127.0.0.1:9090/.well-known/openid-configuration 浏览器访问这个地址就会获取下面所有的地址，所以如果服务端配置oidc，则只需要配置issuer-uri即可
+            issuer-uri: http://localhost:9090
+#            authorization-uri: http://localhost:9090/oauth2/authorize
+#            token-uri: http://localhost:9090/oauth2/token
+#            user-info-uri: http://localhost:9090/userinfo
+#            user-name-attribute: sub
+#            jwk-set-uri: http://localhost:9090/oauth2/jwks
+
+
+
+
