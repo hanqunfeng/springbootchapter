@@ -12,7 +12,7 @@ import java.security.Key;
  */
 
 
-public class SecretKey {
+public class SecretKeyUtil {
 
     /**
      * SECRET 是签名密钥，只生成一次即可，生成方法：

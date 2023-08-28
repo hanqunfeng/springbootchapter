@@ -217,7 +217,7 @@ public class SecurityConfig {
 
         // 基于数据库，要先在数据库中建表: oauth2_registered_client
         final JdbcRegisteredClientRepository jdbcRegisteredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-        // 第一次运行时初始化数据
+        // 第一次运行时初始化数据，这里是方便测试功能，正常情况下需要搞个CURD
 //        jdbcRegisteredClientRepository.save(registeredClient);
         return jdbcRegisteredClientRepository;
     }
