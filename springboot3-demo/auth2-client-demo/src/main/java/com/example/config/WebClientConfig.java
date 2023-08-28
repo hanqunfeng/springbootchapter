@@ -20,6 +20,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+import java.time.Duration;
+
 @Configuration
 public class WebClientConfig {
 
@@ -57,7 +59,9 @@ public class WebClientConfig {
         WebClientAdapter client = WebClientAdapter.forClient(webClient);
 
         // 创建 HttpServiceProxyFactory，它可用于创建客户端
-        return HttpServiceProxyFactory.builder(client).build();
+        return HttpServiceProxyFactory.builder(client)
+                .blockTimeout(Duration.ofSeconds(60)) //设置超时时间，默认5秒
+                .build();
     }
 
     /**

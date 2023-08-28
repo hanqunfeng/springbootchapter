@@ -111,6 +111,7 @@ public class IndexController {
 
     @RequestMapping("/jwt")
     public AjaxResponse jwt() {
+        System.out.println("jwt");
         return resourceServerClient.jwt();
     }
 
