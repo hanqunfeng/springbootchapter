@@ -35,7 +35,9 @@ public class DataSourceConfig {
 
     /**
      * 这里创建基于数据库的客户端信息配置 JdbcOAuth2AuthorizedClientService ，用户登录认证后的token数据会保存到数据表中
+     * 它将OAuth2客户端的访问令牌和刷新令牌存储到数据库中，并将clientId和用户名等信息作为索引存储到内存中
      * 需要现在数据库中创建 oauth2_authorized_client 表
+     *
      *
      * 默认是基于 内存的 InMemoryOAuth2AuthorizedClientService
      */
