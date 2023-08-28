@@ -36,9 +36,10 @@
             <scope>test</scope>
         </dependency>
 
+
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>base-core</artifactId>
+            <artifactId>base-security</artifactId>
             <version>0.0.1</version>
         </dependency>
 

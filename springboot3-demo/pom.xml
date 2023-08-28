@@ -29,12 +29,15 @@
 		<module>auth2-server-demo</module>
 		<module>auth2-client-demo</module>
 		<module>auth2-resource-demo</module>
+		<module>auth2-resource-webflux-demo</module>
 		<module>jwt-simple-demo</module>
 		<module>mybatis-demo</module>
 		<module>mybatis-multi-db-demo</module>
 		<module>mybatis-plus-demo</module>
 		<module>mybatis-plus-multi-db-demo</module>
-    </modules>
+		<module>base-security</module>
+		<module>base-security-webflux</module>
+	</modules>
 
 
 </project>

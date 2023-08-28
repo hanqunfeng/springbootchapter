@@ -101,7 +101,7 @@ public class SecurityConfig {
         return resolver;
     }
 
-    // 不需要这样做，默认会提供一个 JwtDecoder
+    // 不需要这样做，默认会基于配置文件中的 issuer-uri 提供一个 JwtDecoder
 //    @Bean
 //    public JwtDecoder jwtDecoder() {
 //        return JwtDecoders.fromIssuerLocation(issuerUri);

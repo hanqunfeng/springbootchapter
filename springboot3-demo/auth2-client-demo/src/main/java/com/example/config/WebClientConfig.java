@@ -7,6 +7,7 @@ package com.example.config;
 
 
 import com.example.exchange.ResourceServerClient;
+import com.example.exchange.WebfluxResourceServerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -36,6 +37,11 @@ public class WebClientConfig {
     @Bean
     public ResourceServerClient resourceClient(OAuth2AuthorizedClientManager authorizedClientManager) throws Exception {
         return httpServiceProxyFactory(authorizedClientManager).createClient(ResourceServerClient.class);
+    }
+
+    @Bean
+    public WebfluxResourceServerClient webfluxResourceServerClient(OAuth2AuthorizedClientManager authorizedClientManager) throws Exception {
+        return httpServiceProxyFactory(authorizedClientManager).createClient(WebfluxResourceServerClient.class);
     }
 
 

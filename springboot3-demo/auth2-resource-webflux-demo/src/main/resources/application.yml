@@ -1,0 +1,26 @@
+server:
+  port: 8091
+
+spring:
+  # 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
+  devtools:
+    livereload:
+      port: 38004
+  application:
+    name: auth2-resource-webflux-demo
+
+  # auth2 认证
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 下面两个，配置哪个都可以，实际上只要配置 issuer-uri 即可，http://127.0.0.1:9090/.well-known/openid-configuration 可以获取全部认证url
+          # 认证服务器提供的密钥验证路径，这种方式每次验证 access_token 都需要访问认证服务器
+          #          issuer-uri: http://localhost:9090
+          #          jwk-set-uri: http://localhost:9090/oauth2/jwks
+
+          # 公钥文件路径，这种方式不需要每次解析 token 时都去连接认证服务器
+          #          public-key-location: classpath:id_key_rsa.pub
+          public-key-location: classpath:jks_key.pub
+
+

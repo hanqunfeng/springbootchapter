@@ -7,16 +7,16 @@
         <artifactId>springboot3-demo</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>auth2-resource-demo</artifactId>
-
+    <artifactId>auth2-resource-webflux-demo</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -38,7 +38,7 @@
 
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>base-security</artifactId>
+            <artifactId>base-security-webflux</artifactId>
             <version>0.0.1</version>
         </dependency>
 
