@@ -13,6 +13,8 @@ spring:
 
   #r2dbc mysql
   r2dbc:
+#    url: r2dbc:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8
+    # 开启代理，目的是打印sql，生成环境不建议
     url: r2dbc:proxy:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8&proxyListener=com.example.r2dbc.LogExecutionListener
     username: testUser
     password: 123456
