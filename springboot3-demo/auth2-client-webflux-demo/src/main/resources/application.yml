@@ -1,0 +1,69 @@
+server:
+  port: 8085
+
+#debug: true
+
+spring:
+  # 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
+  devtools:
+    livereload:
+      port: 38005
+  application:
+    name: auth2-client-webflux-demo
+
+  #r2dbc mysql
+  r2dbc:
+    url: r2dbc:proxy:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8&proxyListener=com.example.r2dbc.LogExecutionListener
+    username: testUser
+    password: 123456
+    pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30m
+
+
+
+
+
+  # OAuth2 客户端配置
+  security:
+    oauth2:
+      client:
+        registration:
+          my-oauth2-webflux:
+            provider: my-oauth2-webflux
+            client-id: client-webflux
+            client-secret: secret-webflux
+            scope:
+              - openid
+              - user:info
+            authorization-grant-type: authorization_code
+            redirect-uri: http://127.0.0.1:8085/login/oauth2/code/my-oauth2-webflux
+            clientName: my-oauth2-webflux
+            clientAuthenticationMethod: client_secret_post
+
+        provider:
+          my-oauth2-webflux:
+            # http://127.0.0.1:9090/.well-known/openid-configuration 浏览器访问这个地址就会获取下面所有的地址，所以如果服务端配置oidc，则只需要配置issuer-uri即可
+            issuer-uri: http://localhost:9090
+            # 认证服务地址
+            # authorization-uri: http://localhost:9090/oauth2/authorize
+            # 获取token地址
+            # token-uri: http://localhost:9090/oauth2/token
+            # 获取用户信息地址
+            # user-info-uri: http://localhost:9090/userinfo
+            # 用户名，在获取用户信息接口返回的json中的key
+            # user-name-attribute: sub
+            # 访问令牌是 JWT，并且颁发者为客户端提供端点以获取公共 RSA 密钥以进行 JWK 格式的验证
+            # jwk-set-uri: http://localhost:9090/oauth2/jwks
+
+
+
+# 可以打印sql，但不能打印参数值
+logging:
+  level:
+#    io.r2dbc.pool: DEBUG
+#    io.asyncer.r2dbc.mysql: DEBUG
+    org.springframework.r2dbc: DEBUG
+

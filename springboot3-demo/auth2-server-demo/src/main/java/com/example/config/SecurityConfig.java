@@ -176,9 +176,9 @@ public class SecurityConfig {
     public RegisteredClientRepository registeredClientRepository() {
         //生成随机UUID作为客户端唯一标识，避免多个客户端时ID冲突
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientName("my-oauth2") // 设置客户端名称
-                .clientId("client") //设置授权客户端ID
-                .clientSecret(passwordEncoder().encode("secret")) //设置客户端密钥
+                .clientName("my-oauth2-webflux") // 设置客户端名称
+                .clientId("client-webflux") //设置授权客户端ID
+                .clientSecret(passwordEncoder().encode("secret-webflux")) //设置客户端密钥
                 .scopes(strings -> {
                     strings.add(OidcScopes.OPENID);//设置客户端的范围，这里使用了 OpenID Connect 的标准范围
                     strings.add("user:info");
@@ -190,7 +190,7 @@ public class SecurityConfig {
                     redirectUri 不要求存在，固定写法
                  */
                 .redirectUris(redirectUri -> {
-                    redirectUri.add("http://127.0.0.1:8080/login/oauth2/code/my-oauth2"); //客户端回调，固定写法
+                    redirectUri.add("http://127.0.0.1:8085/login/oauth2/code/my-oauth2-webflux"); //客户端回调，固定写法
                     redirectUri.add("https://www.baidu.com"); //用于测试获取验证码模式的code
                 })
                 //设置客户端的身份验证方法

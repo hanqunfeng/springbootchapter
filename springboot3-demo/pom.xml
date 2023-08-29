@@ -28,6 +28,7 @@
 		<module>web-demo</module>
 		<module>auth2-server-demo</module>
 		<module>auth2-client-demo</module>
+		<module>auth2-client-webflux-demo</module>
 		<module>auth2-resource-demo</module>
 		<module>auth2-resource-webflux-demo</module>
 		<module>jwt-simple-demo</module>
