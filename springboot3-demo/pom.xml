@@ -38,6 +38,7 @@
 		<module>mybatis-plus-multi-db-demo</module>
 		<module>base-security</module>
 		<module>base-security-webflux</module>
+		<module>web-flux-mysql-redis-demo</module>
 	</modules>
 
 

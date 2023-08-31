@@ -12,7 +12,7 @@
     </sql>
 
     <resultMap id="AddressAndUserResultMap" type="com.example.model.Address" extends="BaseResultMap">
-        <association column="userId" property="user" select="com.example.dao.XmlUserMapper.selectByPrimaryKey"
+        <association column="userId" property="userEntity" select="com.example.dao.XmlUserMapper.selectByPrimaryKey"
                      fetchType="eager"/>
     </resultMap>
 

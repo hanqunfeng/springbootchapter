@@ -41,7 +41,6 @@ public class IndexController {
     /**
      * 用户信息
      */
-    //@PreAuthorize("#oauth2.hasScope('any')") //不支持
     @RequestMapping(value = "/user")
     public Mono<AjaxResponse> user(Principal principal) {
         //principal在经过security拦截后，是org.springframework.security.authentication.UsernamePasswordAuthenticationToken

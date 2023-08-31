@@ -13,7 +13,7 @@
     </sql>
 
     <resultMap id="BookAndUserResultMap" type="com.example.model.Book" extends="BaseResultMap">
-        <association column="userId" property="user" select="com.example.dao.XmlUserMapper.selectByPrimaryKey"
+        <association column="userId" property="userEntity" select="com.example.dao.XmlUserMapper.selectByPrimaryKey"
                      fetchType="eager"/>
     </resultMap>
 

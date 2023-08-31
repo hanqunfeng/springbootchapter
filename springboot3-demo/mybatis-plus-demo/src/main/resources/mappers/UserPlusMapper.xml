@@ -15,13 +15,13 @@
     <select id="selectUsers" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
 </mapper>

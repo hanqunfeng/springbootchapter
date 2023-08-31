@@ -39,28 +39,28 @@
     <select id="getUserRolesById" parameterType="java.lang.Long" resultMap="UserRolesResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getUserListByRoleId" parameterType="java.lang.Long" resultMap="BooksResultMap">
         select
         <include refid="Base_Column_List" />
-        from user u,userrole ur
+        from userEntity u,userrole ur
         where u.id = ur.userId and ur.roleId = #{roleId,jdbcType=BIGINT}
     </select>
 
     <select id="getUserAddressAndBooksById" parameterType="java.lang.Long" resultMap="UserBooksResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="getUserAndBooksById" parameterType="java.lang.Long" resultMap="BooksResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
 
@@ -68,7 +68,7 @@
     <select id="getUserById" parameterType="java.lang.Long" resultMap="UserResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
 
@@ -76,27 +76,27 @@
     <select id="selectUsers" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from user
+        from userEntity
         where id = #{id,jdbcType=BIGINT}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-        delete from user
+        delete from userEntity
         where id = #{id,jdbcType=BIGINT}
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.model.User" useGeneratedKeys="true">
-        insert into user (`name`, age, email,
+        insert into userEntity (`name`, age, email,
                           del)
         values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR},
                 #{del,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.model.User" useGeneratedKeys="true">
-        insert into user
+        insert into userEntity
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">
                 `name`,
@@ -127,7 +127,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.example.model.User">
-        update user
+        update userEntity
         <set>
             <if test="name != null">
                 `name` = #{name,jdbcType=VARCHAR},
@@ -145,7 +145,7 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.example.model.User">
-        update user
+        update userEntity
         set `name` = #{name,jdbcType=VARCHAR},
             age = #{age,jdbcType=INTEGER},
             email = #{email,jdbcType=VARCHAR},
