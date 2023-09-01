@@ -1,0 +1,49 @@
+server:
+  port: 8086
+
+#debug: true
+
+spring:
+  # 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
+  devtools:
+    livereload:
+      port: 38006
+  application:
+    name: webflux-mysql-multi-demo
+
+  #r2dbc mysql
+  r2dbc:
+    one:
+  #    url: r2dbc:mysql://mysql.test.db:3306/springboot?useUnicode=true&characterEncoding=utf-8
+      # 开启代理，目的是打印sql，生产环境不建议，http://r2dbc.io/r2dbc-proxy/docs/current/docs/html/
+      url: r2dbc:proxy:mysql://mysql.test.db:3306/springboot?useUnicode=true&characterEncoding=utf-8&proxyListener=com.example.r2dbc.LogExecutionListener
+      username: testUser
+      password: 123456
+      pool:
+        enabled: true
+        initial-size: 5
+        max-size: 20
+        max-idle-time: 30m
+    two:
+      #    url: r2dbc:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8
+      url: r2dbc:proxy:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8&proxyListener=com.example.r2dbc.LogExecutionListener
+      username: testUser
+      password: 123456
+      pool:
+        enabled: true
+        initial-size: 5
+        max-size: 20
+        max-idle-time: 30m
+
+
+
+
+
+
+# 可以打印sql，但不能打印参数值
+logging:
+  level:
+#    io.r2dbc.pool: DEBUG
+#    io.asyncer.r2dbc.mysql: DEBUG
+    org.springframework.r2dbc: DEBUG
+
