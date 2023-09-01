@@ -1,7 +1,9 @@
 package com.example.mysql;
 
+import com.example.r2dbc.DefaultR2dbcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -27,6 +30,9 @@ public class SysUserController {
 
     @Autowired
     private TransactionalOperator transactionalOperator;
+
+    @Autowired
+    private R2dbcEntityTemplate r2dbcEntityTemplate;
 
 
     @RequestMapping("/all")
@@ -115,5 +121,21 @@ public class SysUserController {
         return sysUserRepository.addSysUser(sysUser).then(sysUserRepository.addSysUser(sysUser))
                 .as(transactionalOperator::transactional);
     }
+
+    @RequestMapping("/many")
+    public Flux<SysUser> getMany(String username) {
+        String sql = "select id, username from sys_user where username like CONCAT('%',:username,'%')";
+
+        return DefaultR2dbcService.builder()
+                .r2dbcEntityTemplate(r2dbcEntityTemplate).build()
+                .execSqlToFlux(sql, Map.of("username", username), (row, rowMetadata) -> {
+                    final SysUser sysUser = new SysUser();
+                    sysUser.setId(row.get("id", String.class));
+                    sysUser.setUsername(row.get("username", String.class));
+                    return sysUser;
+                });
+    }
+
+
 }
 
