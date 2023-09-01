@@ -34,6 +34,9 @@ import org.springframework.security.web.server.authorization.ServerAccessDeniedH
 @EnableReactiveMethodSecurity //启用@PreAuthorize注解配置
 public class ReactiveSecurityConfig {
 
+    /**
+     * rbac权限认证
+    */
 
     @Autowired
     private CustomReactiveAuthorizationManager customReactiveAuthorizationManager;
@@ -83,6 +86,11 @@ public class ReactiveSecurityConfig {
 
     }
 
+    /**
+     * 用户登录 token 信息保存到到数据库：R2dbcReactiveOAuth2AuthorizedClientService
+     *
+     * 默认保存到内存：InMemoryReactiveOAuth2AuthorizedClientService
+    */
     @Bean
     public ReactiveOAuth2AuthorizedClientService r2dbcReactiveOAuth2AuthorizedClientService(DatabaseClient databaseClient, ReactiveClientRegistrationRepository clientRegistrationRepository) {
         log.info("R2dbcReactiveOAuth2AuthorizedClientService");
