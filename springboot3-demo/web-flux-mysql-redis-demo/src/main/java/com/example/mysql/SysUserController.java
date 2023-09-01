@@ -3,11 +3,15 @@ package com.example.mysql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 /**
  * <h1></h1>
@@ -20,6 +24,9 @@ public class SysUserController {
 
     @Autowired
     private SysUserRepository sysUserRepository;
+
+    @Autowired
+    private TransactionalOperator transactionalOperator;
 
 
     @RequestMapping("/all")
@@ -77,6 +84,35 @@ public class SysUserController {
         Criteria criteria = Criteria.empty();
         criteria = criteria.and("username").like("%admin%");
         return sysUserRepository.findByQuery(criteria);
+    }
+
+    /**
+     * 注解式事务
+     */
+    @Transactional
+    @RequestMapping("/tx")
+    public Mono<Integer> tx() {
+        final SysUser sysUser = new SysUser();
+        sysUser.setId(UUID.randomUUID().toString());
+        sysUser.setUsername("test");
+        sysUser.setPassword("123456");
+        sysUser.setEnable(true);
+        // 主键重复
+        return sysUserRepository.addSysUser(sysUser).then(sysUserRepository.addSysUser(sysUser));
+    }
+
+    /**
+     * 编程式事务
+    */
+    @RequestMapping("/tx2")
+    public Mono<Integer> tx2() {
+        final SysUser sysUser = new SysUser();
+        sysUser.setId(UUID.randomUUID().toString());
+        sysUser.setUsername("test");
+        sysUser.setPassword("123456");
+        sysUser.setEnable(true);
+        // 主键重复
+        return sysUserRepository.addSysUser(sysUser).then(sysUserRepository.addSysUser(sysUser)).as(transactionalOperator::transactional);
     }
 }
 
