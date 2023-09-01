@@ -35,6 +35,11 @@ public class SimpleBaseR2dbcRepository<T, ID extends Serializable> extends Simpl
     }
 
     @Override
+    public R2dbcEntityOperations getR2dbcEntityOperations() {
+        return r2dbcEntityOperations;
+    }
+
+    @Override
     public Mono<Page<T>> pageByQuery(Criteria criteria, Pageable pageable) {
         final Query query = Query.query(criteria);
         return r2dbcEntityOperations.count(query, entity.getJavaType()).flatMap(total ->
