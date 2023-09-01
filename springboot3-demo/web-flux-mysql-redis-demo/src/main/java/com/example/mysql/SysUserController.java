@@ -112,7 +112,8 @@ public class SysUserController {
         sysUser.setPassword("123456");
         sysUser.setEnable(true);
         // 主键重复
-        return sysUserRepository.addSysUser(sysUser).then(sysUserRepository.addSysUser(sysUser)).as(transactionalOperator::transactional);
+        return sysUserRepository.addSysUser(sysUser).then(sysUserRepository.addSysUser(sysUser))
+                .as(transactionalOperator::transactional);
     }
 }
 
