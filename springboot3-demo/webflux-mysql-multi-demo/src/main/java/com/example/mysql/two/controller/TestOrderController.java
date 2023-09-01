@@ -2,9 +2,11 @@ package com.example.mysql.two.controller;
 
 import com.example.mysql.two.model.TestOrder;
 import com.example.mysql.two.repository.TestOrderRepository;
+import com.example.r2dbc.DefaultR2dbcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,10 @@ public class TestOrderController {
     @Autowired
     @Qualifier("twoTransactionalOperator")
     private TransactionalOperator twoTransactionalOperator;
+
+    @Autowired
+    @Qualifier("twoR2dbcEntityTemplate")
+    private R2dbcEntityTemplate twoR2dbcEntityTemplate;
 
 
     @RequestMapping("/save")
@@ -164,6 +170,21 @@ public class TestOrderController {
             testOrder.setOrderId(row.get("order_id", String.class));
             return testOrder;
         });
+    }
+
+
+    @RequestMapping("/many2")
+    public Flux<TestOrder> getMany2(String orderId) {
+        String sql = "select id, order_id from test_order where order_id like CONCAT('%',:orderId,'%')";
+
+        return DefaultR2dbcService.builder()
+                .r2dbcEntityTemplate(twoR2dbcEntityTemplate).build()
+                .execSqlToFlux(sql, Map.of("orderId", orderId), (row, rowMetadata) -> {
+                    final TestOrder testOrder = new TestOrder();
+                    testOrder.setId(row.get("id", Long.class));
+                    testOrder.setOrderId(row.get("order_id", String.class));
+                    return testOrder;
+                });
     }
 
 
