@@ -36,6 +36,7 @@ public class DefaultJpaService {
 
     public EntityManager getEntityManager() {
         if (entityManager == null) {
+            // 默认主数据源
             entityManager = ApplicationContextProvider.getBean("entityManager", EntityManager.class);
         }
         return entityManager;
