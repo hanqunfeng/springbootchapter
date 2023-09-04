@@ -3,9 +3,12 @@ package com.example.controller;
 import com.example.function.dao.UserInfo;
 import com.example.function.dao.UserInfoJpaRepository;
 import com.example.support.ApplicationContextProvider;
+import com.example.support.jpa.DefaultJpaService;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,10 @@ public class DemoController {
 
     @Autowired
     private UserInfoJpaRepository userInfoJpaRepository;
+
+    @Autowired
+    @Qualifier("entityManager")
+    private EntityManager entityManager;
 
     @RequestMapping(value = {"/", "/index.do"})
     public String handleIndex(Model model, HttpServletRequest request) {
@@ -44,10 +51,12 @@ public class DemoController {
         final List<UserInfo> userInfos = userInfoJpaRepository.findAll();
         model.addAttribute("userInfos",userInfos);
 
-        final Map bySqlFirst = userInfoJpaRepository.findBySqlFirst("select * from tbl_dream_userinfo where id = 1");
+        final Map bySqlFirst = DefaultJpaService.builder().entityManager(entityManager).build()
+                .findBySqlFirst("select * from tbl_dream_userinfo where id = 1");
 
         //这里要注意查询字段与model对象的匹配，可以使用as，也可以在model对象的属性加上 @JsonProperty("device_id")进行绑定
-        final UserInfo userInfo = userInfoJpaRepository.findBySqlFirst("select * from tbl_dream_userinfo where id = 1", UserInfo.class);
+        final UserInfo userInfo = DefaultJpaService.builder().build() // 默认主数据源
+                .findBySqlFirst("select * from tbl_dream_userinfo where id = 1", UserInfo.class);
 
         return "index";
     }

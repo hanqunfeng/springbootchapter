@@ -102,5 +102,18 @@ public class SysUserController {
                     return sysUser;
                 });
     }
+
+    @RequestMapping("/many2")
+    public Flux<SysUser> getMany2(String username, Integer enable) {
+        String sql = "select id, username from sys_user where username like CONCAT('%',:username,'%') and enable = :enable";
+
+        return DefaultR2dbcService.builder().build() // 默认主数据源
+                .execSqlToFlux(sql, Map.of("username", username, "enable", enable), (row, rowMetadata) -> {
+                    final SysUser sysUser = new SysUser();
+                    sysUser.setId(row.get("id", String.class));
+                    sysUser.setUsername(row.get("username", String.class));
+                    return sysUser;
+                });
+    }
 }
 

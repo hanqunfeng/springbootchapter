@@ -1,5 +1,6 @@
 package com.example.r2dbc;
 
+import com.example.support.ApplicationContextProvider;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,15 @@ import java.util.function.BiFunction;
 public class DefaultR2dbcService {
     private R2dbcEntityTemplate r2dbcEntityTemplate;
 
+    public R2dbcEntityTemplate getR2dbcEntityTemplate() {
+        if (r2dbcEntityTemplate == null) {
+            r2dbcEntityTemplate = ApplicationContextProvider.getBean(R2dbcEntityTemplate.class);
+        }
+        return r2dbcEntityTemplate;
+    }
+
     private <R> RowsFetchSpec<R> execSql(String sql, Map<String, Object> bindMap, BiFunction<Row, RowMetadata, R> mappingFunction) {
-        DatabaseClient.GenericExecuteSpec genericExecuteSpec = r2dbcEntityTemplate.getDatabaseClient().sql(sql);
+        DatabaseClient.GenericExecuteSpec genericExecuteSpec = getR2dbcEntityTemplate().getDatabaseClient().sql(sql);
         if (bindMap != null) {
             for (Map.Entry<String, Object> entry : bindMap.entrySet()) {
                 genericExecuteSpec = genericExecuteSpec.bind(entry.getKey(), entry.getValue());
