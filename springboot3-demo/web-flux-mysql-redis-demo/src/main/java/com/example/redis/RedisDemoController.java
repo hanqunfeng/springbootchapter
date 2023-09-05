@@ -134,5 +134,15 @@ public class RedisDemoController {
         return reactiveRedisUtil.getHashValue("USER_HS2", String.valueOf(id));
     }
 
+    @GetMapping(value = "/lock")
+    public Mono<Boolean> lock() {
+        return reactiveRedisUtil.tryGetDistributedLock("testKey", "testRequest", 1000);
+    }
+
+    @GetMapping(value = "/res-lock")
+    public Mono<Boolean> resLock() {
+        return reactiveRedisUtil.releaseDistributedLock("testKey", "testRequest");
+    }
+
 
 }

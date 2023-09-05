@@ -112,22 +112,23 @@ public class ReactiveRedisUtil {
     /**
      * 获取分布式锁
      *
-     * @param lockKey
-     * @param requestId
-     * @param expireTime
+     * @param lockKey  锁key
+     * @param requestId 锁体，可以是任意内容，但是释放锁时会要求提供锁体进行验证
+     * @param expireTime 锁过期时间，单位秒
      * @return
      */
     public Mono<Boolean> tryGetDistributedLock(String lockKey, String requestId, long expireTime) {
         Assert.hasLength(lockKey, "lockKey must not be empty");
         Assert.hasLength(requestId, "requestId must not be empty");
-        return reactiveRedisTemplate.opsForValue().setIfAbsent(lockKey, requestId, Duration.ofSeconds(expireTime));
+        String innerLockKey = buildLockKey(lockKey);
+        return reactiveRedisTemplate.opsForValue().setIfAbsent(innerLockKey, requestId, Duration.ofSeconds(expireTime));
     }
 
     /**
      * 释放分布式锁
      *
-     * @param lockKey
-     * @param requestId
+     * @param lockKey 锁key
+     * @param requestId 锁体，可以是任意内容，但是释放锁时会要求提供锁体进行验证
      * @return
      */
     public Mono<Boolean> releaseDistributedLock(String lockKey, String requestId) {
@@ -148,7 +149,7 @@ public class ReactiveRedisUtil {
      * @param lockKey
      * @return
      */
-    public String buildLockKey(String lockKey) {
+    private String buildLockKey(String lockKey) {
         Assert.hasLength(lockKey, "lockKey must not be empty");
         return LOCK_KEY_PREFIX + lockKey;
     }
