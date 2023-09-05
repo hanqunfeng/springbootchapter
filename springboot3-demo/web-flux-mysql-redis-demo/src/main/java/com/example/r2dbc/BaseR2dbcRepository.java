@@ -4,9 +4,11 @@ import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.query.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.r2dbc.core.DatabaseClient;
 import reactor.core.publisher.Flux;
@@ -34,6 +36,18 @@ public interface BaseR2dbcRepository<T, ID extends Serializable> extends R2dbcRe
     Mono<Long> countByQuery(Criteria criteria);
 
     Flux<T> findByQuery(Criteria criteria);
+
+    Flux<T> findByQuery(Criteria criteria, Sort sort);
+
+    Flux<T> findByQuery(Criteria criteria, int limit);
+
+    Flux<T> findByQuery(Criteria criteria, Sort sort, int limit);
+
+    Flux<T> findByQuery(Query query);
+
+    Mono<T> findOneByQuery(Query query);
+
+    Mono<T> findOneByQuery(Criteria criteria);
 
 
     default <R> Mono<R> execSqlToMono(String sql, Map<String, Object> bindMap, BiFunction<Row, RowMetadata, R> mappingFunction) {

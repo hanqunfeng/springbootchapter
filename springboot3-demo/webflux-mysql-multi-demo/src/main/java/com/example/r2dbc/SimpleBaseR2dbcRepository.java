@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.SimpleR2dbcRepository;
@@ -58,5 +59,39 @@ public class SimpleBaseR2dbcRepository<T, ID extends Serializable> extends Simpl
     public Flux<T> findByQuery(Criteria criteria) {
         final Query query = Query.query(criteria);
         return r2dbcEntityOperations.select(query, entity.getJavaType());
+    }
+
+    @Override
+    public Flux<T> findByQuery(Criteria criteria, Sort sort) {
+        final Query query = Query.query(criteria).sort(sort);
+        return r2dbcEntityOperations.select(query, entity.getJavaType());
+    }
+
+    @Override
+    public Flux<T> findByQuery(Criteria criteria, int limit) {
+        final Query query = Query.query(criteria).limit(limit);
+        return r2dbcEntityOperations.select(query, entity.getJavaType());
+    }
+
+    @Override
+    public Flux<T> findByQuery(Criteria criteria, Sort sort, int limit) {
+        final Query query = Query.query(criteria).sort(sort).limit(limit);
+        return r2dbcEntityOperations.select(query, entity.getJavaType());
+    }
+
+    @Override
+    public Flux<T> findByQuery(Query query) {
+        return r2dbcEntityOperations.select(query, entity.getJavaType());
+    }
+
+    @Override
+    public Mono<T> findOneByQuery(Query query) {
+        return r2dbcEntityOperations.selectOne(query, entity.getJavaType());
+    }
+
+    @Override
+    public Mono<T> findOneByQuery(Criteria criteria) {
+        final Query query = Query.query(criteria);
+        return r2dbcEntityOperations.selectOne(query, entity.getJavaType());
     }
 }

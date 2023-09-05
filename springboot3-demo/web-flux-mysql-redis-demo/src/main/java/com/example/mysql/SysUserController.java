@@ -1,5 +1,6 @@
 package com.example.mysql;
 
+import com.example.r2dbc.CustomCriteria;
 import com.example.r2dbc.DefaultR2dbcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -92,6 +93,16 @@ public class SysUserController {
         return sysUserRepository.findByQuery(criteria);
     }
 
+    @RequestMapping("/list2")
+    public Flux<SysUser> findList2() {
+        final Criteria criteria = CustomCriteria.and()
+                .like(true, "username", "%admin%", "lisi%")
+                .eq(true, "enable", 1)
+                .build();
+
+        return sysUserRepository.findByQuery(criteria);
+    }
+
     /**
      * 注解式事务
      */
@@ -109,7 +120,7 @@ public class SysUserController {
 
     /**
      * 编程式事务
-    */
+     */
     @RequestMapping("/tx2")
     public Mono<Integer> tx2() {
         final SysUser sysUser = new SysUser();
