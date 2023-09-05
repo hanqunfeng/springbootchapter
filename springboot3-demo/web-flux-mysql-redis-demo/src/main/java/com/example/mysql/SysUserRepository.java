@@ -13,12 +13,6 @@ import org.springframework.data.r2dbc.repository.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-/**
- * 当我们的操作接口继承的是ReactiveCrudRepository<T, ID> 或者ReactiveSortingRepository<T, ID>时，需要在实体类上使用@Table注解，这也是推荐的用法
- * 当然实体类不使用@Table注解标记时，我们还可以继承R2dbcRepository<T, ID>接口
- *
- * 注意，截至springboot2.4.0版本，分页功能不被支持
- */
 public interface SysUserRepository extends BaseR2dbcRepository<SysUser, String> {
     Mono<SysUser> findByUsername(String username);
 

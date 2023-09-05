@@ -13,24 +13,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LogExecutionListener implements ProxyMethodExecutionListener {
-
     private final QueryExecutionInfoFormatter queryFormatter = new QueryExecutionInfoFormatter()
-            .showTime()
+            .newLine()
+            .showTime().showType().showSuccess().showTransaction().showBatchSize().showConnection().showThread()
+            .newLine()
             .showQuery()
             .newLine()
-            .showBindings()
+            .showBindingsSize().showBindings()
             .newLine();
-
 
     @Override
     public void afterExecuteOnStatement(QueryExecutionInfo queryExecutionInfo) {
-        afterExecuteQuery(queryExecutionInfo);
-    }
-
-    private void afterExecuteQuery(QueryExecutionInfo queryExecutionInfo) {
         String stringBuilder = this.queryFormatter.format(queryExecutionInfo);
         log.info(stringBuilder);
     }
+
 }
 
 

@@ -12,36 +12,47 @@ import java.util.List;
  * <h1>CustomCriteria</h1>
  * Criteria 构造器
  * Created by hanqf on 2023/9/4 11:47.
- * <p>
- * <p>
+ *
+ *
  * 示例：
  * 1.and 关系: select * from tbl_table where (username like '%admin%' or username like 'lisi%') and enable = 1
  * Criteria criteria = CustomCriteria.and()
- * .like(true, "username", "%admin%", "lisi%")
- * .eq(true, "enable", 1)
- * .build();
- * <p>
+ *                 .like(true, "username", "%admin%", "lisi%")
+ *                 .eq(true, "enable", 1)
+ *                 .build();
+ *
  * 2.or 关系: select * from tbl_table where (username like '%admin%' or username like 'lisi%') or enable = 1
  * Criteria criteria = CustomCriteria.or()
- * .like(true, "username", "%admin%", "lisi%")
- * .eq(true, "enable", 1)
- * .build();
- * <p>
- * 3.符合关系：
+ *                 .like(true, "username", "%admin%", "lisi%")
+ *                 .eq(true, "enable", 1)
+ *                 .build();
+ *
+ * 3.复合关系：
  * Criteria criteria1 = CustomCriteria.and()
- * .like(true, "username", "%admin%", "lisi%")
- * .eq(true, "enable", 1)
- * .build();
- * <p>
+ *                 .like(true, "username", "%admin%", "lisi%")
+ *                 .eq(true, "enable", 1)
+ *                 .build();
+
  * Criteria criteria2 = CustomCriteria.or()
- * .like(true, "username", "%admin%", "lisi%")
- * .eq(true, "enable", 1)
- * .build();
- * <p>
+ *                 .like(true, "username", "%admin%", "lisi%")
+ *                 .eq(true, "enable", 1)
+ *                 .build();
+ *
  * Criteria criteria = criteria1.and(criteria2);  // or： criteria1.or(criteria2);
- * <p>
- * 复杂查询建议直接使用 sql 进行查询
- * <p>
+ *
+ * 4.复杂查询建议直接使用 sql 进行查询，可以使用  BaseR2dbcRepository 中的 execSqlToMono 和 execSqlToFlux
+ * 示例：
+ *  public Mono<TestOrder> getOne(String orderId) {
+ *         String sql = "select id, order_id from test_order where order_id = :orderId";
+ *
+ *         return testOrderRepository.execSqlToMono(sql, Map.of("orderId", orderId), (row, rowMetadata) -> {
+ *             final TestOrder testOrder = new TestOrder();
+ *             testOrder.setId(row.get("id", Long.class));
+ *             testOrder.setOrderId(row.get("order_id", String.class));
+ *             return testOrder;
+ *         });
+ *     }
+ *
  * 说明：
  * 1.eq(true, "enable", 1)：第一个参数为真时当前条件加入查询，默认为真
  * 2.支持条件方法详见代码
