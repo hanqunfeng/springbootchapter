@@ -49,7 +49,7 @@ import java.util.List;
 
 public class CustomCriteria {
 
-    enum CriteriaOperator {
+    public enum CriteriaOperator {
         AND, OR
     }
 
