@@ -1,7 +1,7 @@
 server:
   port: 9090
 
-# \u591A\u4E2A\u9879\u76EE\u540C\u65F6\u542F\u52A8\u65F6\uFF0C\u8981\u4FEE\u6539\u8FD9\u4E2A\u7AEF\u53E3\uFF0C\u5426\u5219\u4F1A\u56E0\u4E3A\u7AEF\u53E3\u51B2\u7A81\u4E0D\u80FD\u542F\u52A8\u70ED\u90E8\u7F72\uFF0C\u9ED8\u8BA4\u7AEF\u53E3\uFF1A35729
+# 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
 spring:
   devtools:
     livereload:
@@ -9,9 +9,9 @@ spring:
   application:
     name: auth2-server-demo
 
-  # \u6570\u636E\u5E93\u914D\u7F6E
+  # 数据库配置
   datasource:
-    # druid\u914D\u7F6E
+    # druid配置
     druid:
 #      driver-class-name: com.mysql.cj.jdbc.Driver
 #      url: jdbc:mysql://mysql.test.db:3306/mybatis?useUnicode=true&characterEncoding=utf-8

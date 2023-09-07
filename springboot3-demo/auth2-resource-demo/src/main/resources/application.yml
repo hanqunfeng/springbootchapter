@@ -2,24 +2,24 @@ server:
   port: 8090
 
 spring:
-  # \u591A\u4E2A\u9879\u76EE\u540C\u65F6\u542F\u52A8\u65F6\uFF0C\u8981\u4FEE\u6539\u8FD9\u4E2A\u7AEF\u53E3\uFF0C\u5426\u5219\u4F1A\u56E0\u4E3A\u7AEF\u53E3\u51B2\u7A81\u4E0D\u80FD\u542F\u52A8\u70ED\u90E8\u7F72\uFF0C\u9ED8\u8BA4\u7AEF\u53E3\uFF1A35729
+  # 多个项目同时启动时，要修改这个端口，否则会因为端口冲突不能启动热部署，默认端口：35729
   devtools:
     livereload:
       port: 38003
   application:
     name: auth2-resource-demo
 
-  # auth2 \u8BA4\u8BC1
+  # auth2 认证
   security:
     oauth2:
       resourceserver:
         jwt:
-          # \u4E0B\u9762\u4E24\u4E2A\uFF0C\u914D\u7F6E\u54EA\u4E2A\u90FD\u53EF\u4EE5\uFF0C\u5B9E\u9645\u4E0A\u53EA\u8981\u914D\u7F6E issuer-uri \u5373\u53EF\uFF0Chttp://127.0.0.1:9090/.well-known/openid-configuration \u53EF\u4EE5\u83B7\u53D6\u5168\u90E8\u8BA4\u8BC1url
-          # \u8BA4\u8BC1\u670D\u52A1\u5668\u63D0\u4F9B\u7684\u5BC6\u94A5\u9A8C\u8BC1\u8DEF\u5F84\uFF0C\u8FD9\u79CD\u65B9\u5F0F\u6BCF\u6B21\u9A8C\u8BC1 access_token \u90FD\u9700\u8981\u8BBF\u95EE\u8BA4\u8BC1\u670D\u52A1\u5668
+          # 下面两个，配置哪个都可以，实际上只要配置 issuer-uri 即可，http://127.0.0.1:9090/.well-known/openid-configuration 可以获取全部认证url
+          # 认证服务器提供的密钥验证路径，这种方式每次验证 access_token 都需要访问认证服务器
 #          issuer-uri: http://localhost:9090
 #          jwk-set-uri: http://localhost:9090/oauth2/jwks
 
-          # \u516C\u94A5\u6587\u4EF6\u8DEF\u5F84\uFF0C\u8FD9\u79CD\u65B9\u5F0F\u4E0D\u9700\u8981\u6BCF\u6B21\u89E3\u6790 token \u65F6\u90FD\u53BB\u8FDE\u63A5\u8BA4\u8BC1\u670D\u52A1\u5668
+          # 公钥文件路径，这种方式不需要每次解析 token 时都去连接认证服务器
 #          public-key-location: classpath:id_key_rsa.pub
           public-key-location: classpath:jks_key.pub
 
