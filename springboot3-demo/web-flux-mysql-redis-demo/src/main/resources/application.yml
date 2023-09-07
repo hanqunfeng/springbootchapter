@@ -29,16 +29,18 @@ spring:
   data:
     redis:
       database: 8
-      host: redis.test.db
-      lettuce:
+      host: redis.test.db  # Redis服务器地址
+      password: password   # Redis服务器连接密码（默认为空）
+      port: 6379           # Redis服务器连接端口
+      timeout: 2000        # 连接空闲超过N(s秒、ms毫秒，不加单位默认毫秒)后关闭，0为禁用
+      lettuce:             # 默认使用 lettuce 连接池
         pool:
-          max-active: 100
-          max-idle: 10
-          max-wait: 2000
-          min-idle: 5
-      password: password
-      port: 6379
-      timeout: 2000
+          max-active: 20   # 允许最大连接数，默认8（负值表示没有限制）,通常为(cpu * 2) + 2
+          max-idle: 10     # 最大空闲连接数，默认8
+          min-idle: 5      # 最小空闲连接数，默认0
+          max-wait: 2000   # 连接用完时，新的请求等待时间(s秒、ms毫秒，不加单位默认毫秒)，超过该时间抛出异常，(默认-1，负值表示没有限制)
+
+
 
 
 
