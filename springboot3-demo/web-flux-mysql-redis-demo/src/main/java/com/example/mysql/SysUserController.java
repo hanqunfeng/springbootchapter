@@ -47,6 +47,8 @@ public class SysUserController {
         return sysUserRepository.findAll();
     }
 
+
+
     @ReactiveRedisCacheable(cacheName = "sys-user", key = "'find_' + #username")
     @RequestMapping("/find/{username}")
     public Mono<SysUser> findUserByUsername(@PathVariable String username) {
@@ -54,7 +56,7 @@ public class SysUserController {
     }
 
     /**
-     * 删除指定的"cacheName_key"
+     * 删除指定的"cacheName:key"
      */
     @ReactiveRedisCacheEvict(cacheName = "sys-user", key = "'find_' + #username")
     @RequestMapping("/delete/{username}")
@@ -63,6 +65,10 @@ public class SysUserController {
     }
 
 
+    /**
+     * 删除缓存，allEntries = true 表示删除全部以"cacheName:"开头的缓存
+     * allEntries 默认false，此时需要指定key的值，表示删除指定的"cacheName:key"
+     */
     @ReactiveRedisCacheEvict(cacheName = "sys-user", allEntries = true)
     @RequestMapping("/save")
     public Mono<SysUser> save(@RequestBody SysUser sysUser) {
@@ -71,6 +77,12 @@ public class SysUserController {
     }
 
 
+    /**
+     * 组合注解，用法与@Caching类似
+     * 规则：
+     * 1.cacheables不能与cacheEvicts或者cachePuts同时存在，因为后者一定会执行方法主体，达不到调用缓存的目的，所以当cacheables存在时，后者即便指定也不执行
+     * 2.先执行cacheEvicts，再执行cachePuts
+     */
     @ReactiveRedisCaching(
             evict = {@ReactiveRedisCacheEvict(cacheName = "sys-user", key = "all")},
             put = {@ReactiveRedisCachePut(cacheName = "sys-user", key = "'find_' + #sysUser.username")}
