@@ -33,4 +33,9 @@ public interface SysUserRepository extends BaseR2dbcRepository<SysUser, String> 
      * 分页查询全部
     */
     Flux<SysUser> findAllBy(Pageable pageable);
+
+    /**
+     * 根据用户名删除用户
+    */
+    Mono<Boolean> deleteByUsername(String username);
 }
