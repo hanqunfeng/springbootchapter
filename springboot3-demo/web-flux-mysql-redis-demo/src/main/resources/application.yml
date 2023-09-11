@@ -53,4 +53,6 @@ logging:
 #    io.r2dbc.pool: DEBUG
 #    io.asyncer.r2dbc.mysql: DEBUG
     org.springframework.r2dbc: DEBUG
+    com.hanqunfeng.reactive.redis.cache: DEBUG
+
 
