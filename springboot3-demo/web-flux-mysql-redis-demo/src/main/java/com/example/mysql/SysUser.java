@@ -12,6 +12,16 @@ import java.io.Serializable;
  * Created by hanqf on 2023/8/30 17:15.
  */
 
+/**
+CREATE TABLE `sys_user` (
+        `id` varchar(50) COLLATE utf8mb4_bin NOT NULL COMMENT '用户id',
+        `username` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户名称',
+        `password` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户密码',
+        `enable` tinyint(1) DEFAULT NULL COMMENT '是否有效',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uni_username` (`username`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+*/
 
 @Data
 @Table("sys_user")

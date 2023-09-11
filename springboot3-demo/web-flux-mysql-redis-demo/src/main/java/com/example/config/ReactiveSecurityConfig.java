@@ -36,7 +36,7 @@ public class ReactiveSecurityConfig {
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) { //定义SecurityWebFilterChain对安全进行控制，使用ServerHttpSecurity构造过滤器链；
         http.authorizeExchange(authorizeExchangeSpec -> authorizeExchangeSpec
-                .pathMatchers("/redis/**","/user/**").permitAll()
+                .pathMatchers("/redis/**","/user/**","/cache/**").permitAll()
                 .anyExchange().authenticated() // 其余请求都需要通过认证
         );
 
