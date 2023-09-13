@@ -7,6 +7,7 @@ package com.example.redis;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -16,8 +17,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/redis")
 public class RedisDemoController {
@@ -145,4 +148,23 @@ public class RedisDemoController {
     }
 
 
+    @GetMapping(value = "/lua")
+    public Flux<Object> luaScript() {
+        String luaScript = "return 'Hello World 123'";
+
+        //实际上不需要这么做，executeLuaScript方法执行时就会将lua脚本预加载到redis server中
+        return reactiveRedisUtil.luaScriptExists(luaScript).doOnNext(exist -> {
+            if (!exist) {
+                log.info(reactiveRedisUtil.luaScriptLoad(luaScript));
+            } else {
+                log.info("luaScript exist");
+            }
+        }).thenMany(reactiveRedisUtil.executeLuaScript(luaScript, new ArrayList<>(), new ArrayList<>()));
+    }
+
+    @GetMapping(value = "/lua2")
+    public Flux<Object> luaScript2() {
+        String luaScript = "return 'Hello World 456'";
+       return reactiveRedisUtil.executeLuaScript(luaScript, new ArrayList<>(), new ArrayList<>());
+    }
 }

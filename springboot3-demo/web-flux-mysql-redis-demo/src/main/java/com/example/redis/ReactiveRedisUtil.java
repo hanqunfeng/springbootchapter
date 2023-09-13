@@ -16,6 +16,8 @@ import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
@@ -34,7 +36,7 @@ public class ReactiveRedisUtil {
     @Autowired
     private ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
 
-    private static final String LOCK_KEY_PREFIX = "lock_";
+    private static final String LOCK_KEY_PREFIX = "lock:";
     private static final String RELEASE_LOCK_SCRIPT = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 
 
@@ -83,6 +85,22 @@ public class ReactiveRedisUtil {
     }
 
     /**
+     * 预加载lua脚本
+     */
+    public String luaScriptLoad(String luaScript) {
+        return reactiveRedisTemplate.getConnectionFactory().getReactiveConnection().scriptingCommands()
+                .scriptLoad(ByteBuffer.wrap(luaScript.getBytes(StandardCharsets.UTF_8))).block();
+    }
+
+    public Mono<Boolean> luaScriptExists(String luaScript) {
+        RedisScript<Object> redisScript = RedisScript.of(luaScript);
+        String sha = redisScript.getSha1();
+        log.info("luaScript sha :" + sha);
+        return reactiveRedisTemplate.getConnectionFactory().getReactiveConnection().scriptingCommands()
+                .scriptExists(sha);
+    }
+
+    /**
      * 执行lua脚本
      *
      * @param luaScript 脚本内容
@@ -92,6 +110,7 @@ public class ReactiveRedisUtil {
      */
     public Flux<Object> executeLuaScript(String luaScript, List<String> keys, List<String> values) {
         RedisScript<Object> redisScript = RedisScript.of(luaScript);
+        log.info("luaScript sha :" + redisScript.getSha1());
         return reactiveRedisTemplate.execute(redisScript, keys, values);
     }
 
@@ -106,14 +125,15 @@ public class ReactiveRedisUtil {
      */
     public <T> Flux<T> executeLuaScript(String luaScript, List<String> keys, List<String> values, Class<T> resultType) {
         RedisScript<T> redisScript = RedisScript.of(luaScript, resultType);
+        log.info("luaScript sha :" + redisScript.getSha1());
         return reactiveRedisTemplate.execute(redisScript, keys, values);
     }
 
     /**
      * 获取分布式锁
      *
-     * @param lockKey  锁key
-     * @param requestId 锁体，可以是任意内容，但是释放锁时会要求提供锁体进行验证
+     * @param lockKey    锁key
+     * @param requestId  锁体，可以是任意内容，但是释放锁时会要求提供锁体进行验证
      * @param expireTime 锁过期时间，单位秒
      * @return
      */
@@ -127,7 +147,7 @@ public class ReactiveRedisUtil {
     /**
      * 释放分布式锁
      *
-     * @param lockKey 锁key
+     * @param lockKey   锁key
      * @param requestId 锁体，可以是任意内容，但是释放锁时会要求提供锁体进行验证
      * @return
      */
