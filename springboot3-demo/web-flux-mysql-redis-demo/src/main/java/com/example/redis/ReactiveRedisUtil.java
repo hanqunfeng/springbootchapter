@@ -96,7 +96,8 @@ public class ReactiveRedisUtil {
         RedisScript<Object> redisScript = RedisScript.of(luaScript);
         String sha = redisScript.getSha1();
         log.info("luaScript sha :" + sha);
-        return reactiveRedisTemplate.getConnectionFactory().getReactiveConnection().scriptingCommands()
+        return reactiveRedisTemplate.getConnectionFactory().getReactiveConnection()
+                .scriptingCommands()
                 .scriptExists(sha);
     }
 
