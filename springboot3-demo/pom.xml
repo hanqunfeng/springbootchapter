@@ -40,7 +40,8 @@
 		<module>base-security-webflux</module>
 		<module>web-flux-mysql-redis-demo</module>
 		<module>webflux-mysql-multi-demo</module>
-	</modules>
+        <module>mina-demo</module>
+    </modules>
 
 
 </project>

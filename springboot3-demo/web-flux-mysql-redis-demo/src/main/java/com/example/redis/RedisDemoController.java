@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -165,6 +167,13 @@ public class RedisDemoController {
     @GetMapping(value = "/lua2")
     public Flux<Object> luaScript2() {
         String luaScript = "return 'Hello World 456'";
-       return reactiveRedisUtil.executeLuaScript(luaScript, new ArrayList<>(), new ArrayList<>());
+        return reactiveRedisUtil.executeLuaScript(luaScript, new ArrayList<>(), new ArrayList<>());
+    }
+
+    @GetMapping(value = "/lua3")
+    public Flux<String> luaScript3() {
+        String luaScript = "return 'hello '..ARGV[1]..' '..ARGV[2]..' '..ARGV[3]";
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        return reactiveRedisUtil.executeLuaScript(luaScript, new ArrayList<>(), List.of("world", "hhh哈哈", 1), String.class, stringRedisSerializer);
     }
 }

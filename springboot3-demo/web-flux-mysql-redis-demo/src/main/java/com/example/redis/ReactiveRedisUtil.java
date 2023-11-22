@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.data.redis.serializer.RedisElementReader;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -109,7 +111,7 @@ public class ReactiveRedisUtil {
      * @param values    值列表
      * @return
      */
-    public Flux<Object> executeLuaScript(String luaScript, List<String> keys, List<String> values) {
+    public Flux<Object> executeLuaScript(String luaScript, List<String> keys, List<Object> values) {
         RedisScript<Object> redisScript = RedisScript.of(luaScript);
         log.info("luaScript sha :" + redisScript.getSha1());
         return reactiveRedisTemplate.execute(redisScript, keys, values);
@@ -121,13 +123,29 @@ public class ReactiveRedisUtil {
      * @param luaScript  脚本内容
      * @param keys       redis键列表
      * @param values     值列表
-     * @param resultType 返回值类型
+     * @param resultType 返回值类型  支持 Long
      * @return
      */
-    public <T> Flux<T> executeLuaScript(String luaScript, List<String> keys, List<String> values, Class<T> resultType) {
+    public <T> Flux<T> executeLuaScript(String luaScript, List<String> keys, List<Object> values, Class<T> resultType) {
         RedisScript<T> redisScript = RedisScript.of(luaScript, resultType);
         log.info("luaScript sha :" + redisScript.getSha1());
         return reactiveRedisTemplate.execute(redisScript, keys, values);
+    }
+
+    /**
+     * 执行lua脚本
+     *
+     * @param luaScript  脚本内容
+     * @param keys       redis键列表
+     * @param values     值列表
+     * @param resultType 返回值类型
+     * @param resultSerializer 返回值序列化器  返回值是什么类型，就用什么类型的序列化器进行转换
+     * @return
+     */
+    public <T> Flux<T> executeLuaScript(String luaScript, List<String> keys, List<Object> values, Class<T> resultType, RedisSerializer<T> resultSerializer) {
+        RedisScript<T> redisScript = RedisScript.of(luaScript, resultType);
+        log.info("luaScript sha :" + redisScript.getSha1());
+        return reactiveRedisTemplate.execute(redisScript, keys, values, reactiveRedisTemplate.getSerializationContext().getValueSerializationPair().getWriter(), RedisElementReader.from(resultSerializer));
     }
 
     /**

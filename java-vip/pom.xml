@@ -18,6 +18,7 @@
   <modules>
     <module>concurrency</module>
     <module>openai-study</module>
+      <module>leetcode</module>
   </modules>
 
   <properties>
