@@ -1,4 +1,4 @@
-package com.example.minanew.mina;
+package com.example.minanew.mina.protocol;
 
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;

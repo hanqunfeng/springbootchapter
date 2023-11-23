@@ -36,7 +36,7 @@ public class ServiceMessage {
         //子服务器登陆
         Map<String, Object> map = new HashMap<>();
         map.put("mid", mid);
-        map.put("msg", "hole,欢迎你登陆【监控服务器】.");
+        map.put("msg", "hello,欢迎你登陆【监控服务器】.");
         logger.info("---子服务器监控服务器已登陆---");
         try {
             session.write(objectMapper.writeValueAsString(map));

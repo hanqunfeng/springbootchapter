@@ -39,6 +39,9 @@ public class MyProtocolEncoder implements ProtocolEncoder {
             System.out.println("encoder body length:" + myPack.getBody().getBytes().length);
             ioBuffer.putString(myPack.getBody(), charset.newEncoder());
         }
+        // 当你组装数据完毕之后，调用flip()方法，为输出做好准备，
+        // 切记在write()方法之前，要调用IoBuffer 的flip()方法，否则缓冲区的position 的后面是没有数据可以用来输出的，
+        // 你必须调用flip()方法将position 移至0，limit 移至刚才的position。这个flip()方法的含义请参看java.nio.ByteBuffer
         ioBuffer.flip();
         out.write(ioBuffer);
     }

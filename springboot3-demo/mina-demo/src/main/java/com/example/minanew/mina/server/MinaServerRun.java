@@ -1,7 +1,7 @@
 package com.example.minanew.mina.server;
 
 
-import com.example.minanew.mina.ByteArrayCodecFactory;
+import com.example.minanew.mina.protocol.ByteArrayCodecFactory;
 import com.example.minanew.mina.server.handler.MinaServerHandler;
 import com.example.minanew.mina.server.keepalive.KeepAliveMessageFactoryImpl;
 import com.example.minanew.mina.server.keepalive.KeepAliveRequestTimeoutHandlerImpl;
@@ -44,8 +44,11 @@ public class MinaServerRun {
         acceptor.getSessionConfig().setReadBufferSize(2048);
         acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, IDELTIMEOUT);
 
+        // filter过滤器链，按照声明的位置顺序执行，receive时正向，send时逆向
+        //日志过滤器，receive时它在编解码器之前执行，send时在编解码器之后执行，所以都是IoBuffer
         acceptor.getFilterChain().addLast("logger", new LoggingFilter());
-        // 自定义解编码器
+        // 自定义解编码器，这个是mina中最最重要的过滤器，用于对数据进行编解码。
+        // receive时调用ProtocolDecoder对传递过滤的IoBuffer进行解码，send时调用ProtocolEncoder将数据转换为IoBuffer
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ByteArrayCodecFactory(StandardCharsets.UTF_8)));
 
         // 心跳检测开始
@@ -61,7 +64,11 @@ public class MinaServerRun {
         acceptor.getFilterChain().addLast("heartbeat", heartBeat);
         // 心跳检测结束
 
-        //业务逻辑
+        acceptor.getFilterChain().getAll().forEach(filter -> {
+            logger.info("FilterName:{}",filter.getName());
+        });
+
+        //业务逻辑，经过过滤器链后到达handler，所以到达handler的数据是解码后的数据
         acceptor.setHandler(new MinaServerHandler());
         try {
             //绑定端口，此时就启动完成了
