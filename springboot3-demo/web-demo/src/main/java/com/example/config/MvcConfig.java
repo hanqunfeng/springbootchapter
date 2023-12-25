@@ -28,7 +28,6 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     /**
      * 描述 : <注册消息资源处理器>. <br>
      * <p>
