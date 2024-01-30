@@ -23,7 +23,7 @@ public class S3ClientFactory {
     private S3ClientFactory() {
     }
 
-    private static final String BUCKET_NAME = "myBucket";
+    public static final String BUCKET_NAME = "myBucket";
     private static final Region REGION = Region.of("myRegionName");
     private static final String AWS_ACCESS_KEY = "myAccessKey";
     private static final String AWS_SECRET_KEY = "mySecretKey";
