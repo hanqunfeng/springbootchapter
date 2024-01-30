@@ -457,8 +457,8 @@ public class AmazonS3Util {
      */
     public static void uploadByMultipartToS3(byte[] bytes, String remoteFileName, boolean async) throws IOException {
 
-        //小于5M不进行分段上传
-        if (bytes.length < MIN_PART_SIZE) {
+        //小于等于5M不进行分段上传
+        if (bytes.length <= MIN_PART_SIZE) {
             uploadToS3(bytes, remoteFileName);
         } else {
             // 创建一个列表保存所有分段的 PartETag, 在分段完成后会用到

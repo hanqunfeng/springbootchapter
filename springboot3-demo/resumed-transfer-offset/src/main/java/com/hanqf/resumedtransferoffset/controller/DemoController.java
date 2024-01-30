@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -124,7 +127,7 @@ public class DemoController {
 
     /**
      * S3文件下载，支持断点续传，支持分段下载
-    */
+     */
     @GetMapping("/s3-down-range")
     public void s3DownRange(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 分段下载测试
@@ -139,8 +142,8 @@ public class DemoController {
         String start = null;
         String end = null;
         if (StringUtils.hasText(range) && (range.contains("bytes=") && range.contains("-"))) {
-                start = org.apache.commons.lang.StringUtils.substringBetween(range, "bytes=", "-");
-                end = org.apache.commons.lang.StringUtils.substringAfter(range, "-");
+            start = org.apache.commons.lang.StringUtils.substringBetween(range, "bytes=", "-");
+            end = org.apache.commons.lang.StringUtils.substringAfter(range, "-");
 
         }
 
@@ -174,6 +177,16 @@ public class DemoController {
 
     }
 
+    @PostMapping("/uploadToS3")
+    @ResponseBody
+    public String uploadFileToS3(MultipartFile file, String remoteFileName) throws IOException {
+        if (file != null && StringUtils.hasText(remoteFileName)) {
+            log.info("上传文件到S3：" + remoteFileName);
+            AmazonS3Util.uploadByMultipartToS3(file.getBytes(), remoteFileName, true);
+            return "上传成功";
+        }
+        return "上传失败";
+    }
 
 }
 
