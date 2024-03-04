@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:password@127.0.0.1:27017/mytest?authSource=admin
+      #uri等同于下面的配置
+#      database: mytest # 数据库名称
+#      host: 127.0.0.1
+#      port: 27017
+#      username: root
+#      password: password
+#      authentication-database: admin
+
