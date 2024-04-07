@@ -1,8 +1,13 @@
 package com.hanqf.mongo.config;
 
+import com.mongodb.ReadConcern;
+import com.mongodb.ReadPreference;
+import com.mongodb.TransactionOptions;
+import com.mongodb.WriteConcern;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.convert.*;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
@@ -37,4 +42,25 @@ public class MongoConfig {
 
         return mappingMongoConverter;
     }
+
+    /**
+     * 配置事务管理器
+     * 本方法用于创建并配置MongoDB的事务管理器，它基于给定的Mongo数据库工厂进行配置。
+     * @param factory MongoDB数据库工厂，用于创建数据库实例。
+     * @return 返回配置好的MongoTransactionManager实例，用于事务管理。
+     */
+    @Bean
+    MongoTransactionManager transactionManager(MongoDatabaseFactory factory){
+        // 构建事务选项
+        TransactionOptions txnOptions = TransactionOptions.builder()
+                .readPreference(ReadPreference.primaryPreferred()) // 设置读取偏好为首选主节点
+                .readConcern(ReadConcern.MAJORITY) // 设置读取关注为大多数
+                .writeConcern(WriteConcern.MAJORITY) // 设置写入关注为大多数
+                .build();
+        // 基于给定的数据库工厂和事务选项，创建并返回事务管理器
+        return new MongoTransactionManager(factory, txnOptions);
+    }
+
+
+
 }

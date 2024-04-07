@@ -1,7 +1,10 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:password@127.0.0.1:27017/mytest?authSource=admin
+        # 单数据源
+#      uri: mongodb://user:password@127.0.0.1:27017/mytest?authSource=admin
+        # 复制集
+      uri: mongodb://user:password@127.0.0.1:27040,127.0.0.1:27041,127.0.0.1:27042/mytest?authSource=admin&readPreference=primaryPreferred
       #uri等同于下面的配置
 #      database: mytest # 数据库名称
 #      host: 127.0.0.1

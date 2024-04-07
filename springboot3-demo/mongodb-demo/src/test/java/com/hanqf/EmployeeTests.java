@@ -17,13 +17,13 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
-class MongodbDemoApplicationTests {
+class EmployeeTests {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Test
-    public void testCollection() {
+    void testCollection() {
         // db.getCollectionNames().includes("employee")
         boolean exists = mongoTemplate.collectionExists("employee");
         if (exists) {
@@ -37,7 +37,7 @@ class MongodbDemoApplicationTests {
     }
 
     @Test
-    public void testInsert() {
+    void testInsert() {
         /*
         db.employee.insertOne({
             "_id": 1,
@@ -52,7 +52,7 @@ class MongodbDemoApplicationTests {
 
         //添加文档
         // sava:  _id存在时更新数据
-        //mongoTemplate.save(employee);
+        mongoTemplate.save(employee);
         // insert： _id存在抛出异常   支持批量操作
         mongoTemplate.insert(employee);
 
@@ -115,7 +115,7 @@ class MongodbDemoApplicationTests {
     }
 
     @Test
-    public void testFind() {
+    void testFind() {
 
         System.out.println("==========查询所有文档===========");
         //查询所有文档
@@ -184,7 +184,7 @@ class MongodbDemoApplicationTests {
     }
 
     @Test
-    public void testFindByJson() {
+    void testFindByJson() {
 
         //使用json字符串方式查询
         //等值查询
@@ -200,7 +200,12 @@ class MongodbDemoApplicationTests {
          */
         String json = "{$or:[{age:{$gt:25}},{salary:{$gte:8000}}]}";
         Query query = new BasicQuery(json);
+        query.with(Sort.by(Sort.Order.asc("salary")))
+                .skip(2)  //指定跳过记录数
+                .limit(4);  //每页显示记录数
 
+
+        System.out.println(query); // 打印出生成的查询字符串
         //查询结果
         List<Employee> employees = mongoTemplate.find(
                 query, Employee.class);
@@ -214,7 +219,7 @@ class MongodbDemoApplicationTests {
      * - upsert() 没有符合条件的记录则插入数据，有符合条件的记录则更新第一条记录
      */
     @Test
-    public void testUpdate() {
+    void testUpdate() {
 
         //query设置查询条件
         /*
@@ -257,7 +262,7 @@ class MongodbDemoApplicationTests {
          */
         //upsert() 没有符合条件的记录则插入数据
         //update.setOnInsert("id",11);  //指定_id，只有没有匹配到时才插入
-//        UpdateResult updateResult = mongoTemplate.upsert(query, update, Employee.class);
+        UpdateResult updateResult2 = mongoTemplate.upsert(query, update, Employee.class);
 
         //返回修改的记录数
         System.out.println(updateResult.getModifiedCount());
@@ -269,7 +274,7 @@ class MongodbDemoApplicationTests {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
 
         //删除所有文档
         // db.employee.deleteMany({})
@@ -280,6 +285,23 @@ class MongodbDemoApplicationTests {
         Query query = new Query(Criteria.where("salary").gte(10000));
         mongoTemplate.remove(query, Employee.class);
 
+//        mongoTemplate.dropCollection(Employee.class);
+
+
+
+
     }
+
+    @Test
+    void testProject() {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("age").gte(18)); // 筛选条件，年龄大于等于18岁的文档
+        query.fields().include("name", "age").exclude("id");// 指定返回的字段，只包含"name"和"age"
+        System.out.println(query); // 打印出生成的查询字符串
+        List<Employee> results = mongoTemplate.find(query, Employee.class);
+        results.forEach(System.out::println);
+    }
+
+
 
 }
