@@ -1,0 +1,19 @@
+# 连接池配置
+mongodb:
+  pool:
+    maxpoolsize: 100 # 池中允许的最大连接数。这些连接在空闲时将保留在池中。一旦池耗尽，任何需要连接的操作都将阻塞等待可用连接 默认: 100
+    minpoolsize: 10 # 池中允许的最小连接数。这些连接在空闲时将保留在池中，并且池将确保它至少包含这个最小数量 默认: 0
+    maxidletimems: 0 # 池连接的最大空闲时间。零值表示对空闲时间没有限制。超过其空闲时间的池连接将被关闭并在必要时由新连接替换
+    maxlifetimems: 0 # 池连接可以存活的最长时间。零值表示寿命没有限制。超过其生命周期的池连接将被关闭并在必要时由新连接替换
+    maxconnecting: 5 # 并发请求时允许的最大连接数。
+    waitqueuetimeoutms: 60000 # 最大等待时间。默认为120s
+
+spring:
+  application:
+    name: mongodb-replset
+  data:
+    mongodb:
+      uri: mongodb://user:password@127.0.0.1:27040,127.0.0.1:27041,127.0.0.1:27042/mytest?authSource=admin&readPreference=primaryPreferred&maxpoolsize=100&minpoolsize=10&maxidletimems=0&maxlifetimems=0&maxconnecting=5&waitqueuetimeoutms=60000
+
+
+

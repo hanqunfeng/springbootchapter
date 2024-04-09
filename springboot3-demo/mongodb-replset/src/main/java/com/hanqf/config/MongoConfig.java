@@ -1,20 +1,17 @@
-package com.hanqf.mongo.config;
+package com.hanqf.config;
 
-import com.mongodb.*;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import org.springframework.beans.factory.annotation.Value;
+import com.mongodb.ReadConcern;
+import com.mongodb.ReadPreference;
+import com.mongodb.TransactionOptions;
+import com.mongodb.WriteConcern;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
-import org.springframework.data.mongodb.SpringDataMongoDB;
-import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.*;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * <h1></h1>
@@ -24,46 +21,9 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class MongoConfig {
 
-    @Value("${mongodb.pool.maxSize}")
-    private int maxSize;
+    @Autowired
+    private MongoProperties mongoProperties;
 
-    @Value("${mongodb.pool.minSize}")
-    private int minSize;
-
-    @Value("${mongodb.pool.maxConnectionLifeTime}")
-    private int maxConnectionLifeTime;
-
-    @Value("${mongodb.pool.maxConnectionIdleTime}")
-    private int maxConnectionIdleTime;
-
-    @Value("${mongodb.pool.maxWaitTime}")
-    private int maxWaitTime;
-
-
-    /**
-     * <h2>mongodb工厂，这里是为了加入连接池信息</h2>
-     */
-    @Bean
-    public MongoDatabaseFactory getSimpleMongoClientDatabaseFactory(MongoProperties properties) {
-        MongoClientSettings.Builder builder = MongoClientSettings.builder();
-        builder.applyConnectionString(new ConnectionString(properties.getUri()));
-        builder.applyToConnectionPoolSettings(b -> {
-            b.maxSize(maxSize);
-            b.minSize(minSize);
-            b.maxConnectionLifeTime(maxConnectionLifeTime, TimeUnit.SECONDS);
-            b.maxConnectionIdleTime(maxConnectionIdleTime, TimeUnit.MINUTES);
-            b.maxWaitTime(maxWaitTime, TimeUnit.MILLISECONDS);
-        });
-        String database;
-        if (properties.getUri() != null) {
-            database = new ConnectionString(properties.getUri()).getDatabase();
-        } else {
-            database = properties.getDatabase();
-        }
-        MongoClient mongoClient = MongoClients.create(builder.build(), SpringDataMongoDB.driverInformation());
-        return new SimpleMongoClientDatabaseFactory(mongoClient, database);
-
-    }
 
     /**
      * 定制TypeMapper去掉_class属性
@@ -107,6 +67,12 @@ public class MongoConfig {
         // 基于给定的数据库工厂和事务选项，创建并返回事务管理器
         return new MongoTransactionManager(factory, txnOptions);
     }
+
+//    @Bean
+//    public MongoClientSettings mongoClientSettings() {
+//        // 创建MongoClientSettings对象，用于配置MongoDB客户端连接选项
+//        return MongoClientSettings.builder().applyConnectionString(new ConnectionString(mongoProperties.getUri())).build();
+//    }
 
 
 }
