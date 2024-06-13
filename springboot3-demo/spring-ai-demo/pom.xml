@@ -8,14 +8,21 @@
         <version>3.2.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.lexing</groupId>
+    <groupId>com.hanqf</groupId>
     <artifactId>spring-ai-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>spring-ai-demo</name>
     <description>spring-ai-demo</description>
     <properties>
         <java.version>17</java.version>
     </properties>
+
+    <modules>
+        <module>milvus-demo</module>
+        <module>pgvector-demo</module>
+        <module>rag-demo</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -54,22 +61,15 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- open ai -->
+        <!-- openai tokenizer -->
         <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-        </dependency>
-        <!-- milvus -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-milvus-store-spring-boot-starter</artifactId>
+            <groupId>com.knuddels</groupId>
+            <artifactId>jtokkit</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
-        <!-- pgvector -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.ai</groupId>-->
-<!--            <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
+
+
 
 
     </dependencies>
