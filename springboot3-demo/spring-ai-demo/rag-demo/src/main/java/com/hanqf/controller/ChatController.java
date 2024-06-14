@@ -103,6 +103,7 @@ public class ChatController {
         return chatClient.call(message);
     }
 
+
     @GetMapping("/ai/generateTemplate")
     public String generateTemplate() {
         String adjective = "funny";

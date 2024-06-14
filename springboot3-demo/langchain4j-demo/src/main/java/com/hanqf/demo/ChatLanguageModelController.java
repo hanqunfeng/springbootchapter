@@ -58,6 +58,11 @@ class ChatLanguageModelController {
     @GetMapping(value = "/modelToolStream2", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> modelToolStream2(@RequestParam(value = "message", defaultValue = "我想去北京雍和宫附近喝咖啡，请帮我推荐几个") String message) {
         Sinks.Many<String> sink = Sinks.many().unicast().onBackpressureBuffer();
+
+//        final Sinks.One<String> one = Sinks.one();
+//        one.tryEmitValue("hello");
+//        final Mono<String> mono = one.asMono();
+
         AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
                 .streamingChatLanguageModel(streamingChatLanguageModel)
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
