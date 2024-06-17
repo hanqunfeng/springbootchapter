@@ -42,6 +42,52 @@ class ChatLanguageModelController {
         return chatLanguageModel.generate(message);
     }
 
+    @GetMapping("/modelSysFile")
+    public String modelSysFile(@RequestParam(value = "message", defaultValue = "你是谁？") String message) {
+        AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
+                .chatLanguageModel(chatLanguageModel)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+        return assistantSelf.chatSysFile(message);
+    }
+
+    @GetMapping("/modelSysUser")
+    public String modelSysUser(@RequestParam(value = "message", defaultValue = "你是谁？") String message) {
+        AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
+                .chatLanguageModel(chatLanguageModel)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+        return assistantSelf.chatSysUser(message);
+    }
+
+    @GetMapping("/modelChatSys")
+    public String modelChatSys(@RequestParam(value = "message", defaultValue = "为什么token可以转换为向量") String message) {
+        AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
+                .chatLanguageModel(chatLanguageModel)
+                .systemMessageProvider(o -> "你是一个高级AI专家，请回答有关LLM相关的问题")
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+        return assistantSelf.chatSys(message);
+    }
+
+    @GetMapping("/modelChatUser")
+    public String modelChatUser(@RequestParam(value = "message", defaultValue = "你是谁？") String message) {
+        AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
+                .chatLanguageModel(chatLanguageModel)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+        return assistantSelf.chatUser(message);
+    }
+
+    @GetMapping("/modelNameAge")
+    public String modelNameAge(@RequestParam(value = "name", defaultValue = "张三") String name, @RequestParam(value = "age", defaultValue = "20") Integer age) {
+        AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
+                .chatLanguageModel(chatLanguageModel)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
+                .build();
+        return assistantSelf.chatNameAge(name, age);
+    }
+
     @GetMapping("/modelToolStream")
     public void modelToolStream(@RequestParam(value = "message", defaultValue = "我想去北京雍和宫附近喝咖啡，请帮我推荐几个") String message) {
         AssistantSelf assistantSelf = AiServices.builder(AssistantSelf.class)
