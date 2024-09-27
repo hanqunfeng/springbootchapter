@@ -13,8 +13,8 @@ plugins {
 }
 
 group = 'com.hanqunfeng'
-version = '1.0.0-SNAPSHOT'
-//version = '1.0.3'
+//version = '1.0.0-SNAPSHOT'
+version = '1.0.4-fixed'
 sourceCompatibility = '1.8'
 
 
@@ -124,11 +124,11 @@ publishing {
     repositories {
         maven {
             // 发布仓库配置，这里基于version后缀是否为SNAPSHOT来区分发布到release库还是snapshots库
-            def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
-            def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
+//            def releasesRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-releases/"
+//            def snapshotsRepoUrl = "http://nexus.cxzh.ltd:8081/repository/maven-snapshots/"
 
-//            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-//            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
             //认证用户和密码，在配置文件gradle.properties中配置
@@ -179,7 +179,7 @@ nexusStaging {
     password nexusPassword
     numberOfRetries 10
     delayBetweenRetriesInMillis 20000
-//    packageGroup = "com.hanqunfeng" //optional if packageGroup == project.getGroup()
+    packageGroup = "com.hanqunfeng" //optional if packageGroup == project.getGroup()
 //    stagingProfileId = "yourStagingProfileId" //when not defined will be got from server using "packageGroup"
 }
 

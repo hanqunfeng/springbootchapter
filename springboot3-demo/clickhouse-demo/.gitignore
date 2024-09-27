@@ -31,4 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-!/src/main/java/com/hanqf/utils/AmazonS3CRTV2Util.java

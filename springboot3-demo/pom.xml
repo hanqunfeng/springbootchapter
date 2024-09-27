@@ -41,6 +41,7 @@
 		<module>web-flux-mysql-redis-demo</module>
 		<module>webflux-mysql-multi-demo</module>
         <module>mina-demo</module>
+        <module>clickhouse-demo</module>
     </modules>
 
 
