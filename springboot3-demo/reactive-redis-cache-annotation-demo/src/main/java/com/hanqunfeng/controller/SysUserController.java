@@ -44,4 +44,14 @@ public class SysUserController {
     public Mono<Boolean> deleteByUserName(String username) {
         return sysUserService.deleteByUserName(username);
     }
+
+    @DeleteMapping("/deleteAll")
+    public Mono<Boolean> deleteAll() {
+        return sysUserService.deleteAll();
+    }
+
+    @DeleteMapping("/deleteAll2")
+    public Mono<Boolean> deleteAll2() {
+        return sysUserService.deleteAll2();
+    }
 }

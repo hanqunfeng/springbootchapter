@@ -21,20 +21,20 @@ public class SysUserService {
 
     private static Map<String, SysUser> sysUserMap = new ConcurrentHashMap<>();
 
-//    static {
-//        SysUser sysUser1 = new SysUser();
-//        sysUser1.setId("5c74a4e4-c4f2-4570-8735-761d7a570d36");
-//        sysUser1.setUsername("lisi");
-//        sysUser1.setPassword("$2a$10$PXoGXLwg05.5YO.QtZa46ONypBmiK59yfefvO1OGO8kYFwzOB.Os6");
-//        sysUser1.setEnable(true);
-//        SysUser sysUser2 = new SysUser();
-//        sysUser2.setId("5c74a4e4-c4f2-4570-8735-88888888");
-//        sysUser2.setUsername("zhangsan");
-//        sysUser2.setPassword("$2a$10$PXoGXLwg05.5YO.QtZa46ONypBmiK59yfefvO1OGO8kYFwzOB.Os6");
-//        sysUser2.setEnable(true);
-//        sysUserMap.put(sysUser1.getUsername(), sysUser1);
-//        sysUserMap.put(sysUser2.getUsername(), sysUser2);
-//    }
+    static {
+        SysUser sysUser1 = new SysUser();
+        sysUser1.setId("5c74a4e4-c4f2-4570-8735-761d7a570d36");
+        sysUser1.setUsername("lisi");
+        sysUser1.setPassword("$2a$10$PXoGXLwg05.5YO.QtZa46ONypBmiK59yfefvO1OGO8kYFwzOB.Os6");
+        sysUser1.setEnable(true);
+        SysUser sysUser2 = new SysUser();
+        sysUser2.setId("5c74a4e4-c4f2-4570-8735-88888888");
+        sysUser2.setUsername("zhangsan");
+        sysUser2.setPassword("$2a$10$PXoGXLwg05.5YO.QtZa46ONypBmiK59yfefvO1OGO8kYFwzOB.Os6");
+        sysUser2.setEnable(true);
+        sysUserMap.put(sysUser1.getUsername(), sysUser1);
+        sysUserMap.put(sysUser2.getUsername(), sysUser2);
+    }
 
     /**
      * 缓存 cacheName和key支持EL表达式，实际key的名称是"cacheName:key"
@@ -58,10 +58,11 @@ public class SysUserService {
         return Mono.justOrEmpty(sysUserMap.get(username));
     }
 
+
     @ReactiveRedisCacheable(cacheName = "sys-user", key = "all", timeout = -1, cacheNull = true, cacheNullTimeout = 300)
     public Flux<SysUser> findAll() {
-//        return Flux.fromIterable(sysUserMap.values());
-        return Flux.empty();
+        return Flux.fromIterable(sysUserMap.values());
+//        return Flux.empty();
     }
 
     /**
@@ -95,6 +96,26 @@ public class SysUserService {
     @ReactiveRedisCacheEvict(cacheName = "sys-user", key = "'find_' + #username")
     public Mono<Boolean> deleteByUserName(String username) {
         sysUserMap.remove(username);
+        return Mono.just(true);
+    }
+
+    @ReactiveRedisCacheEvict(cacheName = "sys-user", keys={
+            "'find_*'",
+            "'all'"
+    })
+    public Mono<Boolean> deleteAll() {
+        sysUserMap.clear();
+        return Mono.just(true);
+    }
+
+    @ReactiveRedisCaching(
+            evict = {@ReactiveRedisCacheEvict(cacheName = "sys-user", keys={
+                    "'find_*'",
+                    "'all'"
+            })}
+    )
+    public Mono<Boolean> deleteAll2() {
+        sysUserMap.clear();
         return Mono.just(true);
     }
 }
