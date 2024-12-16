@@ -90,7 +90,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--        <mysql.driver.version>5.1.46</mysql.driver.version>-->
-        <mysql.driver.version>8.0.19</mysql.driver.version>
+        <mysql.driver.version>8.0.28</mysql.driver.version>
     </properties>
 
     <!--    <repositories>-->
