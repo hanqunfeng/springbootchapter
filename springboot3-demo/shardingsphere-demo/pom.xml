@@ -19,6 +19,8 @@
 
     <modules>
         <module>nouse-shardingsphere</module>
+        <module>shardingsphere-demo-01</module>
+        <module>shardingsphere-demo-02</module>
     </modules>
     <dependencies>
         <dependency>

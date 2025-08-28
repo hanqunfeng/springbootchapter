@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    # 指向类路径下的 sharding.yaml（也可 absolute path / file: / http: 等，见官方说明）
+    url: jdbc:shardingsphere:classpath:sharding.yaml
+
