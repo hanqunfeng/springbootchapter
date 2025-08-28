@@ -2,6 +2,8 @@ package com.hanqf.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 
@@ -9,6 +11,8 @@ import java.io.Serial;
  * 课程表
  * Created by hanqf on 2025/8/27 17:14.
  */
+@Setter
+@Getter
 @TableName("course")
 public class Course implements java.io.Serializable {
     @Serial
@@ -19,35 +23,4 @@ public class Course implements java.io.Serializable {
     private Long userId;
     private String cstatus;
 
-    public Long getCid() {
-        return this.cid;
-    }
-
-    public String getCname() {
-        return this.cname;
-    }
-
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public String getCstatus() {
-        return this.cstatus;
-    }
-
-    public void setCid(Long cid) {
-        this.cid = cid;
-    }
-
-    public void setCname(String cname) {
-        this.cname = cname;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setCstatus(String cstatus) {
-        this.cstatus = cstatus;
-    }
 }

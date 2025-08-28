@@ -25,7 +25,7 @@ public class DataSourceConfig {
     @Bean(name = "dataSource")
     @ConfigurationProperties("spring.datasource.druid")
     public DataSource dataSource(){
-        // log.info("spring.datasource.druid init");
+        log.info("spring.datasource.druid init");
         return DruidDataSourceBuilder.create().build();
     }
 
