@@ -29,10 +29,19 @@
 
     </appender>
 
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>161.189.181.89:4560</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" >
+            <includeCallerData>true</includeCallerData>
+            <customFields>{"appname": "springboot-logstash-demo"}</customFields>
+        </encoder>
+    </appender>
+
     <!-- 日志输出级别 -->
     <root level="info">
         <appender-ref ref="STDOUT"/>
 <!--        <appender-ref ref="FILE"/>-->
+        <appender-ref ref="LOGSTASH"/>
     </root>
 
 <!--    <logger name="abc" level="info">-->
