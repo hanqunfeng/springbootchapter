@@ -41,7 +41,7 @@ rules:
         actualDataNodes: ds_${0..1}.course_${1..2} # 实际数据节点
         databaseStrategy: # 分库策略
           standard: # 用于单分片键的标准分片场景
-            shardingColumn: cid # 分片列名称
+            shardingColumn: user_id # 分片列名称，这里要注意，分库策略和分表策略不能使用同一个字段，否则不会分配到同一个库的不同表中
             shardingAlgorithmName: course_db_inline # 分片算法名称
         tableStrategy: # 分表策略
           standard:
@@ -59,7 +59,7 @@ rules:
       course_db_inline:
         type: INLINE
         props:
-          algorithm-expression: ds_${cid % 2} # 表示 ds_0, ds_1
+          algorithm-expression: ds_${user_id % 2} # 表示 ds_0, ds_1
       mod_2:
         type: MOD       # 基于 MOD 的分片算法
         props:

@@ -16,17 +16,18 @@ dataSources:
 
 # 分片规则配置
 rules:
-  - !SHARDING # 分片
+  - !SHARDING
+    # 分片
     # 绑定表：同分片键 join 时走同路由，减少广播,多个逗号分隔
     bindingTables:
       - course
 
-    tables: # 表配置
+    tables: # 手工分片规则配置
       course: # 逻辑表名称
         actualDataNodes: ds_${0..1}.course_${1..2} # 实际数据节点
         databaseStrategy: # 分库策略
           standard: # 用于单分片键的标准分片场景
-            shardingColumn: cid # 分片列名称
+            shardingColumn: user_id # 分片列名称
             shardingAlgorithmName: course_db_inline # 分片算法名称
         tableStrategy: # 分表策略
           standard:
@@ -35,18 +36,37 @@ rules:
         keyGenerateStrategy: # 分布式序列策略
           column: cid # 自增列名称
           keyGeneratorName: snowflake # 分布式序列算法名称
+    autoTables: # 自动分片规则配置
+      t_order: # 逻辑表名称
+        actualDataSources: ds_${0..1} # 数据源名称
+        shardingStrategy: # 切分策略
+          standard: # 用于单分片键的标准分片场景
+            shardingColumn: user_id # 分片列名称
+            shardingAlgorithmName: mod_2 # 自动分片算法名称
+        keyGenerateStrategy: # 分布式序列策略
+          column: order_id # 自增列名称
+          keyGeneratorName: snowflake # 分布式序列算法名称
+      t_order_item: # 逻辑表名称
+        actualDataSources: ds_${0..1} # 数据源名称
+        shardingStrategy: # 切分策略
+          standard: # 用于单分片键的标准分片场景
+            shardingColumn: user_id # 分片列名称
+            shardingAlgorithmName: mod_2 # 自动分片算法名称
+        keyGenerateStrategy: # 分布式序列策略
+          column: item_id # 自增列名称
+          keyGeneratorName: snowflake # 分布式序列算法名称
 
     shardingAlgorithms: # 分片算法 https://shardingsphere.apache.org/document/current/cn/dev-manual/sharding/
-      course_inline:    # 定义名称，在上面引用
-        type: INLINE    # 基于行表达式的分片算法，这里使用 MOD 会报错
-        props:          # 属性
+      course_inline: # 定义名称，在上面引用
+        type: INLINE # 基于行表达式的分片算法，这里使用 MOD 会报错
+        props: # 属性
           algorithm-expression: course_${cid % 2 + 1} # 表达式，这是因为表名称为 course_1, course_2
       course_db_inline:
         type: INLINE
         props:
-          algorithm-expression: ds_${cid % 2} # 表示 ds_0, ds_1
+          algorithm-expression: ds_${user_id % 2} # 表示 ds_0, ds_1
       mod_2:
-        type: MOD       # 基于 MOD 的分片算法
+        type: MOD # 基于 MOD 的分片算法
         props:
           sharding-count: 2 # 分片数量
 
