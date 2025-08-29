@@ -1,4 +1,4 @@
-# 数据源配置
+# 数据源配置: https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/yaml-config/data-source/
 dataSources:
   ds_0: # 逻辑数据源名称
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
@@ -14,7 +14,7 @@ dataSources:
     username: root
     password: newpwd
 
-# 分片规则配置
+# 分片规则配置: https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/yaml-config/rules/sharding/
 rules:
   - !SHARDING
     # 分片
