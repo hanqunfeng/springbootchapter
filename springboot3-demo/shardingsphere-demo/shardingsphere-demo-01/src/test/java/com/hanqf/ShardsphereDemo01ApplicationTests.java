@@ -143,4 +143,13 @@ class ShardsphereDemo01ApplicationTests {
         }
     }
 
+    @Test
+    public void queryAddress() {
+        QueryWrapper<Address> wrapper = new QueryWrapper<>();
+        // 不分库分表的数据表支持  between
+        wrapper.between("id", 1L, 3L);
+        List<Address> courses = addressService.list(wrapper);
+        courses.forEach(System.out::println);
+    }
+
 }
