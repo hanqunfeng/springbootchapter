@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serial;
 
@@ -13,6 +14,7 @@ import java.io.Serial;
  */
 @Setter
 @Getter
+@ToString
 @TableName("course")
 public class Course implements java.io.Serializable {
     @Serial

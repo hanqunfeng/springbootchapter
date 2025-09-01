@@ -35,6 +35,8 @@ class ShardsphereDemo01ApplicationTests {
     private UserService userService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private DictService dictService;
 
     @Test
     public void addcourse() {
@@ -124,7 +126,10 @@ class ShardsphereDemo01ApplicationTests {
     public void addUser() {
         for (int i = 0; i < 10; i++) {
             User user = new User();
-            user.setName("user"+ i);
+            user.setName("user" + i);
+            user.setPassword("password" + i);
+            user.setEmail("email" + i + "@163.com");
+            user.setTelephone("180701" + i + "8080");
 
             userService.save(user);
 
@@ -132,10 +137,19 @@ class ShardsphereDemo01ApplicationTests {
     }
 
     @Test
+    public void queryUser() {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        // 不分库分表的数据表支持  between
+        wrapper.eq("password", "password" + 1);
+        List<User> users = userService.list(wrapper);
+        users.forEach(System.out::println);
+    }
+
+    @Test
     public void addAddress() {
         for (int i = 0; i < 10; i++) {
             Address address = new Address();
-            address.setAddress("address"+ i);
+            address.setAddress("address" + i);
             address.setUserId(1001L + i);
 
             addressService.save(address);
@@ -152,4 +166,16 @@ class ShardsphereDemo01ApplicationTests {
         courses.forEach(System.out::println);
     }
 
+
+    @Test
+    public void addDict() {
+        for (int i = 0; i < 10; i++) {
+            Dict dict = new Dict();
+            dict.setDictval("value_" + i);
+            dict.setDictkey("key_" + i);
+
+            dictService.save(dict);
+
+        }
+    }
 }

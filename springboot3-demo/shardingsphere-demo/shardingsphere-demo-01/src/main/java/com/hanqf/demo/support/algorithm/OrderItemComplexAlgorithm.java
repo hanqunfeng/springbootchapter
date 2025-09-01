@@ -1,4 +1,4 @@
-package com.hanqf.demo.algorithm;
+package com.hanqf.demo.support.algorithm;
 
 import org.apache.shardingsphere.sharding.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.sharding.api.sharding.complex.ComplexKeysShardingValue;
