@@ -57,7 +57,7 @@ rules:
         tableStrategy: # 分表策略
           complex: # 用于多分片键的复杂分片场景
             shardingColumns: user_id,order_id  # 分片列名称,多个逗号分隔
-#             shardingAlgorithmName: t_order_item-class-based-algorithm   # 基于自定义类的分片算法
+            #             shardingAlgorithmName: t_order_item-class-based-algorithm   # 基于自定义类的分片算法
             shardingAlgorithmName: t_order_item-class-based-algorithm_spi # 基于 SPI 的分片算法，效果同上，建议生产环境使用 SPI
         keyGenerateStrategy: # 分布式序列策略
           column: item_id # 自增列名称
@@ -75,12 +75,12 @@ rules:
             shardingAlgorithmName: t_user_inline # 分片算法名称
         keyGenerateStrategy: # 分布式序列策略
           column: id # 自增列名称，字符串类型
-#           keyGeneratorName: uuid # 分布式序列算法名称
+          #           keyGeneratorName: uuid # 分布式序列算法名称
           keyGeneratorName: custom_snowflake_string # 分布式序列算法名称
 
 
-#       t_address:      # 普通表（不分库分表，绑定到 ds_0）,没有默认的数据源配置，所以每个都要显示声明
-#         actualDataNodes: ds_0.t_address # 实际数据节点
+    #       t_address:      # 普通表（不分库分表，绑定到 ds_0）,没有默认的数据源配置，所以每个都要显示声明
+    #         actualDataNodes: ds_0.t_address # 实际数据节点
 
     autoTables: # 自动分片规则配置
       t_order: # 逻辑表名称
@@ -143,7 +143,7 @@ rules:
     keyGenerators: # 分布式主键生成器: https://shardingsphere.apache.org/document/current/cn/user-manual/common-config/builtin-algorithm/keygen/
       snowflake: # 定义名称，在上面引用
         type: SNOWFLAKE # 使用雪花算法，Long
-      uuid:    # 定义名称
+      uuid: # 定义名称
         type: UUID # 字符串主键，String
       custom_snowflake_string:
         type: CUSTOM_SNOWFLAKE_STRING
@@ -157,7 +157,7 @@ rules:
 
   - !ENCRYPT    # 数据加密配置
     tables:
-      t_user:  # 加密表名称
+      t_user: # 加密表名称
         columns:
           password: # 加密列名称
             cipher:
@@ -177,8 +177,8 @@ rules:
 
   - !MASK  # 数据脱敏配置
     tables:
-      t_user:  # 脱敏表名称
-        columns:  # 脱敏列配置
+      t_user: # 脱敏表名称
+        columns: # 脱敏列配置
           password: # 脱敏列名称
             maskAlgorithm: md5_mask # 脱敏算法名称
           email:
@@ -215,7 +215,13 @@ rules:
 #       - ds_1.* # 加载指定数据源中的全部单表
 #       - "*.*" # 加载全部单表
 
-# 属性配置：https://shardingsphere.apache.org/document/current/cn/user-manual/common-config/props/
+
+# 事务配置，proxy模式时需要配置到 global.yaml
+#transaction:
+#  defaultType: LOCAL
+
+# 属性配置，proxy模式时需要配置到 global.yaml
+# https://shardingsphere.apache.org/document/current/cn/user-manual/common-config/props/
 props:
   sql-show: true # 控制台打印改写后的 SQL，便于排错，默认为 false
   check-table-metadata-enabled: false # 在程序启动和更新时，是否检查分片元数据的结构一致性，默认为 false
