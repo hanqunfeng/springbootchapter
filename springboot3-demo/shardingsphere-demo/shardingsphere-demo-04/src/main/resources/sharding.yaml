@@ -1,0 +1,14 @@
+# # 开启集群模式
+mode:
+  type: Cluster                 # 运行模式，默认是单机模式 Standalone
+  repository:
+    type: ZooKeeper             # 注册中心类型
+    props:
+      namespace: governance_ds  # ZooKeeper 上的根路径（逻辑命名空间），ShardingSphere 会把所有元数据（schema 的 data_sources、rules、版本信息、运行时实例节点等）放在该 namespace 下
+      server-lists: localhost:2181 # ZooKeeper 集群地址列表，以逗号分隔的 host:port 列表
+      retryIntervalMilliseconds: 500 # 与注册中心交互失败后的重试间隔（毫秒）。网络不稳定或短暂故障时用于重试回退。
+      timeToLiveSeconds: 60     # 表示“临时/短期数据”的生存时间（秒），用于控制某些临时节点/实例信息的存活策略
+      maxRetries: 3             # 最大重试次数（超过则认为操作失败）。
+      operationTimeoutMilliseconds: 500  # 单次 ZooKeeper 操作（读写）的超时时间（毫秒）。
+# 数据库名称，默认值：logic_db
+databaseName: sharding_db

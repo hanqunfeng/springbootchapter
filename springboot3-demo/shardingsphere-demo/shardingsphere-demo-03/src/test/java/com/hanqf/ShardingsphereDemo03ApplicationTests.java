@@ -8,12 +8,11 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SpringBootTest
-class ShardingsphereApplicationTests {
+class ShardingsphereDemo03ApplicationTests {
 
     @Test
     void contextLoads() {
@@ -179,26 +178,4 @@ class ShardingsphereApplicationTests {
 
         }
     }
-
-
-    @Test
-    @Transactional
-    public void transctionTest() {
-
-        int i = 1000;
-        Address address = new Address();
-        address.setAddress("address" + i);
-        address.setUserId(1001L + i);
-        addressService.save(address);
-
-        User user = new User();
-        user.setName("user" + i);
-        user.setPassword("password" + i);
-        user.setEmail("email" + i + "@163.com");
-        user.setTelephone("180701" + i + "8082");
-        userService.save(user);
-        throw new RuntimeException("测试事务");
-    }
 }
-
-

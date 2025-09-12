@@ -1,0 +1,11 @@
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+    props:
+      provider: MySQL
+      jdbc_url: jdbc:mysql://127.0.0.1:3306/shardingsphere?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+      username: root
+      password: newpwd
+# 数据库名称，默认值：logic_db
+databaseName: sharding_db

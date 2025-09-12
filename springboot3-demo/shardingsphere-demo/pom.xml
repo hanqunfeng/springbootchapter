@@ -21,6 +21,7 @@
         <module>shardingsphere-proxy</module>
         <module>shardingsphere-demo-01</module>
         <module>shardingsphere-demo-02</module>
+        <module>shardingsphere-demo-03</module>
     </modules>
     <dependencies>
         <dependency>
