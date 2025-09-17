@@ -3,9 +3,10 @@ package com.example;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.ACLProvider;
-import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.AddWatchMode;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
@@ -201,13 +202,14 @@ public class CuratorFrameworkTest {
         if (client.checkExists().forPath(WATCH_PATH) == null) {
             client.create().creatingParentsIfNeeded().forPath(WATCH_PATH, "init".getBytes());
         }
-
-        // NodeCache 会自动保持监听
-        NodeCache cache = new NodeCache(client, WATCH_PATH, false);
-        cache.getListenable().addListener(() -> {
-            System.out.println("Curator监听：数据变化 = " + new String(cache.getCurrentData().getData()));
-        });
-        cache.start();
+        // 添加永久监听器, `ZooKeeper 3.6+` + `Curator 5.x` 的创建方法
+        client.watchers()
+                .add()
+                .withMode(AddWatchMode.PERSISTENT)
+                .usingWatcher((CuratorWatcher) event -> {
+                    System.out.println("Persistent Watcher event: " + event);
+                })
+                .forPath(WATCH_PATH);
 
         // 模拟数据变化
         client.setData().forPath(WATCH_PATH, "data1".getBytes());

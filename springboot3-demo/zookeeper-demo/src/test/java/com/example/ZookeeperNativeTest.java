@@ -131,7 +131,7 @@ public class ZookeeperNativeTest {
             }
         }
 
-        // 注册持久化监听
+        // 添加永久监听器, `ZooKeeper 3.6+`，以前的版本不支持
         zk.addWatch(WATCH_PATH, event -> {
             System.out.println("持久化监听触发：类型 = " + event.getType() + ", 路径 = " + event.getPath());
         }, AddWatchMode.PERSISTENT);
