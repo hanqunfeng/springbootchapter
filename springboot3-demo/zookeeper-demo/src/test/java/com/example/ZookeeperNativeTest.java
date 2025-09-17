@@ -118,4 +118,28 @@ public class ZookeeperNativeTest {
 
         zk.delete(path, -1);
     }
+
+    @Test
+    public void testPersistentWatch() throws Exception {
+        String WATCH_PATH = "/watch_test";
+        // 确保节点存在
+        if (zk.exists(WATCH_PATH, false) == null) {
+            try {
+                zk.create(WATCH_PATH, new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            } catch (KeeperException.NodeExistsException ignore) {
+                // 可能被其他客户端并发创建，忽略
+            }
+        }
+
+        // 注册持久化监听
+        zk.addWatch(WATCH_PATH, event -> {
+            System.out.println("持久化监听触发：类型 = " + event.getType() + ", 路径 = " + event.getPath());
+        }, AddWatchMode.PERSISTENT);
+
+        // 模拟数据变化
+        zk.setData(WATCH_PATH, "data1".getBytes(), -1);
+        Thread.sleep(1000);
+        zk.setData(WATCH_PATH, "data2".getBytes(), -1);
+        Thread.sleep(2000);
+    }
 }

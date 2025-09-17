@@ -3,6 +3,7 @@ package com.example;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.ACLProvider;
+import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.Watcher;
@@ -190,6 +191,29 @@ public class CuratorFrameworkTest {
                 System.out.println("释放分布式锁");
             }
         }
+    }
+
+    @Test
+    public void testPermanentWatcher() throws Exception {
+
+        String WATCH_PATH = "/watch_test";
+        // 确保节点存在
+        if (client.checkExists().forPath(WATCH_PATH) == null) {
+            client.create().creatingParentsIfNeeded().forPath(WATCH_PATH, "init".getBytes());
+        }
+
+        // NodeCache 会自动保持监听
+        NodeCache cache = new NodeCache(client, WATCH_PATH, false);
+        cache.getListenable().addListener(() -> {
+            System.out.println("Curator监听：数据变化 = " + new String(cache.getCurrentData().getData()));
+        });
+        cache.start();
+
+        // 模拟数据变化
+        client.setData().forPath(WATCH_PATH, "data1".getBytes());
+        Thread.sleep(1000);
+        client.setData().forPath(WATCH_PATH, "data2".getBytes());
+        Thread.sleep(2000);
     }
 }
 
