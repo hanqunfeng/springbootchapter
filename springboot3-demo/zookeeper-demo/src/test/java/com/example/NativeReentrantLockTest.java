@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class NativeReentrantLockTest {
 
-    private static final String CONNECT_STRING = "52.83.240.35:2181";
+    private static final String CONNECT_STRING = "127.0.0.1:2181";
     private static final int SESSION_TIMEOUT = 10000;
     private static final String LOCK_BASE_PATH = "/locks/testReentrantSingle";
     private ZooKeeper zk;
