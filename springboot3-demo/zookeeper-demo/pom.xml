@@ -20,7 +20,6 @@
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
             <version>3.8.4</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Curator Recipes -->
