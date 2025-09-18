@@ -4,6 +4,7 @@ package com.example;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
+import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,6 +54,22 @@ public class ZookeeperNativeTest {
         }
     }
 
+    /**
+     * 修改或删除节点方法中的 version 的含义
+     *
+     * ZooKeeper 中的每个节点（znode）都有一个 数据版本号，存储在节点的 Stat 对象里。
+     * 初始创建节点时，版本号是 0。
+     * 每次调用 setData 修改节点数据，版本号 自动 +1。
+     *
+     * version 参数用于 乐观锁：
+     * 当你修改或删除节点时，ZooKeeper 会检查你传入的 version 是否和节点当前版本一致。
+     * 如果不一致，操作会失败（KeeperException.BadVersionException）。
+     *
+     * 作用：避免并发修改导致的数据覆盖。
+     *
+     * -1：无视版本，强制更新（通常在不关心并发的场景使用）。
+     * 非负整数：严格要求节点的版本必须匹配，保证数据修改的安全性。
+     */
     @Test
     public void testCreateAndGetData() throws Exception {
         String path = "/test-native";
@@ -65,6 +82,36 @@ public class ZookeeperNativeTest {
         assertEquals("hello", new String(data));
         // 删除节点
         zk.delete(path, -1);
+        System.out.println("节点已删除");
+    }
+
+    @Test
+    public void testCreateAndGetDataWithStat() throws Exception {
+        String path = "/test-native";
+        // 创建 Stat 对象
+        Stat stat = new Stat();
+
+        // 创建节点
+        zk.create(path, "hello".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        System.out.println("节点已创建");
+        // 读取数据
+        byte[] data = zk.getData(path, false, stat);
+        System.out.println("数据：" + new String(data) + " || stat version:" + stat.getVersion());
+        assertEquals("hello", new String(data));
+        assertEquals(0, stat.getVersion());
+        // 修改数据
+        zk.setData(path, "new-data".getBytes(), stat.getVersion());
+        System.out.println("数据已修改");
+        data = zk.getData(path, false, stat);
+        System.out.println("数据：" + new String(data) + " || stat version:" + stat.getVersion());
+        // 获取节点状态
+        stat = zk.exists(path, false);
+        assertEquals(1, stat.getVersion());
+
+        System.out.println(stat);
+
+        // 删除节点，传入版本
+        zk.delete(path, stat.getVersion());
         System.out.println("节点已删除");
     }
 
