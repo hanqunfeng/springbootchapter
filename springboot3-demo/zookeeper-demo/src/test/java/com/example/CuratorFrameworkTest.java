@@ -11,6 +11,7 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Id;
+import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Curator Framework 测试
@@ -117,6 +117,28 @@ public class CuratorFrameworkTest {
         assertEquals("hello", new String(data));
         System.out.println("删除节点成功！");
         client.delete().forPath(path);
+    }
+
+    @Test
+    public void testCreateAndGetDataWithStat() throws Exception {
+        String path = "/test-curator";
+        Stat stat = new Stat();
+        client.create().forPath(path, "hello".getBytes());
+        System.out.println("创建节点成功，节点路径：" + path);
+        byte[] data = client.getData().storingStatIn(stat).forPath(path);
+        System.out.println("获取节点数据成功，节点数据：" + new String(data) + "|| stat version:" + stat.getVersion() );
+        assertEquals(0, stat.getVersion());
+        assertEquals("hello", new String(data));
+        // 修改节点
+        client.setData().withVersion(stat.getVersion()).forPath(path, "new-data".getBytes());
+        System.out.println("修改节点数据成功！");
+        data = client.getData().storingStatIn(stat).forPath(path);
+        System.out.println("获取节点数据成功，节点数据：" + new String(data) + "|| stat version:" + stat.getVersion());
+        assertEquals(1, stat.getVersion());
+
+        stat = client.checkExists().forPath(path);
+        System.out.println("删除节点成功！");
+        client.delete().withVersion(stat.getVersion()).forPath(path);
     }
 
     @Test
