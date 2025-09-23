@@ -37,7 +37,7 @@ public class Consumer {
         // 如果同名交换机已经存在，则此处声明的参数必须与服务端创建的队列的参数一致，否则会报错
         channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
 
-        // 绑定队列到交换机，与其它类型相比，这里需要多传递一个 headers 参数
+        // 绑定队列到交换机
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
 
         // 接收消息
@@ -52,10 +52,13 @@ public class Consumer {
             // false: 只拒绝当前 deliveryTag 对应的消息
             // true: 拒绝当前 deliveryTag 及之前所有未确认的消息
             boolean multiple = true;
-            channel.basicAck(deliveryTag, multiple);
+            channel.basicAck(deliveryTag, multiple); // 确认消息
+
+            boolean requeue = false; // true: 重新入队
+//            channel.basicNack(deliveryTag, multiple, false); // 拒绝消息
         };
 
-        // 队列内删除时触发
+        // 队列被删除时触发
         CancelCallback cancelCallback = consumerTag -> System.out.println("canceled message consumerTag: " + consumerTag + "; ");
 
         // 建议手动应答

@@ -7,8 +7,7 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>rabbitmq-core</artifactId>
-
+    <artifactId>rabbitmq-stream</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,13 +15,12 @@
 
     <dependencies>
 
-        <!-- rabbitmq amqp-client -->
+        <!-- stream-client -->
         <dependency>
             <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>5.26.0</version>
+            <artifactId>stream-client</artifactId>
+            <version>1.2.0</version>
         </dependency>
-
         <!-- JUnit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -30,6 +28,5 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

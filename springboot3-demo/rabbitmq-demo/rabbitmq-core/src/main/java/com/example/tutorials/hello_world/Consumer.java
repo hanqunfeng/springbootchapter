@@ -40,10 +40,13 @@ public class Consumer {
             // false: 只拒绝当前 deliveryTag 对应的消息
             // true: 拒绝当前 deliveryTag 及之前所有未确认的消息
             boolean multiple = false;
-            channel.basicAck(deliveryTag, multiple);
+            channel.basicAck(deliveryTag, multiple); // 确认消息
+
+            boolean requeue = false; // true: 重新入队
+//            channel.basicNack(deliveryTag, multiple, false); // 拒绝消息
         };
 
-        // 队列内删除时触发
+        // 队列被删除时触发
         CancelCallback cancelCallback = consumerTag -> System.out.println("canceled message consumerTag: " + consumerTag + "; ");
 
         // 建议手动应答

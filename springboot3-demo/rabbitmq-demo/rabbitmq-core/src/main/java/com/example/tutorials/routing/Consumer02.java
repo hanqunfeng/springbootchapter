@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * Created by hanqf on 2025/9/22 16:25.
  * <p>
  * Routing 基于内容的路由
- *
+ * <p>
  * 把preducer与Consumer进⾏进⼀步的解耦。producer只负责发送消息，⾄于消息进⼊哪个queue，由exchange来分配。
  * 增加⼀个路由配置，指定exchange如何将不同类别的消息分发到不同的queue上
  */
@@ -31,7 +31,7 @@ public class Consumer02 {
         RabbitMQUtil.declareClassicQueue(channel, QUEUE_NAME);
         // 声明交换机
         // 如果同名交换机已经存在，则此处声明的参数必须与服务端创建的队列的参数一致，否则会报错
-        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
+        RabbitMQUtil.declareExchange(channel, EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
 
         // 绑定队列到交换机
         channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
@@ -48,10 +48,13 @@ public class Consumer02 {
             // false: 只拒绝当前 deliveryTag 对应的消息
             // true: 拒绝当前 deliveryTag 及之前所有未确认的消息
             boolean multiple = true;
-            channel.basicAck(deliveryTag, multiple);
+            channel.basicAck(deliveryTag, multiple); // 确认消息
+
+            boolean requeue = false; // true: 重新入队
+//            channel.basicNack(deliveryTag, multiple, false); // 拒绝消息
         };
 
-        // 队列内删除时触发
+        // 队列被删除时触发
         CancelCallback cancelCallback = consumerTag -> System.out.println("canceled message consumerTag: " + consumerTag + "; ");
 
         // 建议手动应答

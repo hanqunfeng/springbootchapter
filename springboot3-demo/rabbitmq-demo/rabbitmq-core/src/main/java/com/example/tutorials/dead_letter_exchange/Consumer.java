@@ -1,27 +1,23 @@
-package com.example.tutorials.topics;
+package com.example.tutorials.dead_letter_exchange;
 
 import com.example.tutorials.RabbitMQConnectionFactory;
 import com.example.tutorials.utils.RabbitMQUtil;
 import com.rabbitmq.client.*;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * 消费者
  * Created by hanqf on 2025/9/22 16:25.
  * <p>
- * Topics 基于话题的路由
- *
- * 把preducer与Consumer进⾏进⼀步的解耦。producer只负责发送消息，⾄于消息进⼊哪个queue，由exchange来分配。
- * 增加⼀个路由配置，指定exchange如何将不同类别的消息分发到不同的queue上
- * 这个模式也就在Routing模式的基础上，对routingKey进⾏了模糊匹配。单词之间⽤,隔开，* 代表⼀个具体的单词。# 代表0个或多个单词。
+ * 死信队列
  */
 
 
-public class Consumer01 {
-    private static final String QUEUE_NAME = "core-topic-queue01";
-    private static final String EXCHANGE_NAME = "core-topic-exchange";
-    private static final String ROUTING_KEY = "*.orange.*";
+public class Consumer {
+    // 死信队列名称
+    private static final String QUEUE_NAME = "core-dead-letter-queue";
+    // 死信交换机名称
+    private static final String DEAD_LETTER_EXCHANGE_NAME = "core-dead-letter-exchange";
+    private static final String DEAD_LETTER_EXCHANGE_ROUTINGKEY = "core-dead-letter-routing_key";
 
     public static void main(String[] args) throws Exception {
 
@@ -32,23 +28,28 @@ public class Consumer01 {
         RabbitMQUtil.declareClassicQueue(channel, QUEUE_NAME);
         // 声明交换机
         // 如果同名交换机已经存在，则此处声明的参数必须与服务端创建的队列的参数一致，否则会报错
-        channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.TOPIC);
+        channel.exchangeDeclare(DEAD_LETTER_EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
 
-        // 绑定队列到交换机
-        channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
+        // 绑定队列到交换机，注意这里要设置 路由键，否则接收不到消息
+        channel.queueBind(QUEUE_NAME, DEAD_LETTER_EXCHANGE_NAME, DEAD_LETTER_EXCHANGE_ROUTINGKEY);
+
 
         // 接收消息
         // 接收消息时触发
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            String message = new String(delivery.getBody(), "UTF-8");
             System.out.println(" [x] Received '" + message + "'");
+            // 获取消息头，打印消息转化为死信的原因
+            delivery.getProperties().getHeaders().forEach((key, value) -> {
+                System.out.println("key: " + key + "; value: " + value);
+            });
 
             // 手动应答
             // deliveryTag: 消息的标识，通过它来确认消息被消费了
             final long deliveryTag = delivery.getEnvelope().getDeliveryTag();
             // false: 只拒绝当前 deliveryTag 对应的消息
             // true: 拒绝当前 deliveryTag 及之前所有未确认的消息
-            boolean multiple = true;
+            boolean multiple = false;
             channel.basicAck(deliveryTag, multiple); // 确认消息
 
             boolean requeue = false; // true: 重新入队

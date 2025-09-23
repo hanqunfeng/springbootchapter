@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>rabbitmq-core</module>
+        <module>rabbitmq-stream</module>
     </modules>
     <properties>
         <java.version>17</java.version>
