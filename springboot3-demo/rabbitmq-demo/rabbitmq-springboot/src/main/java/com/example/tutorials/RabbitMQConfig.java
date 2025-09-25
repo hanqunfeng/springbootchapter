@@ -1,5 +1,10 @@
 package com.example.tutorials;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -46,6 +51,7 @@ public class RabbitMQConfig {
 //        factory.setMaxConcurrentConsumers(4);
 //        factory.setConnectionFactory(connectionFactory);
 //        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//手动确认
+//        factory.setMessageConverter(messageConverter()); // 默认使用 SimpleMessageConverter，设置接收消息的转换器
 //        return factory;
 //    }
 
@@ -55,6 +61,7 @@ public class RabbitMQConfig {
 //        factory.setConnectionFactory(connectionFactory);
 //        factory.setConsumersPerQueue(5);
 //        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+//        factory.setMessageConverter(messageConverter());
 //        return factory;
 //    }
 
@@ -88,10 +95,23 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
+    @Bean
+    public JsonMapper jsonMapper() {
+        return JsonMapper.builder()
+                // 允许属性可见性
+                .visibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
+                // 允许序列化空的POJO类（否则会抛出异常）
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                // 在遇到未知属性的时候不抛出异常
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                // 禁用把java.util.Date, Calendar输出为数字(时间戳)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .build();
+    }
 
     // 消息转换器
     @Bean("jsonConverter")
     public MessageConverter messageConverter() {
-        return new Jackson2JsonMessageConverter();
+        return new Jackson2JsonMessageConverter(jsonMapper());
     }
 }

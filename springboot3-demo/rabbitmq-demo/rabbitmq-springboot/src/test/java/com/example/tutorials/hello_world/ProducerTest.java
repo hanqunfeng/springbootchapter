@@ -1,6 +1,7 @@
 package com.example.tutorials.hello_world;
 
 import com.example.tutorials.RabbitMQConstants;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,13 @@ public class ProducerTest {
         Map<String,Object> message = RabbitMQConstants.DEFAULT_MESSAGE_MAP;
         System.out.println("send map: " + helloWorldProducer.send(message));
 //        Thread.sleep(10000L);
+    }
+
+    @Test
+    public void sendMapJson() throws InterruptedException, JsonProcessingException {
+        Map<String,Object> message = RabbitMQConstants.DEFAULT_MESSAGE_MAP;
+        System.out.println("send map: " + helloWorldProducer.sendMessage(message));
+        Thread.sleep(10000L);
     }
 
 

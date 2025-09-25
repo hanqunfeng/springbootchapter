@@ -1,7 +1,10 @@
 package com.example.tutorials.hello_world;
 
 import com.example.tutorials.RabbitMQConstants;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,6 +23,9 @@ import java.util.Map;
 public class HelloWorldProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private JsonMapper jsonMapper;
 
 //    @Autowired
 //    @Qualifier("jsonConverter")
@@ -59,6 +65,18 @@ public class HelloWorldProducer {
             m.getMessageProperties().setPriority(1);
             return m;
         });
+        return message;
+    }
+
+    public Map<String, Object> sendMessage(Map<String, Object> message) throws JsonProcessingException {
+//        rabbitTemplate.setMessageConverter(messageConverter); //设置消息转换器，无需配置，已经自动注入到 RabbitTemplate 中
+
+        Message jsonMsg = MessageBuilder.withBody(jsonMapper.writeValueAsBytes(message))
+                .setContentType(MessageProperties.CONTENT_TYPE_JSON)
+                .setPriority(2)
+                .build();
+
+        rabbitTemplate.send(RabbitMQConstants.QUEUE_NAME_HELLO_WORLD_MAP, jsonMsg);
         return message;
     }
 
