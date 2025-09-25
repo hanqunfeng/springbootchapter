@@ -14,6 +14,49 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
+/*
+    | 工厂类                                      | 作用                                                                       |
+    | ---------------------------------------- | ------------------------------------------------------------------------ |
+    | **SimpleRabbitListenerContainerFactory** | 创建 **SimpleMessageListenerContainer**，使用**线程池 + 多消费者**的模型处理消息，支持动态伸缩并发。  |
+    | **DirectRabbitListenerContainerFactory** | 创建 **DirectMessageListenerContainer**，使用**单线程 NIO 事件循环**模型处理消息，更轻量，延迟更低。 |
+
+    | 特性      | SimpleMessageListenerContainer          | DirectMessageListenerContainer  |
+    | ------- | --------------------------------------- | ------------------------------- |
+    | 并发模型    | 多个独立的消费者线程，每个线程有自己的 `Channel`           | 基于 NIO 事件循环，一个线程可管理多个 `Channel` |
+    | 并发控制    | 支持 `concurrency`、`maxConcurrency`，可动态伸缩 | 不支持动态伸缩，只能通过固定消费者数配置            |
+    | 性能      | 在高并发下可能因为线程数多导致上下文切换开销变大                | 更轻量，低延迟，适合长连接场景                 |
+    | 自动恢复    | 消费者线程异常会自动重启                            | 消费者异常会自动重连                      |
+    | 消费者数量配置 | `concurrency`、`maxConcurrency`          | `consumersPerQueue`（每个队列多少个消费者） |
+    | 延迟      | 可能略高，线程调度带来的延迟                          | 更低延迟，消息可即时分发                    |
+    | 适用场景    | 绝大多数通用场景，尤其是并发动态调整要求高的场景                | 低延迟、超高性能、对线程资源敏感的场景             |
+
+    | 场景                   | 建议使用容器                                 |
+    | -------------------- | -------------------------------------- |
+    | **通用业务场景**（订单、支付等）   | `SimpleRabbitListenerContainerFactory` |
+    | **高性能、低延迟场景**（实时推送等） | `DirectRabbitListenerContainerFactory` |
+    | **需要动态伸缩消费者数量**      | `SimpleRabbitListenerContainerFactory` |
+    | **长连接、大量队列、少量消息**    | `DirectRabbitListenerContainerFactory` |
+
+
+*/
+
+//    @Bean(name="qos_4")
+//    public SimpleRabbitListenerContainerFactory getSimpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+//        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//        factory.setMaxConcurrentConsumers(4);
+//        factory.setConnectionFactory(connectionFactory);
+//        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//手动确认
+//        return factory;
+//    }
+
+//    @Bean
+//    public DirectRabbitListenerContainerFactory directFactory(ConnectionFactory connectionFactory) {
+//        DirectRabbitListenerContainerFactory factory = new DirectRabbitListenerContainerFactory();
+//        factory.setConnectionFactory(connectionFactory);
+//        factory.setConsumersPerQueue(5);
+//        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+//        return factory;
+//    }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {

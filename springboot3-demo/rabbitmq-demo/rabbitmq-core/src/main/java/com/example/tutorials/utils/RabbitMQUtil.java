@@ -33,7 +33,7 @@ public class RabbitMQUtil {
     // 对于Quorum类型，durable参数就必须是true了，设置成false的话，会报错。同样，exclusive参数必须设置为false
     public static AMQP.Queue.DeclareOk declareQuorumQueue(Channel channel, String queueName) throws IOException {
         Map<String, Object> arguments = new HashMap<>();
-        arguments.put("x-queue-type", "quorum");
+        arguments.put("x-queue-type", "quorum"); // 设置队列类型为Quorum
         return declareQuorumQueue(channel, queueName, arguments);
     }
 
@@ -61,13 +61,13 @@ public class RabbitMQUtil {
     public static AMQP.Queue.DeclareOk declareStreamQueue(Channel channel, String queueName, Map<String, Object> arguments) throws IOException {
         if (arguments != null) {
             if (!arguments.containsKey("x-queue-type") || !arguments.get("x-queue-type").equals("stream")) {
-                arguments.put("x-queue-type", "stream");
+                arguments.put("x-queue-type", "stream"); // 设置队列类型为Stream
                 arguments.put("x-max-length-bytes", 20_000_000_000L); // maximum stream size: 20 GB
                 arguments.put("x-stream-max-segment-size-bytes", 100_000_000); // size of segment files: 100
             }
         } else {
             arguments = new HashMap<>();
-            arguments.put("x-queue-type", "stream");
+            arguments.put("x-queue-type", "stream"); // 设置队列类型为Stream
             arguments.put("x-max-length-bytes", 20_000_000_000L); // maximum stream size: 20 GB
             arguments.put("x-stream-max-segment-size-bytes", 100_000_000); // size of segment files: 100
         }
