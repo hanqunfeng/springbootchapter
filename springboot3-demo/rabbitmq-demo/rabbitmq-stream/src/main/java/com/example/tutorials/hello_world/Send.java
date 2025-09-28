@@ -18,7 +18,8 @@ public class Send {
 
     public static void main(String[] args) throws IOException {
         // 创建Environment，建立连接
-        Environment environment = EnvironmentFactory.createDefaultEnvironment();
+//        Environment environment = EnvironmentFactory.createDefaultEnvironment();
+        Environment environment = EnvironmentFactory.createDefaultEnvironmentCluster();
 
         // 创建stream
         environment.streamCreator()

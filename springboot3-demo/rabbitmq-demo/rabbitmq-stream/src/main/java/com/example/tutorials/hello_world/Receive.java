@@ -20,7 +20,8 @@ public class Receive {
     private static final String STREAM_NAME = "hello-java-stream";
     public static void main(String[] args) throws IOException {
         // 创建Environment，建立连接
-        Environment environment = EnvironmentFactory.createDefaultEnvironment();
+//        Environment environment = EnvironmentFactory.createDefaultEnvironment();
+        Environment environment = EnvironmentFactory.createDefaultEnvironmentCluster();
 
         // 创建stream队列，如果不存在则创建，存在则必须与创建的参数一致
         environment.streamCreator().stream(STREAM_NAME).maxLengthBytes(ByteCapacity.GB(5)).create();

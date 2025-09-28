@@ -23,7 +23,8 @@ public class RoutingConfig {
         // 创建 quorum queue
         Map<String, Object> params = new HashMap<>();
         params.put("x-queue-type", "quorum");
-        return new Queue(RabbitMQConstants.QUEUE_NAME_ROUTING_1, true, false, false, params);
+        return QueueBuilder.durable(RabbitMQConstants.QUEUE_NAME_ROUTING_1).withArguments(params).build();
+//        return new Queue(RabbitMQConstants.QUEUE_NAME_ROUTING_1, true, false, false, params);
     }
 
     @Bean
