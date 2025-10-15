@@ -20,6 +20,12 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit-stream</artifactId>
+        </dependency>
+
+
     </dependencies>
     <build>
         <plugins>
