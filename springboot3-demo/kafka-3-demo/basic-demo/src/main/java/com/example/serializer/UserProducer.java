@@ -1,36 +1,31 @@
-package com.example;
+package com.example.serializer;
 
+import com.example.basic.KafkaManager;
 import org.apache.kafka.clients.producer.*;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /**
- *
- * Created by hanqf on 2025/10/15 17:40.
+ * @auth roykingw
  */
-
-
-public class MyProducer {
+public class UserProducer {
+    private static final String TOPIC = "userTopic";
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //PART1:设置发送者相关属性
         Properties props = KafkaManager.getBootstrapServersConfig();
-
-        // 添加拦截器
-//        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,"com.roy.kfk.basic.MyInterceptor");
         // 配置key的序列化类
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
         // 配置value的序列化类
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"org.apache.kafka.common.serialization.StringSerializer");
+//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"com.example.serializer.UserSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,"com.example.serializer.UserSerializer2");
 
-//        props.put(ProducerConfig.ACKS_CONFIG,"all");
-
-        Producer<String,String> producer = new KafkaProducer<>(props);
-//        CountDownLatch latch = new CountDownLatch(5);
-        for(int i = 0; i < 2; i++) {
+        Producer<String,User> producer = new KafkaProducer<>(props);
+        for(int i = 0; i < 5; i++) {
+            User user = new User((long)i, "user" + i, i % 2);
             //Part2:构建消息
-            ProducerRecord<String, String> record = new ProducerRecord<>(KafkaManager.topicName, Integer.toString(i), "MyProducer" + i);
+            ProducerRecord<String, User> record = new ProducerRecord<>(TOPIC, Integer.toString(i), user);
             //Part3:发送消息
             //单向发送：不关心服务端的应答。
 //            producer.send(record);
@@ -64,4 +59,3 @@ public class MyProducer {
         producer.close();
     }
 }
-

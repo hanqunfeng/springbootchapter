@@ -21,5 +21,24 @@
             <artifactId>kafka-clients</artifactId>
             <version>3.9.1</version>
         </dependency>
+        <!--  与 server 端版本要一致。Stream式  -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <!-- redis.clients/jedis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+        <!-- 对象 与 byte[] 互转最快的方式 -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.6.2</version>
+        </dependency>
     </dependencies>
 </project>

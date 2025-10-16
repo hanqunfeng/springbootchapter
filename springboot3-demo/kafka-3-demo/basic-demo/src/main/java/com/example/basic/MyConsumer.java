@@ -1,4 +1,4 @@
-package com.example;
+package com.example.basic;
 
 import org.apache.kafka.clients.consumer.*;
 
@@ -25,6 +25,10 @@ public class MyConsumer {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         //value序列化类
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        // 忽略内部主题，默认为 true
+//        props.put(ConsumerConfig.EXCLUDE_INTERNAL_TOPICS_CONFIG,true);
+//        //第一次启动，没有offset偏移量，就从头开始消费。
+//        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
         // 创建一个消费者
         // 指定一个group
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "test");

@@ -1,4 +1,4 @@
-package com.example;
+package com.example.basic;
 
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.common.KafkaFuture;
