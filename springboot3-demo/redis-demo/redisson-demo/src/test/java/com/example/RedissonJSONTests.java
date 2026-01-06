@@ -9,16 +9,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.redisson.api.RBloomFilter;
 import org.redisson.api.RJsonBucket;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JacksonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -26,45 +23,10 @@ import java.util.concurrent.TimeUnit;
  */
 
 @SpringBootTest
-public class RedissonTests {
+public class RedissonJSONTests {
 
     @Autowired
     private RedissonClient redissonClient;
-
-    @Test
-    void bloomFilter() {
-        //使用Redisson提供的BloomFilter工具类
-        RBloomFilter<Object> bloomFilter = redissonClient.getBloomFilter("bloomFilter");
-        bloomFilter.tryInit(1000000, 0.01);
-        bloomFilter.add("test");
-        System.out.println(bloomFilter.contains("test"));
-        System.out.println(bloomFilter.count()); // 获取当前布隆过滤器中已添加的元素个数
-        System.out.println(bloomFilter.getSize()); // 获取当前布隆过滤器占用内存的大小，单位bit
-    }
-
-    @Test
-    void redisLock() throws InterruptedException {
-
-        RLock lock = redissonClient.getLock("myLock");
-
-        // 传统锁定方式，阻塞等待获取锁
-        // lock.lock();
-
-        // 或者，获取锁并在10秒后自动解锁
-        // lock.lock(10, TimeUnit.SECONDS);
-
-        // 或等，尝试在 100 秒内获取锁，获得后在 10 秒后自动解锁
-        boolean res = lock.tryLock(100, 10, TimeUnit.SECONDS);
-        if (res) {
-            try {
-                System.out.println("获取锁成功");
-                System.out.println("开始执行业务逻辑");
-                TimeUnit.SECONDS.sleep(5);
-            } finally {
-                lock.unlock();
-            }
-        }
-    }
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static String userStr = """
