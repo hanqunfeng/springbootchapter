@@ -6,6 +6,7 @@ import org.redisson.api.RSetCache;
 import org.redisson.api.RSortedSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
+import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -89,13 +90,17 @@ public class SetTests {
 
 
     /**
-     * RSortedSet<V> —— 有序集合（基于 ZSet）
+     * RSortedSet<V> —— 有序集合（基于 List）
      * <p>
-     * 对应 Redis：ZSet
-     * 按 score 排序
+     * 对应 Redis：List + Lua
+     * 实现排序的原理是：
+     * 1.插入元素前，在 client 计算好元素的位置
+     * 2.插入元素时，使用 Lua 脚本直接插入到计算好的位置
      */
     @Test
     void testRSortedSet() {
+        Config config = new Config();
+
         RSortedSet<String> sortedSet =
                 redisson.getSortedSet("zset:demo", StringCodec.INSTANCE);
         sortedSet.clear();
@@ -104,6 +109,7 @@ public class SetTests {
         sortedSet.add("Alice");
         sortedSet.add("Bob");
         sortedSet.add("Carol");
+        sortedSet.add("Carol");
 
         // 获取第一个（最小 score）
         System.out.println(sortedSet.first());
@@ -111,6 +117,7 @@ public class SetTests {
         // 获取最后一个（最大 score）
         System.out.println(sortedSet.last());
 
+        System.out.println("size = " + sortedSet.size());
         // 遍历（按 score 顺序）
         for (String v : sortedSet) {
             System.out.println(v);
