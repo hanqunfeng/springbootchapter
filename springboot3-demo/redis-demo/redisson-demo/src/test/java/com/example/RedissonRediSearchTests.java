@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.redisson.api.RSearch;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.SortOrder;
+import org.redisson.api.search.SpellcheckOptions;
 import org.redisson.api.search.aggregate.*;
 import org.redisson.api.search.index.FieldIndex;
 import org.redisson.api.search.index.IndexInfo;
@@ -421,6 +422,31 @@ public class RedissonRediSearchTests {
         rSearch.updateSynonyms("idx:user", "phone_group", "iphone", "mobile", "phone");
         Map<String, List<String>> synonyms = rSearch.dumpSynonyms("idx:user");
         System.out.println("synonyms = " + synonyms);
+    }
+
+
+
+    @Test
+    void spellcheck(){
+        Map<String, Map<String, Double>> spellcheck = rSearch.spellcheck(
+                "idx:user",
+                "iphnoe linu",
+                SpellcheckOptions.defaults()
+                        .distance(2)
+        );
+        System.out.println("spellcheck = " + spellcheck);
+    }
+
+    @Test
+    void spellcheck2(){
+        Map<String, Map<String, Double>> spellcheck = rSearch.spellcheck(
+                "idx:user",
+                "macboo",
+                SpellcheckOptions.defaults()
+                        .distance(2)
+                        .includedTerms("dict:tech")
+        );
+        System.out.println("spellcheck = " + spellcheck);
     }
 
 }
