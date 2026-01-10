@@ -87,6 +87,7 @@ public class RedisConfig {
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(serializer);
         redisTemplate.afterPropertiesSet();
+
         return redisTemplate;
     }
 
