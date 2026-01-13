@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>langchain4j-ai-demo</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>langchain4j-ai-demo</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>17</source>
+          <target>17</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>dev.langchain4j</groupId>
+        <artifactId>langchain4j-community-bom</artifactId>
+        <version>1.10.0-beta18</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j</artifactId>
+      <version>1.10.0</version>
+    </dependency>
+
+    <!-- OpenAI -->
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-open-ai</artifactId>
+      <version>1.10.0</version>
+    </dependency>
+
+    <!-- 阿里云百炼 DashScope -->
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-community-dashscope</artifactId>
+    </dependency>
+
+    <!-- redis 向量数据库 -->
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-community-redis</artifactId>
+    </dependency>
+
+    <!-- 为了计算向量距离 -->
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>9.12.3</version>
+    </dependency>
+  </dependencies>
+
+
+
+</project>
