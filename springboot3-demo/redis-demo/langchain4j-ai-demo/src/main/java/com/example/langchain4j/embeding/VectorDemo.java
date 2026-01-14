@@ -14,11 +14,14 @@ import org.apache.lucene.util.VectorUtil;
 
 
 public class VectorDemo {
+
+    public static final EmbeddingModel embeddingModel = QwenEmbeddingModel.builder()
+            .apiKey(ModelUtil.DASHSCOPE_API_KEY)
+            .modelName("text-embedding-v3")
+            .build();
+
     public static void main(String[] args) {
-        EmbeddingModel embeddingModel = QwenEmbeddingModel.builder()
-                .apiKey(ModelUtil.DASHSCOPE_API_KEY)
-                .modelName("text-embedding-v3")
-                .build();
+
 
         String question = "Redis 7 如何开启向量检索功能？";
 
