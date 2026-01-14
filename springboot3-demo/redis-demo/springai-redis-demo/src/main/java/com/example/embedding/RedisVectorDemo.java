@@ -61,10 +61,15 @@ public class RedisVectorDemo {
             .batchingStrategy(new TokenCountBatchingStrategy()) // Optional: defaults to TokenCountBatchingStrategy
             .build();
 
-    public static void main(String[] args) {
-        // 初始化 RedisVectorStore，创建索引，如果已经创建不会重复创建
+    static {
+        // 创建索引，如果已经创建不会重复创建
         redisVectorStore.afterPropertiesSet();
-//        insertDocumentsToRedis();
+    }
+
+    public static void main(String[] args) {
+
+        insertDocumentsToRedis();
+
         String question = "Redis 7 如何开启向量检索功能？";
         search(question);
     }
