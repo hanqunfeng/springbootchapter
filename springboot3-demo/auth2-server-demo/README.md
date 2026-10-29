@@ -51,3 +51,9 @@ POST http://localhost:9090/oauth2/token?grant_type=refresh_token&client_id=clien
 ```
 如果配置的是`ClientAuthenticationMethod.CLIENT_SECRET_BASIC`，可以将`client_id`和`client_secret`放到url的前面
 POST http://client:secret@localhost:9090/oauth2/token?grant_type=refresh_token&refresh_token=WAL5bD8sRKQjdY3H3Io-e0E61rEgjIHyRvMJ1wVTj6HCW_3ebFy4iVyBQHxsVCn-odvCrVaPcRcv9uRZKOpXc6I3O4gtuP6c90nPYLcJj5S0QWbOBMP2pQUfgs2GPaK-
+
+
+## CLIENT_CREDENTIALS 模式
+POST 
+http://localhost:9090/oauth2/token?grant_type=client_credentials&client_id=mcp-server-01&client_secret=secret-mcp-01
+

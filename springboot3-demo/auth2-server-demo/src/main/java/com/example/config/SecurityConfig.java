@@ -176,9 +176,9 @@ public class SecurityConfig {
     public RegisteredClientRepository registeredClientRepository() {
         //生成随机UUID作为客户端唯一标识，避免多个客户端时ID冲突
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientName("my-oauth2-webflux") // 设置客户端名称
-                .clientId("client-webflux") //设置授权客户端ID
-                .clientSecret(passwordEncoder().encode("secret-webflux")) //设置客户端密钥
+                .clientName("mcp-server") // 设置客户端名称
+                .clientId("mcp-server-01") //设置授权客户端ID
+                .clientSecret(passwordEncoder().encode("secret-mcp-01")) //设置客户端密钥
                 .scopes(strings -> {
                     strings.add(OidcScopes.OPENID);//设置客户端的范围，这里使用了 OpenID Connect 的标准范围
                     strings.add("user:info");
@@ -190,7 +190,7 @@ public class SecurityConfig {
                     redirectUri 不要求存在，固定写法
                  */
                 .redirectUris(redirectUri -> {
-                    redirectUri.add("http://127.0.0.1:8085/login/oauth2/code/my-oauth2-webflux"); //客户端回调，固定写法
+//                    redirectUri.add("http://127.0.0.1:8085/login/oauth2/code/my-oauth2-webflux"); //客户端回调，固定写法
                     redirectUri.add("https://www.baidu.com"); //用于测试获取验证码模式的code
                 })
                 //设置客户端的身份验证方法
@@ -200,8 +200,9 @@ public class SecurityConfig {
                 })
                 //设置客户端的授权类型，这里使用了授权码授权类型和刷新token
                 .authorizationGrantTypes(authorizationGrantTypes -> {
-                    authorizationGrantTypes.add(AuthorizationGrantType.AUTHORIZATION_CODE);
-                    authorizationGrantTypes.add(AuthorizationGrantType.REFRESH_TOKEN);
+                    authorizationGrantTypes.add(AuthorizationGrantType.AUTHORIZATION_CODE); // 授权码授权
+                    authorizationGrantTypes.add(AuthorizationGrantType.REFRESH_TOKEN); // 刷新token
+                    authorizationGrantTypes.add(AuthorizationGrantType.CLIENT_CREDENTIALS); // client_credentials
                 })
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofHours(12)) // accessToken有效期，默认12小时
@@ -218,7 +219,7 @@ public class SecurityConfig {
         // 基于数据库，要先在数据库中建表: oauth2_registered_client
         final JdbcRegisteredClientRepository jdbcRegisteredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         // 第一次运行时初始化数据，这里是方便测试功能，正常情况下需要搞个CURD
-//        jdbcRegisteredClientRepository.save(registeredClient);
+        jdbcRegisteredClientRepository.save(registeredClient);
         return jdbcRegisteredClientRepository;
     }
 
